@@ -18,6 +18,25 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(":app")
 }
+// isar_flutter_libs 3.1.0+1 predates AGP 8+ namespace requirement.
+subprojects {
+    if (name == "isar_flutter_libs") {
+        pluginManager.withPlugin("com.android.library") {
+            extensions.configure<com.android.build.api.dsl.LibraryExtension> {
+                namespace = "dev.isar.isar_flutter_libs"
+            }
+        }
+        afterEvaluate {
+            extensions.configure<com.android.build.api.dsl.LibraryExtension> {
+                val appCompileSdk = rootProject.findProject(":app")
+                    ?.extensions
+                    ?.findByType<com.android.build.api.dsl.ApplicationExtension>()
+                    ?.compileSdk
+                compileSdk = appCompileSdk ?: 36
+            }
+        }
+    }
+}
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)

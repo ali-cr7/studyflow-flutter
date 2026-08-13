@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_planner/core/theme.dart';
-import 'package:study_planner/main.dart';
+
 import 'package:study_planner/features/ThemePreviewScreen.dart';
 
 class StudyFlowApp extends StatefulWidget {
