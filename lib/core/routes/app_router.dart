@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:study_planner/core/di/injection.dart';
+import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:study_planner/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:study_planner/features/planner/presentation/pages/daily_plan_page.dart';
+import 'package:study_planner/features/planner/presentation/pages/subjects_page.dart';
 import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';
 
 abstract final class AppRoutes {
   static const onboarding = '/onboarding';
   static const dashboard = '/dashboard';
+  static const subjects = '/subjects';
+  static const dailyPlan = '/daily-plan';
 }
 
 class AppRouter {
@@ -24,6 +28,14 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.dashboard,
         builder: (context, state) => const DashboardPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.subjects,
+        builder: (context, state) => const SubjectsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.dailyPlan,
+        builder: (context, state) => const DailyPlanPage(),
       ),
     ],
   );

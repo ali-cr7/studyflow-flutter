@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner/core/app_colors.dart';
-import 'package:study_planner/core/di/injection.dart';
+import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/core/routes/app_router.dart';
 import 'package:study_planner/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:study_planner/features/onboarding/presentation/cubit/onboarding_state.dart';

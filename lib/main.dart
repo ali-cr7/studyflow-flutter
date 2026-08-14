@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_planner/core/di/injection.dart';
+import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/core/routes/app_router.dart';
 import 'package:study_planner/core/theme.dart';
 import 'package:study_planner/data/database/isar.dart';
@@ -13,7 +13,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
