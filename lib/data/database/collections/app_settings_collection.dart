@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
+import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 
 part 'app_settings_collection.g.dart';
 
@@ -10,6 +11,9 @@ class AppSettingsCollection {
 
   @Enumerated(EnumType.name)
   late AppThemeMode theme;
+
+  @Enumerated(EnumType.name)
+  late FocusSoundMode focusSound;
 
   /// Default Pomodoro study block length in minutes.
   late int studyDuration;

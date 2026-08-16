@@ -68,15 +68,15 @@ class DashboardContent extends StatelessWidget {
                       value: '${settings.breakDuration} min',
                     ),
                     const SizedBox(height: 10),
-                    DashboardRow(
-                      label: 'Wake up',
-                      value: _formatDayTime(profile.wakeUpTime),
-                    ),
-                    const SizedBox(height: 10),
-                    DashboardRow(
-                      label: 'Sleep',
-                      value: _formatDayTime(profile.sleepTime),
-                    ),
+                    // DashboardRow(
+                    //   label: 'Wake up',
+                    //   value: _formatDayTime(profile.wakeUpTime),
+                    // ),
+                    // const SizedBox(height: 10),
+                    // DashboardRow(
+                    //   label: 'Sleep',
+                    //   value: _formatDayTime(profile.sleepTime),
+                    // ),
                   ],
                 ),
               ),
@@ -110,25 +110,25 @@ class DashboardContent extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FilledButton.icon(
-                            onPressed: () => context.go(AppRoutes.subjects),
-                            icon: const Icon(Icons.school_outlined),
-                            label: const Text('Subjects'),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: FilledButton.icon(
-                            onPressed: () => context.go(AppRoutes.dailyPlan),
-                            icon: const Icon(Icons.calendar_today_outlined),
-                            label: const Text('Daily Plan'),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: FilledButton.icon(
+                    //         onPressed: () => context.go(AppRoutes.subjects),
+                    //         icon: const Icon(Icons.school_outlined),
+                    //         label: const Text('Subjects'),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 12),
+                    //     Expanded(
+                    //       child: FilledButton.icon(
+                    //         onPressed: () => context.go(AppRoutes.dailyPlan),
+                    //         icon: const Icon(Icons.calendar_today_outlined),
+                    //         label: const Text('Daily Plan'),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     const Spacer(),
                   ],
                 ),

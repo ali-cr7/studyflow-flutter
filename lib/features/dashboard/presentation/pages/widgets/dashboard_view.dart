@@ -13,16 +13,16 @@ class DashboardView extends StatelessWidget {
       builder: (context, state) {
         return switch (state.status) {
           DashboardStatus.loading => const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            ),
+            body: Center(child: CircularProgressIndicator()),
+          ),
           DashboardStatus.failure => Scaffold(
-              body: Center(
-                child: Text(state.errorMessage ?? 'Something went wrong.'),
-              ),
+            body: Center(
+              child: Text(state.errorMessage ?? 'Something went wrong.'),
             ),
+          ),
           DashboardStatus.empty => const Scaffold(
-              body: Center(child: Text('No profile found.')),
-            ),
+            body: Center(child: Text('No profile found.')),
+          ),
           DashboardStatus.loaded => DashboardContent(state: state),
         };
       },

@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/features/planner/cubit/daily_plan_cubit.dart';
+import 'package:study_planner/shared/domain/entities/planned_subject.dart';
+import 'package:study_planner/shared/domain/entities/subject.dart';
+
+class DailyPlanSessionCard extends StatelessWidget {
+  const DailyPlanSessionCard({
+    super.key,
+    required this.plannedSubject,
+    required this.subject,
+    required this.sessionNumber,
+    required this.totalSessions,
+    required this.onTap,
+  });
+
+  final PlannedSubject plannedSubject;
+  final Subject subject;
+  final int sessionNumber;
+  final int totalSessions;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = context.sfColors;
+    final subjectColor = Color(subject.color);
+    final cubit = context.read<DailyPlanCubit>();
+
+    return Material(
+      color: theme.cardColor,
+      borderRadius: BorderRadius.circular(AppColors.radiusLg),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(AppColors.radiusLg),
+            border: Border.all(color: colors.border, width: 1),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: subjectColor.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Icon(
+                  _subjectIcon(subject.icon),
+                  color: subjectColor,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      subject.name,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _sessionSummary(),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colors.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  IconButton(
+                    onPressed: () => cubit.togglePlannedSubject(plannedSubject),
+                    icon: Icon(
+                      plannedSubject.completed
+                          ? Icons.check_circle_rounded
+                          : Icons.radio_button_unchecked_rounded,
+                      color: plannedSubject.completed
+                          ? colors.success
+                          : colors.mutedForeground,
+                    ),
+                    tooltip: 'Toggle completion',
+                  ),
+                  IconButton(
+                    onPressed: () =>
+                        cubit.deletePlannedSubject(plannedSubject.id),
+                    icon: const Icon(Icons.delete_outline_rounded),
+                    tooltip: 'Delete planned subject',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _sessionSummary() {
+    final minutes = plannedSubject.plannedMinutes;
+    final sessionLabel = totalSessions == 1 ? 'session' : 'sessions';
+    return '$sessionNumber/$totalSessions $sessionLabel • $minutes min';
+  }
+
+  static IconData _subjectIcon(String key) {
+    const map = <String, IconData>{
+      'calculate': Icons.calculate_outlined,
+      'science': Icons.science_outlined,
+      'language': Icons.translate_outlined,
+      'history': Icons.history_edu_outlined,
+      'book': Icons.book_rounded,
+      'palette': Icons.palette_outlined,
+      'music': Icons.music_note_outlined,
+      'computer': Icons.computer_outlined,
+      'biotech': Icons.biotech_outlined,
+      'code': Icons.code_outlined,
+    };
+    return map[key] ?? Icons.book_rounded;
+  }
+}

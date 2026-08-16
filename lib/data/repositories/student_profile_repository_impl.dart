@@ -12,26 +12,38 @@ class StudentProfileRepositoryImpl implements StudentProfileRepository {
 
   @override
   Future<StudentProfile?> getProfile() async {
-    final collection = await _isar.studentProfileCollections.get(
-      DatabaseConstants.singletonId,
-    );
-    if (collection == null) return null;
-    return StudentProfileMapper.toDomain(collection);
+    try {
+      final collection = await _isar.studentProfileCollections.get(
+        DatabaseConstants.singletonId,
+      );
+      if (collection == null) return null;
+      return StudentProfileMapper.toDomain(collection);
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
   Future<void> saveProfile(StudentProfile profile) async {
-    final collection = StudentProfileMapper.toCollection(profile);
-    await _isar.writeTxn(() async {
-      await _isar.studentProfileCollections.put(collection);
-    });
+    try {
+      final collection = StudentProfileMapper.toCollection(profile);
+      await _isar.writeTxn(() async {
+        await _isar.studentProfileCollections.put(collection);
+      });
+    } catch (_) {
+      return;
+    }
   }
 
   @override
   Future<bool> hasProfile() async {
-    return _isar.studentProfileCollections.getSync(
-          DatabaseConstants.singletonId,
-        ) !=
-        null;
+    try {
+      return _isar.studentProfileCollections.getSync(
+            DatabaseConstants.singletonId,
+          ) !=
+          null;
+    } catch (_) {
+      return false;
+    }
   }
 }

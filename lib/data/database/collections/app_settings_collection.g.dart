@@ -23,23 +23,29 @@ const AppSettingsCollectionSchema = CollectionSchema(
       name: r'breakDuration',
       type: IsarType.long,
     ),
-    r'notificationsEnabled': PropertySchema(
+    r'focusSound': PropertySchema(
       id: 1,
+      name: r'focusSound',
+      type: IsarType.string,
+      enumMap: _AppSettingsCollectionfocusSoundEnumValueMap,
+    ),
+    r'notificationsEnabled': PropertySchema(
+      id: 2,
       name: r'notificationsEnabled',
       type: IsarType.bool,
     ),
     r'soundEnabled': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'soundEnabled',
       type: IsarType.bool,
     ),
     r'studyDuration': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'studyDuration',
       type: IsarType.long,
     ),
     r'theme': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'theme',
       type: IsarType.string,
       enumMap: _AppSettingsCollectionthemeEnumValueMap,
@@ -65,6 +71,7 @@ int _appSettingsCollectionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.focusSound.name.length * 3;
   bytesCount += 3 + object.theme.name.length * 3;
   return bytesCount;
 }
@@ -76,10 +83,11 @@ void _appSettingsCollectionSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.breakDuration);
-  writer.writeBool(offsets[1], object.notificationsEnabled);
-  writer.writeBool(offsets[2], object.soundEnabled);
-  writer.writeLong(offsets[3], object.studyDuration);
-  writer.writeString(offsets[4], object.theme.name);
+  writer.writeString(offsets[1], object.focusSound.name);
+  writer.writeBool(offsets[2], object.notificationsEnabled);
+  writer.writeBool(offsets[3], object.soundEnabled);
+  writer.writeLong(offsets[4], object.studyDuration);
+  writer.writeString(offsets[5], object.theme.name);
 }
 
 AppSettingsCollection _appSettingsCollectionDeserialize(
@@ -90,12 +98,15 @@ AppSettingsCollection _appSettingsCollectionDeserialize(
 ) {
   final object = AppSettingsCollection();
   object.breakDuration = reader.readLong(offsets[0]);
+  object.focusSound = _AppSettingsCollectionfocusSoundValueEnumMap[
+          reader.readStringOrNull(offsets[1])] ??
+      FocusSoundMode.none;
   object.id = id;
-  object.notificationsEnabled = reader.readBool(offsets[1]);
-  object.soundEnabled = reader.readBool(offsets[2]);
-  object.studyDuration = reader.readLong(offsets[3]);
+  object.notificationsEnabled = reader.readBool(offsets[2]);
+  object.soundEnabled = reader.readBool(offsets[3]);
+  object.studyDuration = reader.readLong(offsets[4]);
   object.theme = _AppSettingsCollectionthemeValueEnumMap[
-          reader.readStringOrNull(offsets[4])] ??
+          reader.readStringOrNull(offsets[5])] ??
       AppThemeMode.system;
   return object;
 }
@@ -110,12 +121,16 @@ P _appSettingsCollectionDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (_AppSettingsCollectionfocusSoundValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          FocusSoundMode.none) as P;
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
       return (_AppSettingsCollectionthemeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           AppThemeMode.system) as P;
@@ -124,6 +139,20 @@ P _appSettingsCollectionDeserializeProp<P>(
   }
 }
 
+const _AppSettingsCollectionfocusSoundEnumValueMap = {
+  r'none': r'none',
+  r'rain': r'rain',
+  r'ocean': r'ocean',
+  r'forest': r'forest',
+  r'cafe': r'cafe',
+};
+const _AppSettingsCollectionfocusSoundValueEnumMap = {
+  r'none': FocusSoundMode.none,
+  r'rain': FocusSoundMode.rain,
+  r'ocean': FocusSoundMode.ocean,
+  r'forest': FocusSoundMode.forest,
+  r'cafe': FocusSoundMode.cafe,
+};
 const _AppSettingsCollectionthemeEnumValueMap = {
   r'system': r'system',
   r'light': r'light',
@@ -284,6 +313,144 @@ extension AppSettingsCollectionQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundEqualTo(
+    FocusSoundMode value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'focusSound',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundGreaterThan(
+    FocusSoundMode value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'focusSound',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundLessThan(
+    FocusSoundMode value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'focusSound',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundBetween(
+    FocusSoundMode lower,
+    FocusSoundMode upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'focusSound',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'focusSound',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'focusSound',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+          QAfterFilterCondition>
+      focusSoundContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'focusSound',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+          QAfterFilterCondition>
+      focusSoundMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'focusSound',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'focusSound',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> focusSoundIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'focusSound',
+        value: '',
       ));
     });
   }
@@ -582,6 +749,20 @@ extension AppSettingsCollectionQuerySortBy
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      sortByFocusSound() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'focusSound', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      sortByFocusSoundDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'focusSound', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
       sortByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.asc);
@@ -651,6 +832,20 @@ extension AppSettingsCollectionQuerySortThenBy
       thenByBreakDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'breakDuration', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      thenByFocusSound() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'focusSound', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      thenByFocusSoundDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'focusSound', Sort.desc);
     });
   }
 
@@ -735,6 +930,13 @@ extension AppSettingsCollectionQueryWhereDistinct
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
+      distinctByFocusSound({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'focusSound', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
       distinctByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notificationsEnabled');
@@ -775,6 +977,13 @@ extension AppSettingsCollectionQueryProperty on QueryBuilder<
       breakDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'breakDuration');
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, FocusSoundMode, QQueryOperations>
+      focusSoundProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'focusSound');
     });
   }
 

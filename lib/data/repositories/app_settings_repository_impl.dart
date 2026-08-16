@@ -12,18 +12,28 @@ class AppSettingsRepositoryImpl implements AppSettingsRepository {
 
   @override
   Future<AppSettings> getSettings() async {
-    final collection = await _isar.appSettingsCollections.get(
-      DatabaseConstants.singletonId,
-    );
-    if (collection == null) return AppSettings.defaults();
-    return AppSettingsMapper.toDomain(collection);
+    try {
+      final collection = await _isar.appSettingsCollections.get(
+        DatabaseConstants.singletonId,
+      );
+      if (collection == null) return AppSettings.defaults();
+      return AppSettingsMapper.toDomain(collection);
+    } catch (_) {
+      return AppSettings.defaults();
+    }
   }
 
   @override
   Future<void> saveSettings(AppSettings settings) async {
-    final collection = AppSettingsMapper.toCollection(settings);
-    await _isar.writeTxn(() async {
-      await _isar.appSettingsCollections.put(collection);
-    });
+    try {
+      final collection = AppSettingsMapper.toCollection(settings);
+      await _isar.writeTxn(() async {
+        await _isar.appSettingsCollections.put(collection);
+      });
+    } catch (_) {
+      // Keep the app usable even if the persisted settings row is stale or
+      // partially migrated from an earlier schema version.
+      return;
+    }
   }
 }

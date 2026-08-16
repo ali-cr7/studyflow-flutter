@@ -10,6 +10,7 @@ abstract final class AppSettingsMapper {
       breakDuration: collection.breakDuration,
       notificationsEnabled: collection.notificationsEnabled,
       soundEnabled: collection.soundEnabled,
+      focusSound: collection.focusSound,
     );
   }
 
@@ -17,6 +18,7 @@ abstract final class AppSettingsMapper {
     return AppSettingsCollection()
       ..id = DatabaseConstants.singletonId
       ..theme = settings.theme
+      ..focusSound = settings.focusSound
       ..studyDuration = settings.studyDuration
       ..breakDuration = settings.breakDuration
       ..notificationsEnabled = settings.notificationsEnabled
