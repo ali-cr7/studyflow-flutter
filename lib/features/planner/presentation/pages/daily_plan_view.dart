@@ -29,9 +29,12 @@ class DailyPlanView extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (_) {
-        return DailyPlanAddSubjectSheet(
-          availableSubjects: state.availableSubjects,
-          sessionDurationMinutes: state.sessionDurationMinutes,
+        return BlocProvider.value(
+          value: cubit,
+          child: DailyPlanAddSubjectSheet(
+            availableSubjects: state.availableSubjects,
+            sessionDurationMinutes: state.sessionDurationMinutes,
+          ),
         );
       },
     );

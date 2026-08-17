@@ -7,6 +7,8 @@ import 'package:study_planner/data/repositories/daily_plan_repository_impl.dart'
 import 'package:study_planner/data/repositories/student_profile_repository_impl.dart';
 import 'package:study_planner/data/repositories/study_session_repository_impl.dart';
 import 'package:study_planner/data/repositories/subject_repository_impl.dart';
+import 'package:study_planner/features/statistics/data/repositories/statistics_repository.dart';
+import 'package:study_planner/features/statistics/data/repositories/statistics_repository_impl.dart';
 import 'package:study_planner/shared/domain/repositories/repositories.dart';
 
 final getIt = GetIt.instance;
@@ -39,5 +41,15 @@ Future<void> setupDependencies() async {
     )
     ..registerLazySingleton<AppSettingsRepository>(
       () => AppSettingsRepositoryImpl(isar),
+    )
+    ..registerLazySingleton<StatisticsRepository>(
+      () => StatisticsRepositoryImpl(
+        studentProfileRepository: getIt<StudentProfileRepository>(),
+        subjectRepository: getIt<SubjectRepository>(),
+        dailyPlanRepository: getIt<DailyPlanRepository>(),
+        studySessionRepository: getIt<StudySessionRepository>(),
+        achievementRepository: getIt<AchievementRepository>(),
+        appSettingsRepository: getIt<AppSettingsRepository>(),
+      ),
     );
 }
