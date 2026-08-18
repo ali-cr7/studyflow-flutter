@@ -17,7 +17,11 @@ class StatisticsSubjectBreakdown extends StatelessWidget {
       );
     }
 
-    final total = subjects.fold<int>(0, (sum, item) => sum + item.minutes);
+    // subject.minutes currently contains duration in SECONDS.
+    final totalSeconds = subjects.fold<int>(
+      0,
+      (sum, item) => sum + item.minutes,
+    );
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -28,7 +32,10 @@ class StatisticsSubjectBreakdown extends StatelessWidget {
       ),
       child: Column(
         children: subjects.map((subject) {
-          final percent = total == 0 ? 0 : subject.percent.clamp(0, 100);
+          final percent = totalSeconds == 0
+              ? 0
+              : ((subject.minutes / totalSeconds) * 100).round().clamp(0, 100);
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 14),
             child: Column(
@@ -50,6 +57,7 @@ class StatisticsSubjectBreakdown extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
+
                 ClipRRect(
                   borderRadius: BorderRadius.circular(999),
                   child: LinearProgressIndicator(
@@ -59,9 +67,11 @@ class StatisticsSubjectBreakdown extends StatelessWidget {
                     valueColor: AlwaysStoppedAnimation(Color(subject.color)),
                   ),
                 ),
+
                 const SizedBox(height: 6),
+
                 Text(
-                  _formatMinutes(subject.minutes),
+                  _formatDuration(subject.minutes),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: context.sfColors.mutedForeground,
                   ),
@@ -74,11 +84,28 @@ class StatisticsSubjectBreakdown extends StatelessWidget {
     );
   }
 
-  static String _formatMinutes(int minutes) {
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
-    if (hours > 0) return '${hours}h';
-    return '${remainder}m';
+  /// The input is duration in seconds.
+  static String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final remainingSeconds = seconds % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return '${hours}h ${minutes}m';
+    }
+
+    if (hours > 0) {
+      return '${hours}h';
+    }
+
+    if (minutes > 0 && remainingSeconds > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+
+    if (minutes > 0) {
+      return '${minutes}m';
+    }
+
+    return '${remainingSeconds}s';
   }
 }

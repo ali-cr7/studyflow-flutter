@@ -115,7 +115,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              _formatMinutes(snapshot.studyMinutes),
+                              _formatDuration(snapshot.studyMinutes),
                               style: Theme.of(context).textTheme.headlineSmall
                                   ?.copyWith(fontWeight: FontWeight.w700),
                             ),
@@ -158,7 +158,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   children: [
                     StatisticsMetricCard(
                       title: 'Study Time',
-                      value: _formatMinutes(snapshot.studyMinutes),
+                      value: _formatDuration(snapshot.studyMinutes),
                       subtitle: '${snapshot.sessionCount} completed sessions',
                       icon: Icons.timer_rounded,
                       tint: context.sfColors.chart1,
@@ -174,7 +174,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       title: 'Plan Completion',
                       value: '${snapshot.planCompletionPercent}%',
                       subtitle:
-                          '${_formatMinutes(snapshot.completedPlannedMinutes)} of ${_formatMinutes(snapshot.plannedMinutes)}',
+                          '${_formatDuration(snapshot.completedPlannedMinutes)} of ${_formatDuration(snapshot.plannedMinutes)}',
                       icon: Icons.task_alt_rounded,
                       tint: context.sfColors.chart3,
                     ),
@@ -234,11 +234,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  static String _formatMinutes(int minutes) {
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
-    if (hours > 0) return '${hours}h';
-    return '${remainder}m';
+  static String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final remainingSeconds = seconds % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return '${hours}h ${minutes}m';
+    }
+
+    if (hours > 0) {
+      return '${hours}h';
+    }
+
+    if (minutes > 0 && remainingSeconds > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+
+    if (minutes > 0) {
+      return '${minutes}m';
+    }
+
+    return '${remainingSeconds}s';
   }
 }

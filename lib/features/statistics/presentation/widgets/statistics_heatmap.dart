@@ -84,30 +84,31 @@ class StatisticsHeatmap extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
-          GridView.builder(
-            itemCount: cells.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 6,
-              childAspectRatio: 1,
-            ),
-            itemBuilder: (context, index) {
-              final intensity = cells[index];
-              final color = switch (intensity) {
-                0 => context.sfColors.muted,
-                1 => context.sfColors.primaryLight,
-                2 => context.sfColors.chart1.withValues(alpha: 0.55),
-                3 => context.sfColors.chart2.withValues(alpha: 0.7),
-                _ => context.sfColors.success,
-              };
-              return Container(
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(8),
-                ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final cellSize = ((constraints.maxWidth - 36) / 7).clamp(12.0, 24.0);
+
+              return Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: List.generate(cells.length, (index) {
+                  final intensity = cells[index];
+                  final color = switch (intensity) {
+                    0 => context.sfColors.muted,
+                    1 => context.sfColors.primaryLight,
+                    2 => context.sfColors.chart1.withValues(alpha: 0.55),
+                    3 => context.sfColors.chart2.withValues(alpha: 0.7),
+                    _ => context.sfColors.success,
+                  };
+                  return Container(
+                    width: cellSize,
+                    height: cellSize,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  );
+                }),
               );
             },
           ),

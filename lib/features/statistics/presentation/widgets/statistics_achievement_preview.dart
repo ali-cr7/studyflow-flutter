@@ -16,13 +16,12 @@ class StatisticsAchievementPreview extends StatelessWidget {
             'Complete study sessions and reach your goals to unlock milestones.',
       );
     }
-
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(AppColors.radiusLg),
-        border: Border.all(color: context.sfColors.border, width: 1),
+        border: Border.all(color: context.sfColors.border),
       ),
       child: Wrap(
         spacing: 8,

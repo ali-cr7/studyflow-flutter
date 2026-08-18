@@ -38,40 +38,50 @@ class StatisticsMetricCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                title,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: colors.mutedForeground,
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: colors.mutedForeground,
+                  ),
                 ),
               ),
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: tint.withValues(alpha: 0.16),
-                  borderRadius: BorderRadius.circular(12),
+              Expanded(
+                child: Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: tint.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: tint, size: 18),
                 ),
-                child: Icon(icon, color: tint, size: 18),
               ),
             ],
           ),
-          const SizedBox(height: 14),
-          Text(
-            value,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+          //    const SizedBox(height: 14),
+          Expanded(
+            child: Text(
+              value,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colors.mutedForeground,
-              fontWeight: FontWeight.w600,
+          //  const SizedBox(height: 4),
+          Expanded(
+            child: Text(
+              subtitle,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colors.mutedForeground,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

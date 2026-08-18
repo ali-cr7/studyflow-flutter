@@ -48,6 +48,13 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
               session.completed && _isInPeriod(session.startTime, period),
         )
         .toList();
+    print('Relevant sessions for period $period: ${relevantSessions.length}');
+
+    for (final session in relevantSessions) {
+      print(
+        'Session: ${session.id}, Subject ID: ${session.subjectId}, Duration: ${session.duration} minutes, Start Time: ${session.startTime}',
+      );
+    }
 
     final range = _periodRange(period);
     final dailyPlans = await _loadPlansForRange(range.start, range.end);
@@ -516,7 +523,7 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
       BestRecord(label: 'Most studied subject', value: bestSubject),
       BestRecord(
         label: 'Longest session',
-        value: _formatMinutes(longSession.duration),
+        value: _formatDuration(longSession.duration),
       ),
     ];
   }
@@ -526,12 +533,28 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     return weekdays[(date.weekday - 1) % 7];
   }
 
-  String _formatMinutes(int minutes) {
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
-    if (hours > 0) return '${hours}h';
-    return '${remainder}m';
+  static String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final remainingSeconds = seconds % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return '${hours}h ${minutes}m';
+    }
+
+    if (hours > 0) {
+      return '${hours}h';
+    }
+
+    if (minutes > 0 && remainingSeconds > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+
+    if (minutes > 0) {
+      return '${minutes}m';
+    }
+
+    return '${remainingSeconds}s';
   }
 
   String _subtitleForPeriod(StatisticsPeriod period) {
