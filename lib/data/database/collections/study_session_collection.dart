@@ -15,7 +15,7 @@ class StudySessionCollection {
 
   DateTime? endTime;
 
-  /// Actual studied minutes (may differ from planned duration).
+  /// Actual studied duration in seconds (may differ from planned duration).
   late int duration;
 
   late bool completed;

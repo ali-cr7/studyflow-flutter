@@ -1,30 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:study_planner/data/repositories/mappers/study_session_mapper.dart';
+import 'package:study_planner/core/services/study_timer_service.dart';
+import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
 import 'package:study_planner/shared/domain/entities/study_session.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
-import 'package:study_planner/shared/domain/repositories/study_session_repository.dart';
 
 part 'session_state.dart';
 
 class SessionCubit extends Cubit<SessionState> {
   SessionCubit({
-    required StudySessionRepository sessionRepository,
+    required StudyTimerService timerService,
     required Subject subject,
     required int plannedMinutes,
     int breakDurationMinutes = 5,
     AppSettingsRepository? settingsRepository,
-  }) : _sessionRepository = sessionRepository,
+  }) : _timerService = timerService,
        _subject = subject,
        _plannedMinutes = plannedMinutes,
        _settingsRepository = settingsRepository,
        _breakDurationMinutes = breakDurationMinutes,
        super(SessionInitial());
 
-  final StudySessionRepository _sessionRepository;
-  //final StudySessionMapper _mapper = StudySessionMapper();
+  final StudyTimerService _timerService;
   final Subject _subject;
   final int _plannedMinutes;
   final AppSettingsRepository? _settingsRepository;
@@ -43,75 +42,26 @@ class SessionCubit extends Cubit<SessionState> {
   }
 
   Future<void> restoreOrStartSession() async {
-    await loadBreakDuration();
-
-    final active = await _sessionRepository.getActiveSession();
-    if (active != null && active.subjectId == _subject.id) {
-      final elapsedSeconds = _elapsedSeconds(active.startTime, DateTime.now());
-      final remainingSeconds = (totalSeconds - elapsedSeconds).clamp(
-        0,
-        totalSeconds,
-      );
-
-      if (remainingSeconds <= 0) {
-        final completedSession = active.copyWith(
-          endTime: DateTime.now(),
-          duration: totalSeconds,
-          completed: true,
-        );
-        await _sessionRepository.save(completedSession);
-        _startBreakTicker();
-        emit(
-          SessionBreakActive(
-            subject: _subject,
-            totalSeconds: breakTotalSeconds,
-            remainingSeconds: breakTotalSeconds,
-          ),
-        );
+    try {
+      await loadBreakDuration();
+      final restored = await _timerService.restoreForSubject(_subject);
+      if (restored != null) {
+        _emitSnapshot(restored);
+        _startProjectionTicker();
         return;
       }
-
-      final restored = active.copyWith(
-        duration: totalSeconds - remainingSeconds,
-      );
-      await _sessionRepository.save(restored);
-      _startSessionTicker(restored);
-      emit(
-        SessionActive(
-          session: restored,
-          subject: _subject,
-          totalSeconds: totalSeconds,
-          remainingSeconds: remainingSeconds,
-        ),
-      );
-      return;
+      await startSession();
+    } catch (error) {
+      _emitState(SessionError(error.toString()));
     }
-
-    await startSession();
   }
 
   Future<void> saveCurrentProgress() async {
+    if (isClosed) return;
     final current = state;
-
     if (current is SessionActive) {
-      final elapsedSeconds = _elapsedSeconds(
-        current.session.startTime,
-        DateTime.now(),
-      );
-      final duration = elapsedSeconds.clamp(0, totalSeconds);
-      final updated = current.session.copyWith(
-        duration: duration,
-        endTime: duration >= totalSeconds ? DateTime.now() : null,
-        completed: duration >= totalSeconds,
-      );
-      await _sessionRepository.save(updated);
-    } else if (current is SessionPaused) {
-      final duration = (totalSeconds - current.remainingSeconds).clamp(
-        0,
-        totalSeconds,
-      );
-      final updated = current.session.copyWith(duration: duration);
-      await _sessionRepository.save(updated);
+      final snapshot = await _timerService.restoreForSubject(_subject);
+      if (!isClosed && snapshot != null) _emitSnapshot(snapshot);
     }
   }
 
@@ -124,242 +74,185 @@ class SessionCubit extends Cubit<SessionState> {
     }
 
     try {
-      final now = DateTime.now();
-      final session = StudySession(
-        id: 0,
-        subjectId: _subject.id,
-        startTime: now,
-        endTime: null,
-        duration: 0,
-        completed: false,
+      await loadBreakDuration();
+      final snapshot = await _timerService.startStudy(
+        subject: _subject,
+        plannedDurationSeconds: totalSeconds,
       );
-
-      final saved = await _sessionRepository.save(session);
-      _startSessionTicker(saved);
-      emit(
-        SessionActive(
-          session: saved,
-          subject: _subject,
-          totalSeconds: totalSeconds,
-          remainingSeconds: totalSeconds,
-        ),
-      );
+      _emitSnapshot(snapshot);
+      _startProjectionTicker();
     } catch (error) {
-      emit(SessionError(error.toString()));
+      _emitState(SessionError(error.toString()));
     }
   }
 
   Future<void> pauseSession() async {
-    final current = state;
-    if (current is! SessionActive) return;
-
-    final duration = (totalSeconds - current.remainingSeconds).clamp(
-      0,
-      totalSeconds,
-    );
-    final persisted = current.session.copyWith(
-      duration: duration,
-      endTime: null,
-      completed: false,
-    );
-
-    await _sessionRepository.save(persisted);
-    _timer?.cancel();
-    _timer = null;
-
-    emit(
-      SessionPaused(
-        session: persisted,
-        subject: _subject,
-        totalSeconds: totalSeconds,
-        remainingSeconds: current.remainingSeconds,
-      ),
-    );
+    try {
+      final snapshot = await _timerService.pause(_subject);
+      if (snapshot == null) return;
+      _timer?.cancel();
+      _timer = null;
+      _emitSnapshot(snapshot);
+    } catch (error) {
+      _emitState(SessionError(error.toString()));
+    }
   }
 
   Future<void> resumeSession() async {
-    final current = state;
-    if (current is! SessionPaused) return;
-
-    final remaining = current.remainingSeconds;
-    final now = DateTime.now();
-    final session = current.session.copyWith(
-      startTime: now.subtract(Duration(seconds: totalSeconds - remaining)),
-    );
-
-    _startSessionTicker(session);
-    emit(
-      SessionActive(
-        session: session,
-        subject: _subject,
-        totalSeconds: totalSeconds,
-        remainingSeconds: remaining,
-      ),
-    );
+    try {
+      final snapshot = await _timerService.resume(_subject);
+      if (snapshot == null) return;
+      _emitSnapshot(snapshot);
+      _startProjectionTicker();
+    } catch (error) {
+      _emitState(SessionError(error.toString()));
+    }
   }
 
   Future<void> finishSession() async {
-    final current = state;
-    final activeSession = current is SessionActive ? current : null;
-    final pausedSession = current is SessionPaused ? current : null;
-
-    if (activeSession == null && pausedSession == null) return;
-
     try {
-      final session = activeSession?.session ?? pausedSession!.session;
-      final remaining =
-          activeSession?.remainingSeconds ?? pausedSession!.remainingSeconds;
-      final endTime = DateTime.now();
-      final elapsedSeconds = (totalSeconds - remaining).clamp(0, totalSeconds);
-
-      final finished = session.copyWith(
-        endTime: endTime,
-        duration: elapsedSeconds,
-        completed: true,
-      );
-
-      await _sessionRepository.save(finished);
-      _timer?.cancel();
-      _timer = null;
-
-      _startBreakTicker();
-      emit(
-        SessionBreakActive(
-          subject: _subject,
-          totalSeconds: breakTotalSeconds,
-          remainingSeconds: breakTotalSeconds,
-        ),
-      );
+      final snapshot = await _timerService.finishStudy(_subject);
+      if (snapshot == null) return;
+      _emitSnapshot(snapshot);
+      _startProjectionTicker();
     } catch (error) {
-      emit(SessionError(error.toString()));
+      _emitState(SessionError(error.toString()));
     }
   }
 
   Future<void> completeBreak() async {
-    if (state is! SessionBreakActive) return;
-
-    _timer?.cancel();
-    _timer = null;
-
-    emit(
-      SessionBreakComplete(subject: _subject, totalSeconds: breakTotalSeconds),
-    );
-  }
-
-  Future<void> cancelSession() async {
-    final current = state;
-    final activeSession = current is SessionActive ? current : null;
-    final pausedSession = current is SessionPaused ? current : null;
-
-    if (activeSession == null && pausedSession == null) return;
-
     try {
-      final session = activeSession?.session ?? pausedSession!.session;
-      final cancelled = session.copyWith(
-        endTime: DateTime.now(),
-        completed: false,
-      );
-      await _sessionRepository.save(cancelled);
+      await _timerService.completeBreak(_subject);
       _timer?.cancel();
       _timer = null;
-      emit(SessionError('Session cancelled'));
+      _emitState(
+        SessionBreakComplete(
+          subject: _subject,
+          totalSeconds: breakTotalSeconds,
+        ),
+      );
     } catch (error) {
-      emit(SessionError(error.toString()));
+      _emitState(SessionError(error.toString()));
     }
   }
 
-  void _startSessionTicker(StudySession session) {
+  Future<void> cancelSession() async {
+    try {
+      await _timerService.cancel(_subject);
+      _timer?.cancel();
+      _timer = null;
+      _emitState(SessionError('Session cancelled'));
+    } catch (error) {
+      _emitState(SessionError(error.toString()));
+    }
+  }
+
+  void _startProjectionTicker() {
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      final elapsedSeconds = _elapsedSeconds(session.startTime, DateTime.now());
-      final remainingSeconds = (totalSeconds - elapsedSeconds).clamp(
-        0,
-        totalSeconds,
-      );
-
-      if (remainingSeconds <= 0) {
-        _timer?.cancel();
-        _timer = null;
-        _startBreakTicker();
-        emit(
-          SessionBreakActive(
-            subject: _subject,
-            totalSeconds: breakTotalSeconds,
-            remainingSeconds: breakTotalSeconds,
-          ),
-        );
-        return;
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
+      try {
+        final snapshot =
+            await _timerService.reconcile(subject: _subject) ??
+            await _timerService.restoreForSubject(_subject);
+        if (snapshot == null) {
+          _timer?.cancel();
+          _timer = null;
+          _emitState(
+            SessionBreakComplete(
+              subject: _subject,
+              totalSeconds: breakTotalSeconds,
+            ),
+          );
+          return;
+        }
+        _emitSnapshot(snapshot);
+        if (snapshot.timer?.phase == ActiveTimerPhase.paused) {
+          _timer?.cancel();
+          _timer = null;
+        }
+      } catch (error) {
+        _emitState(SessionError(error.toString()));
       }
-
-      emit(
-        SessionActive(
-          session: session.copyWith(duration: totalSeconds - remainingSeconds),
-          subject: _subject,
-          totalSeconds: totalSeconds,
-          remainingSeconds: remainingSeconds,
-        ),
-      );
     });
   }
 
-  void _startBreakTicker() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      final current = state;
-      if (current is! SessionBreakActive) return;
-
-      final remaining = (current.remainingSeconds - 1).clamp(
-        0,
-        breakTotalSeconds,
+  void _emitSnapshot(StudyTimerSnapshot snapshot) {
+    if (isClosed) return;
+    final timer = snapshot.timer;
+    if (timer == null) {
+      _emitState(
+        SessionBreakComplete(
+          subject: _subject,
+          totalSeconds: breakTotalSeconds,
+        ),
       );
+      return;
+    }
 
-      if (remaining <= 0) {
-        _timer?.cancel();
-        _timer = null;
-        emit(
+    switch (timer.phase) {
+      case ActiveTimerPhase.study:
+        final session =
+            snapshot.session ??
+            StudySession(
+              id: timer.sessionId ?? 0,
+              subjectId: _subject.id,
+              startTime: timer.startedAt ?? DateTime.now(),
+              endTime: null,
+              duration: snapshot.elapsedSeconds,
+              completed: false,
+            );
+        _emitState(
+          SessionActive(
+            session: session.copyWith(duration: snapshot.elapsedSeconds),
+            subject: _subject,
+            totalSeconds: timer.plannedDurationSeconds,
+            remainingSeconds: snapshot.remainingSeconds,
+          ),
+        );
+      case ActiveTimerPhase.paused:
+        final session =
+            snapshot.session ??
+            StudySession(
+              id: timer.sessionId ?? 0,
+              subjectId: _subject.id,
+              startTime: DateTime.now(),
+              endTime: null,
+              duration: snapshot.elapsedSeconds,
+              completed: false,
+            );
+        _emitState(
+          SessionPaused(
+            session: session.copyWith(duration: snapshot.elapsedSeconds),
+            subject: _subject,
+            totalSeconds: timer.plannedDurationSeconds,
+            remainingSeconds: snapshot.remainingSeconds,
+          ),
+        );
+      case ActiveTimerPhase.breakTime:
+        _emitState(
+          SessionBreakActive(
+            subject: _subject,
+            totalSeconds: timer.plannedDurationSeconds,
+            remainingSeconds: snapshot.remainingSeconds,
+          ),
+        );
+      case ActiveTimerPhase.idle:
+        _emitState(
           SessionBreakComplete(
             subject: _subject,
             totalSeconds: breakTotalSeconds,
           ),
         );
-        return;
-      }
-
-      emit(
-        SessionBreakActive(
-          subject: _subject,
-          totalSeconds: breakTotalSeconds,
-          remainingSeconds: remaining,
-        ),
-      );
-    });
+    }
   }
 
-  int _elapsedSeconds(DateTime start, DateTime end) {
-    return end.difference(start).inSeconds;
+  void _emitState(SessionState nextState) {
+    if (!isClosed) emit(nextState);
   }
 
   @override
   Future<void> close() {
     _timer?.cancel();
     return super.close();
-  }
-
-  Future<void> getAllSessions() async {
-    try {
-      final sessions = await _sessionRepository.getAll();
-      for (final session in sessions) {
-        print(
-          session.completed
-              ? 'Session ${session.id} completed in ${session.duration} seconds.'
-              : 'Session ${session.id} is not completed.',
-        );
-        print(session.subjectId);
-        print(session.startTime);
-        print(session.endTime);
-      }
-    } catch (error) {
-      emit(SessionError(error.toString()));
-    }
   }
 }

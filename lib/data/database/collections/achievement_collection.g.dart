@@ -28,7 +28,7 @@ const AchievementCollectionSchema = CollectionSchema(
       id: 1,
       name: r'unlockedAt',
       type: IsarType.dateTime,
-    )
+    ),
   },
   estimateSize: _achievementCollectionEstimateSize,
   serialize: _achievementCollectionSerialize,
@@ -46,9 +46,9 @@ const AchievementCollectionSchema = CollectionSchema(
           name: r'type',
           type: IndexType.hash,
           caseSensitive: true,
-        )
+        ),
       ],
-    )
+    ),
   },
   links: {},
   embeddedSchemas: {},
@@ -86,8 +86,10 @@ AchievementCollection _achievementCollectionDeserialize(
 ) {
   final object = AchievementCollection();
   object.id = id;
-  object.type = _AchievementCollectiontypeValueEnumMap[
-          reader.readStringOrNull(offsets[0])] ??
+  object.type =
+      _AchievementCollectiontypeValueEnumMap[reader.readStringOrNull(
+        offsets[0],
+      )] ??
       AchievementType.firstSession;
   object.unlockedAt = reader.readDateTime(offsets[1]);
   return object;
@@ -101,9 +103,11 @@ P _achievementCollectionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (_AchievementCollectiontypeValueEnumMap[
-              reader.readStringOrNull(offset)] ??
-          AchievementType.firstSession) as P;
+      return (_AchievementCollectiontypeValueEnumMap[reader.readStringOrNull(
+                offset,
+              )] ??
+              AchievementType.firstSession)
+          as P;
     case 1:
       return (reader.readDateTime(offset)) as P;
     default:
@@ -137,39 +141,45 @@ Id _achievementCollectionGetId(AchievementCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _achievementCollectionGetLinks(
-    AchievementCollection object) {
+  AchievementCollection object,
+) {
   return [];
 }
 
 void _achievementCollectionAttach(
-    IsarCollection<dynamic> col, Id id, AchievementCollection object) {
+  IsarCollection<dynamic> col,
+  Id id,
+  AchievementCollection object,
+) {
   object.id = id;
 }
 
 extension AchievementCollectionQueryWhereSort
     on QueryBuilder<AchievementCollection, AchievementCollection, QWhere> {
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhere>
-      anyId() {
+  anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension AchievementCollectionQueryWhere on QueryBuilder<AchievementCollection,
-    AchievementCollection, QWhereClause> {
+extension AchievementCollectionQueryWhere
+    on
+        QueryBuilder<
+          AchievementCollection,
+          AchievementCollection,
+          QWhereClause
+        > {
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      idEqualTo(Id id) {
+  idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -192,7 +202,7 @@ extension AchievementCollectionQueryWhere on QueryBuilder<AchievementCollection,
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -201,7 +211,7 @@ extension AchievementCollectionQueryWhere on QueryBuilder<AchievementCollection,
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -210,174 +220,222 @@ extension AchievementCollectionQueryWhere on QueryBuilder<AchievementCollection,
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      idBetween(
+  idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      typeEqualTo(AchievementType type) {
+  typeEqualTo(AchievementType type) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'type',
-        value: [type],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'type', value: [type]),
+      );
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterWhereClause>
-      typeNotEqualTo(AchievementType type) {
+  typeNotEqualTo(AchievementType type) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [],
-              upper: [type],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [type],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'type',
+                lower: [],
+                upper: [type],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'type',
+                lower: [type],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [type],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type',
-              lower: [],
-              upper: [type],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'type',
+                lower: [type],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'type',
+                lower: [],
+                upper: [type],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
 }
 
-extension AchievementCollectionQueryFilter on QueryBuilder<
-    AchievementCollection, AchievementCollection, QFilterCondition> {
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> idEqualTo(Id value) {
+extension AchievementCollectionQueryFilter
+    on
+        QueryBuilder<
+          AchievementCollection,
+          AchievementCollection,
+          QFilterCondition
+        > {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> idBetween(
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeEqualTo(
-    AchievementType value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeEqualTo(AchievementType value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeGreaterThan(
-    AchievementType value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeLessThan(
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeGreaterThan(
     AchievementType value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeBetween(
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeLessThan(
+    AchievementType value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeBetween(
     AchievementType lower,
     AchievementType upper, {
     bool includeLower = true,
@@ -385,177 +443,226 @@ extension AchievementCollectionQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'type',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'type',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-          QAfterFilterCondition>
-      typeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'type',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-          QAfterFilterCondition>
-      typeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'type',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'type',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeIsEmpty() {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'type',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'type', value: ''),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> typeIsNotEmpty() {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  typeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'type',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'type', value: ''),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> unlockedAtEqualTo(DateTime value) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  unlockedAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unlockedAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'unlockedAt', value: value),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> unlockedAtGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  unlockedAtGreaterThan(DateTime value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unlockedAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'unlockedAt',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> unlockedAtLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  unlockedAtLessThan(DateTime value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unlockedAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'unlockedAt',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AchievementCollection, AchievementCollection,
-      QAfterFilterCondition> unlockedAtBetween(
+  QueryBuilder<
+    AchievementCollection,
+    AchievementCollection,
+    QAfterFilterCondition
+  >
+  unlockedAtBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unlockedAt',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'unlockedAt',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension AchievementCollectionQueryObject on QueryBuilder<
-    AchievementCollection, AchievementCollection, QFilterCondition> {}
+extension AchievementCollectionQueryObject
+    on
+        QueryBuilder<
+          AchievementCollection,
+          AchievementCollection,
+          QFilterCondition
+        > {}
 
-extension AchievementCollectionQueryLinks on QueryBuilder<AchievementCollection,
-    AchievementCollection, QFilterCondition> {}
+extension AchievementCollectionQueryLinks
+    on
+        QueryBuilder<
+          AchievementCollection,
+          AchievementCollection,
+          QFilterCondition
+        > {}
 
 extension AchievementCollectionQuerySortBy
     on QueryBuilder<AchievementCollection, AchievementCollection, QSortBy> {
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      sortByType() {
+  sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      sortByTypeDesc() {
+  sortByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      sortByUnlockedAt() {
+  sortByUnlockedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unlockedAt', Sort.asc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      sortByUnlockedAtDesc() {
+  sortByUnlockedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unlockedAt', Sort.desc);
     });
@@ -565,42 +672,42 @@ extension AchievementCollectionQuerySortBy
 extension AchievementCollectionQuerySortThenBy
     on QueryBuilder<AchievementCollection, AchievementCollection, QSortThenBy> {
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      thenById() {
+  thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      thenByIdDesc() {
+  thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      thenByType() {
+  thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      thenByTypeDesc() {
+  thenByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      thenByUnlockedAt() {
+  thenByUnlockedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unlockedAt', Sort.asc);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QAfterSortBy>
-      thenByUnlockedAtDesc() {
+  thenByUnlockedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'unlockedAt', Sort.desc);
     });
@@ -610,22 +717,27 @@ extension AchievementCollectionQuerySortThenBy
 extension AchievementCollectionQueryWhereDistinct
     on QueryBuilder<AchievementCollection, AchievementCollection, QDistinct> {
   QueryBuilder<AchievementCollection, AchievementCollection, QDistinct>
-      distinctByType({bool caseSensitive = true}) {
+  distinctByType({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<AchievementCollection, AchievementCollection, QDistinct>
-      distinctByUnlockedAt() {
+  distinctByUnlockedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'unlockedAt');
     });
   }
 }
 
-extension AchievementCollectionQueryProperty on QueryBuilder<
-    AchievementCollection, AchievementCollection, QQueryProperty> {
+extension AchievementCollectionQueryProperty
+    on
+        QueryBuilder<
+          AchievementCollection,
+          AchievementCollection,
+          QQueryProperty
+        > {
   QueryBuilder<AchievementCollection, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -633,14 +745,14 @@ extension AchievementCollectionQueryProperty on QueryBuilder<
   }
 
   QueryBuilder<AchievementCollection, AchievementType, QQueryOperations>
-      typeProperty() {
+  typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
     });
   }
 
   QueryBuilder<AchievementCollection, DateTime, QQueryOperations>
-      unlockedAtProperty() {
+  unlockedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'unlockedAt');
     });

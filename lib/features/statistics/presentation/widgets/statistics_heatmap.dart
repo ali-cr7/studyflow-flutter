@@ -86,7 +86,10 @@ class StatisticsHeatmap extends StatelessWidget {
           const SizedBox(height: 14),
           LayoutBuilder(
             builder: (context, constraints) {
-              final cellSize = ((constraints.maxWidth - 36) / 7).clamp(12.0, 24.0);
+              final cellSize = ((constraints.maxWidth - 36) / 7).clamp(
+                12.0,
+                24.0,
+              );
 
               return Wrap(
                 spacing: 6,

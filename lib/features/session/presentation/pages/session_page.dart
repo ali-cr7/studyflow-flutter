@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
+import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/features/session/cubit/session_cubit.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
-import 'package:study_planner/shared/domain/repositories/study_session_repository.dart';
 
 class SessionRouteArgs {
   const SessionRouteArgs({required this.subject, required this.plannedMinutes});
@@ -32,13 +32,12 @@ class SessionPage extends StatelessWidget {
     return BlocProvider(
       create: (_) =>
           SessionCubit(
-              sessionRepository: getIt<StudySessionRepository>(),
+              timerService: getIt<StudyTimerService>(),
               settingsRepository: getIt<AppSettingsRepository>(),
               subject: subject,
               plannedMinutes: plannedMinutes,
             )
-            ..loadBreakDuration()
-            ..startSession(),
+            ..restoreOrStartSession(),
       child: const SessionView(),
     );
   }
@@ -78,6 +77,8 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
       unawaited(_cubit.saveCurrentProgress());
+    } else if (state == AppLifecycleState.resumed) {
+      unawaited(_cubit.restoreOrStartSession());
     }
   }
 
@@ -154,7 +155,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                 child: OutlinedButton.icon(
                   onPressed: () => _cubit.pauseSession(),
                   icon: const Icon(Icons.pause_rounded),
-                  label: const Text('Stop'),
+                  label: const Text('Pause'),
                 ),
               ),
               const SizedBox(width: 12),
@@ -163,13 +164,6 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                   onPressed: () => _cubit.finishSession(),
                   icon: const Icon(Icons.check_rounded),
                   label: const Text('Finish'),
-                ),
-              ),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () => _cubit.getAllSessions(),
-                  icon: const Icon(Icons.list_rounded),
-                  label: const Text('Print all sessions'),
                 ),
               ),
             ],

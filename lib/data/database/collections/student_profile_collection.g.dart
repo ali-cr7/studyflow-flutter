@@ -23,16 +23,8 @@ const StudentProfileCollectionSchema = CollectionSchema(
       name: r'dailyGoalMinutes',
       type: IsarType.long,
     ),
-    r'grade': PropertySchema(
-      id: 1,
-      name: r'grade',
-      type: IsarType.string,
-    ),
-    r'name': PropertySchema(
-      id: 2,
-      name: r'name',
-      type: IsarType.string,
-    ),
+    r'grade': PropertySchema(id: 1, name: r'grade', type: IsarType.string),
+    r'name': PropertySchema(id: 2, name: r'name', type: IsarType.string),
     r'preferredSessionDuration': PropertySchema(
       id: 3,
       name: r'preferredSessionDuration',
@@ -47,7 +39,7 @@ const StudentProfileCollectionSchema = CollectionSchema(
       id: 5,
       name: r'wakeUpTime',
       type: IsarType.long,
-    )
+    ),
   },
   estimateSize: _studentProfileCollectionEstimateSize,
   serialize: _studentProfileCollectionSerialize,
@@ -134,39 +126,58 @@ Id _studentProfileCollectionGetId(StudentProfileCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _studentProfileCollectionGetLinks(
-    StudentProfileCollection object) {
+  StudentProfileCollection object,
+) {
   return [];
 }
 
 void _studentProfileCollectionAttach(
-    IsarCollection<dynamic> col, Id id, StudentProfileCollection object) {
+  IsarCollection<dynamic> col,
+  Id id,
+  StudentProfileCollection object,
+) {
   object.id = id;
 }
 
-extension StudentProfileCollectionQueryWhereSort on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QWhere> {
+extension StudentProfileCollectionQueryWhereSort
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QWhere
+        > {
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterWhere>
-      anyId() {
+  anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension StudentProfileCollectionQueryWhere on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QWhereClause> {
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterWhereClause> idEqualTo(Id id) {
+extension StudentProfileCollectionQueryWhere
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QWhereClause
+        > {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterWhereClause
+  >
+  idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterWhereClause
+  >
+  idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -188,8 +199,12 @@ extension StudentProfileCollectionQueryWhere on QueryBuilder<
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterWhereClause
+  >
+  idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -197,8 +212,12 @@ extension StudentProfileCollectionQueryWhere on QueryBuilder<
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterWhereClause
+  >
+  idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -206,130 +225,175 @@ extension StudentProfileCollectionQueryWhere on QueryBuilder<
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterWhereClause> idBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterWhereClause
+  >
+  idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension StudentProfileCollectionQueryFilter on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QFilterCondition> {
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> dailyGoalMinutesEqualTo(int value) {
+extension StudentProfileCollectionQueryFilter
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QFilterCondition
+        > {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  dailyGoalMinutesEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dailyGoalMinutes',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'dailyGoalMinutes', value: value),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> dailyGoalMinutesGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  dailyGoalMinutesGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'dailyGoalMinutes',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'dailyGoalMinutes',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> dailyGoalMinutesLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  dailyGoalMinutesLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'dailyGoalMinutes',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'dailyGoalMinutes',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> dailyGoalMinutesBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  dailyGoalMinutesBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'dailyGoalMinutes',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'dailyGoalMinutes',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'grade',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeLessThan(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'grade',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'grade',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -337,193 +401,251 @@ extension StudentProfileCollectionQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'grade',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'grade',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'grade',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'grade',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-          QAfterFilterCondition>
-      gradeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'grade',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'grade',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-          QAfterFilterCondition>
-      gradeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'grade',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'grade',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeIsEmpty() {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'grade',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'grade', value: ''),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> gradeIsNotEmpty() {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  gradeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'grade',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'grade', value: ''),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> idBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameLessThan(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -531,499 +653,601 @@ extension StudentProfileCollectionQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'name',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-          QAfterFilterCondition>
-      nameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-          QAfterFilterCondition>
-      nameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'name',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'name', value: ''),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'name', value: ''),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> preferredSessionDurationEqualTo(int value) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  preferredSessionDurationEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'preferredSessionDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'preferredSessionDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> preferredSessionDurationGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  preferredSessionDurationGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'preferredSessionDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'preferredSessionDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> preferredSessionDurationLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  preferredSessionDurationLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'preferredSessionDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'preferredSessionDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> preferredSessionDurationBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  preferredSessionDurationBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'preferredSessionDuration',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'preferredSessionDuration',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> sleepTimeEqualTo(int value) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  sleepTimeEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'sleepTime',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'sleepTime', value: value),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> sleepTimeGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  sleepTimeGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'sleepTime',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'sleepTime',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> sleepTimeLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  sleepTimeLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'sleepTime',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'sleepTime',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> sleepTimeBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  sleepTimeBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'sleepTime',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'sleepTime',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> wakeUpTimeEqualTo(int value) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  wakeUpTimeEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'wakeUpTime',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'wakeUpTime', value: value),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> wakeUpTimeGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  wakeUpTimeGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'wakeUpTime',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'wakeUpTime',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> wakeUpTimeLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  wakeUpTimeLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'wakeUpTime',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'wakeUpTime',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<StudentProfileCollection, StudentProfileCollection,
-      QAfterFilterCondition> wakeUpTimeBetween(
+  QueryBuilder<
+    StudentProfileCollection,
+    StudentProfileCollection,
+    QAfterFilterCondition
+  >
+  wakeUpTimeBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'wakeUpTime',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'wakeUpTime',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension StudentProfileCollectionQueryObject on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QFilterCondition> {}
+extension StudentProfileCollectionQueryObject
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QFilterCondition
+        > {}
 
-extension StudentProfileCollectionQueryLinks on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QFilterCondition> {}
+extension StudentProfileCollectionQueryLinks
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QFilterCondition
+        > {}
 
-extension StudentProfileCollectionQuerySortBy on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QSortBy> {
+extension StudentProfileCollectionQuerySortBy
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QSortBy
+        > {
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByDailyGoalMinutes() {
+  sortByDailyGoalMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyGoalMinutes', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByDailyGoalMinutesDesc() {
+  sortByDailyGoalMinutesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyGoalMinutes', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByGrade() {
+  sortByGrade() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'grade', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByGradeDesc() {
+  sortByGradeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'grade', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByName() {
+  sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByNameDesc() {
+  sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByPreferredSessionDuration() {
+  sortByPreferredSessionDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'preferredSessionDuration', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByPreferredSessionDurationDesc() {
+  sortByPreferredSessionDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'preferredSessionDuration', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortBySleepTime() {
+  sortBySleepTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sleepTime', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortBySleepTimeDesc() {
+  sortBySleepTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sleepTime', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByWakeUpTime() {
+  sortByWakeUpTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'wakeUpTime', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      sortByWakeUpTimeDesc() {
+  sortByWakeUpTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'wakeUpTime', Sort.desc);
     });
   }
 }
 
-extension StudentProfileCollectionQuerySortThenBy on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QSortThenBy> {
+extension StudentProfileCollectionQuerySortThenBy
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QSortThenBy
+        > {
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByDailyGoalMinutes() {
+  thenByDailyGoalMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyGoalMinutes', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByDailyGoalMinutesDesc() {
+  thenByDailyGoalMinutesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyGoalMinutes', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByGrade() {
+  thenByGrade() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'grade', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByGradeDesc() {
+  thenByGradeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'grade', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenById() {
+  thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByIdDesc() {
+  thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByName() {
+  thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByNameDesc() {
+  thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByPreferredSessionDuration() {
+  thenByPreferredSessionDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'preferredSessionDuration', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByPreferredSessionDurationDesc() {
+  thenByPreferredSessionDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'preferredSessionDuration', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenBySleepTime() {
+  thenBySleepTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sleepTime', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenBySleepTimeDesc() {
+  thenBySleepTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sleepTime', Sort.desc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByWakeUpTime() {
+  thenByWakeUpTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'wakeUpTime', Sort.asc);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QAfterSortBy>
-      thenByWakeUpTimeDesc() {
+  thenByWakeUpTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'wakeUpTime', Sort.desc);
     });
   }
 }
 
-extension StudentProfileCollectionQueryWhereDistinct on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QDistinct> {
+extension StudentProfileCollectionQueryWhereDistinct
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QDistinct
+        > {
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QDistinct>
-      distinctByDailyGoalMinutes() {
+  distinctByDailyGoalMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dailyGoalMinutes');
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QDistinct>
-      distinctByGrade({bool caseSensitive = true}) {
+  distinctByGrade({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'grade', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QDistinct>
-      distinctByName({bool caseSensitive = true}) {
+  distinctByName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QDistinct>
-      distinctByPreferredSessionDuration() {
+  distinctByPreferredSessionDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'preferredSessionDuration');
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QDistinct>
-      distinctBySleepTime() {
+  distinctBySleepTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'sleepTime');
     });
   }
 
   QueryBuilder<StudentProfileCollection, StudentProfileCollection, QDistinct>
-      distinctByWakeUpTime() {
+  distinctByWakeUpTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'wakeUpTime');
     });
   }
 }
 
-extension StudentProfileCollectionQueryProperty on QueryBuilder<
-    StudentProfileCollection, StudentProfileCollection, QQueryProperty> {
+extension StudentProfileCollectionQueryProperty
+    on
+        QueryBuilder<
+          StudentProfileCollection,
+          StudentProfileCollection,
+          QQueryProperty
+        > {
   QueryBuilder<StudentProfileCollection, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -1031,42 +1255,42 @@ extension StudentProfileCollectionQueryProperty on QueryBuilder<
   }
 
   QueryBuilder<StudentProfileCollection, int, QQueryOperations>
-      dailyGoalMinutesProperty() {
+  dailyGoalMinutesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dailyGoalMinutes');
     });
   }
 
   QueryBuilder<StudentProfileCollection, String, QQueryOperations>
-      gradeProperty() {
+  gradeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'grade');
     });
   }
 
   QueryBuilder<StudentProfileCollection, String, QQueryOperations>
-      nameProperty() {
+  nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
   }
 
   QueryBuilder<StudentProfileCollection, int, QQueryOperations>
-      preferredSessionDurationProperty() {
+  preferredSessionDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'preferredSessionDuration');
     });
   }
 
   QueryBuilder<StudentProfileCollection, int, QQueryOperations>
-      sleepTimeProperty() {
+  sleepTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'sleepTime');
     });
   }
 
   QueryBuilder<StudentProfileCollection, int, QQueryOperations>
-      wakeUpTimeProperty() {
+  wakeUpTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'wakeUpTime');
     });

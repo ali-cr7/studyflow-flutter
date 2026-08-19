@@ -18,11 +18,7 @@ const DailyPlanCollectionSchema = CollectionSchema(
   name: r'DailyPlanCollection',
   id: 4058560302857714376,
   properties: {
-    r'date': PropertySchema(
-      id: 0,
-      name: r'date',
-      type: IsarType.dateTime,
-    )
+    r'date': PropertySchema(id: 0, name: r'date', type: IsarType.dateTime),
   },
   estimateSize: _dailyPlanCollectionEstimateSize,
   serialize: _dailyPlanCollectionSerialize,
@@ -40,9 +36,9 @@ const DailyPlanCollectionSchema = CollectionSchema(
           name: r'date',
           type: IndexType.value,
           caseSensitive: false,
-        )
+        ),
       ],
-    )
+    ),
   },
   links: {},
   embeddedSchemas: {},
@@ -101,12 +97,16 @@ Id _dailyPlanCollectionGetId(DailyPlanCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _dailyPlanCollectionGetLinks(
-    DailyPlanCollection object) {
+  DailyPlanCollection object,
+) {
   return [];
 }
 
 void _dailyPlanCollectionAttach(
-    IsarCollection<dynamic> col, Id id, DailyPlanCollection object) {
+  IsarCollection<dynamic> col,
+  Id id,
+  DailyPlanCollection object,
+) {
   object.id = id;
 }
 
@@ -159,8 +159,10 @@ extension DailyPlanCollectionByIndex on IsarCollection<DailyPlanCollection> {
     return putAllByIndex(r'date', objects);
   }
 
-  List<Id> putAllByDateSync(List<DailyPlanCollection> objects,
-      {bool saveLinks = true}) {
+  List<Id> putAllByDateSync(
+    List<DailyPlanCollection> objects, {
+    bool saveLinks = true,
+  }) {
     return putAllByIndexSync(r'date', objects, saveLinks: saveLinks);
   }
 }
@@ -174,7 +176,7 @@ extension DailyPlanCollectionQueryWhereSort
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhere>
-      anyDate() {
+  anyDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'date'),
@@ -186,17 +188,14 @@ extension DailyPlanCollectionQueryWhereSort
 extension DailyPlanCollectionQueryWhere
     on QueryBuilder<DailyPlanCollection, DailyPlanCollection, QWhereClause> {
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      idEqualTo(Id id) {
+  idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -219,7 +218,7 @@ extension DailyPlanCollectionQueryWhere
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -228,7 +227,7 @@ extension DailyPlanCollectionQueryWhere
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -237,248 +236,270 @@ extension DailyPlanCollectionQueryWhere
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      idBetween(
+  idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      dateEqualTo(DateTime date) {
+  dateEqualTo(DateTime date) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'date',
-        value: [date],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'date', value: [date]),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      dateNotEqualTo(DateTime date) {
+  dateNotEqualTo(DateTime date) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [],
-              upper: [date],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [date],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'date',
+                lower: [],
+                upper: [date],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'date',
+                lower: [date],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [date],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [],
-              upper: [date],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'date',
+                lower: [date],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'date',
+                lower: [],
+                upper: [date],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      dateGreaterThan(
-    DateTime date, {
-    bool include = false,
-  }) {
+  dateGreaterThan(DateTime date, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [date],
-        includeLower: include,
-        upper: [],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'date',
+          lower: [date],
+          includeLower: include,
+          upper: [],
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      dateLessThan(
-    DateTime date, {
-    bool include = false,
-  }) {
+  dateLessThan(DateTime date, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [],
-        upper: [date],
-        includeUpper: include,
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'date',
+          lower: [],
+          upper: [date],
+          includeUpper: include,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterWhereClause>
-      dateBetween(
+  dateBetween(
     DateTime lowerDate,
     DateTime upperDate, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [lowerDate],
-        includeLower: includeLower,
-        upper: [upperDate],
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'date',
+          lower: [lowerDate],
+          includeLower: includeLower,
+          upper: [upperDate],
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension DailyPlanCollectionQueryFilter on QueryBuilder<DailyPlanCollection,
-    DailyPlanCollection, QFilterCondition> {
+extension DailyPlanCollectionQueryFilter
+    on
+        QueryBuilder<
+          DailyPlanCollection,
+          DailyPlanCollection,
+          QFilterCondition
+        > {
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      dateEqualTo(DateTime value) {
+  dateEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'date',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'date', value: value),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      dateGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  dateGreaterThan(DateTime value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'date',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'date',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      dateLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  dateLessThan(DateTime value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'date',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'date',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      dateBetween(
+  dateBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'date',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'date',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      idEqualTo(Id value) {
+  idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterFilterCondition>
-      idBetween(
+  idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension DailyPlanCollectionQueryObject on QueryBuilder<DailyPlanCollection,
-    DailyPlanCollection, QFilterCondition> {}
+extension DailyPlanCollectionQueryObject
+    on
+        QueryBuilder<
+          DailyPlanCollection,
+          DailyPlanCollection,
+          QFilterCondition
+        > {}
 
-extension DailyPlanCollectionQueryLinks on QueryBuilder<DailyPlanCollection,
-    DailyPlanCollection, QFilterCondition> {}
+extension DailyPlanCollectionQueryLinks
+    on
+        QueryBuilder<
+          DailyPlanCollection,
+          DailyPlanCollection,
+          QFilterCondition
+        > {}
 
 extension DailyPlanCollectionQuerySortBy
     on QueryBuilder<DailyPlanCollection, DailyPlanCollection, QSortBy> {
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterSortBy>
-      sortByDate() {
+  sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterSortBy>
-      sortByDateDesc() {
+  sortByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
@@ -488,28 +509,28 @@ extension DailyPlanCollectionQuerySortBy
 extension DailyPlanCollectionQuerySortThenBy
     on QueryBuilder<DailyPlanCollection, DailyPlanCollection, QSortThenBy> {
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterSortBy>
-      thenByDate() {
+  thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterSortBy>
-      thenByDateDesc() {
+  thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterSortBy>
-      thenById() {
+  thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QAfterSortBy>
-      thenByIdDesc() {
+  thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
@@ -519,7 +540,7 @@ extension DailyPlanCollectionQuerySortThenBy
 extension DailyPlanCollectionQueryWhereDistinct
     on QueryBuilder<DailyPlanCollection, DailyPlanCollection, QDistinct> {
   QueryBuilder<DailyPlanCollection, DailyPlanCollection, QDistinct>
-      distinctByDate() {
+  distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
     });

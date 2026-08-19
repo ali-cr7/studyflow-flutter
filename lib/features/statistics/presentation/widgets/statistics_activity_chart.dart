@@ -39,7 +39,7 @@ class StatisticsActivityChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Average ${_formatMinutes(_averageMinutes(chartPoints))}',
+                'Average ${_formatDuration(_averageSeconds(chartPoints))}',
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: colors.mutedForeground,
                 ),
@@ -51,7 +51,7 @@ class StatisticsActivityChart extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  'Goal ${_formatMinutes(goalMinutes)}',
+                  'Goal ${_formatDuration(goalMinutes)}',
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w700,
@@ -65,7 +65,7 @@ class StatisticsActivityChart extends StatelessWidget {
             height: 220,
             child: BarChart(
               BarChartData(
-                maxY: (maxY * 1.25).clamp(30, 240),
+                maxY: (maxY * 1.25).clamp(1800, 14400),
                 alignment: BarChartAlignment.spaceAround,
                 gridData: const FlGridData(show: false),
                 borderData: FlBorderData(show: false),
@@ -80,7 +80,7 @@ class StatisticsActivityChart extends StatelessWidget {
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       final value = chartPoints[groupIndex];
                       return BarTooltipItem(
-                        '${value.label}\n${_formatMinutes(value.minutes)}',
+                        '${value.label}\n${_formatDuration(value.minutes)}',
                         const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -176,17 +176,22 @@ class StatisticsActivityChart extends StatelessWidget {
     );
   }
 
-  int _averageMinutes(List<ChartPoint> points) {
+  int _averageSeconds(List<ChartPoint> points) {
     if (points.isEmpty) return 0;
     final total = points.fold<int>(0, (sum, point) => sum + point.minutes);
     return (total / points.length).round();
   }
 
-  static String _formatMinutes(int minutes) {
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
+  static String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final remainingSeconds = seconds % 60;
+    if (hours > 0 && minutes > 0) return '${hours}h ${minutes}m';
     if (hours > 0) return '${hours}h';
-    return '${remainder}m';
+    if (minutes > 0 && remainingSeconds > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+    if (minutes > 0) return '${minutes}m';
+    return '${remainingSeconds}s';
   }
 }

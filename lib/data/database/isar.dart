@@ -34,11 +34,12 @@ class IsarDatabase {
         DailyPlanCollectionSchema,
         PlannedSubjectCollectionSchema,
         StudySessionCollectionSchema,
+        ActiveTimerCollectionSchema,
         AchievementCollectionSchema,
         AppSettingsCollectionSchema,
       ],
       directory: path,
-      name: 'study_planner',
+      name: 'study_planner_v2',
     );
 
     return _instance!;

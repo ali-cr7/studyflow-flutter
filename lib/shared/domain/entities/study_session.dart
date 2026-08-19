@@ -15,7 +15,7 @@ class StudySession {
   final DateTime startTime;
   final DateTime? endTime;
 
-  /// Actual studied minutes.
+  /// Actual studied duration in seconds.
   final int duration;
   final bool completed;
   final String? notes;

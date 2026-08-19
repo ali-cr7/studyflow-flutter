@@ -52,14 +52,14 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
 
     for (final session in relevantSessions) {
       print(
-        'Session: ${session.id}, Subject ID: ${session.subjectId}, Duration: ${session.duration} minutes, Start Time: ${session.startTime}',
+        'Session: ${session.id}, Subject ID: ${session.subjectId}, Duration: ${session.duration} seconds, Start Time: ${session.startTime}',
       );
     }
 
     final range = _periodRange(period);
     final dailyPlans = await _loadPlansForRange(range.start, range.end);
 
-    final studyMinutes = relevantSessions.fold<int>(
+    final studySeconds = relevantSessions.fold<int>(
       0,
       (sum, session) => sum + session.duration,
     );
@@ -71,7 +71,7 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     final activeDays = _uniqueStudyDays(relevantSessions).length;
     final longestStreak = _calculateLongestStreak(relevantSessions);
     final insights = _buildInsights(
-      studyMinutes: studyMinutes,
+      studyMinutes: studySeconds,
       sessionCount: sessionCount,
       planCompletionPercent: planTotals.completionPercent,
       subjectBreakdown: subjectBreakdown,
@@ -88,11 +88,11 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     return StatisticsSnapshot(
       period: period,
       subtitle: _subtitleForPeriod(period),
-      studyMinutes: studyMinutes,
+      studyMinutes: studySeconds,
       sessionCount: sessionCount,
       planCompletionPercent: planTotals.completionPercent,
       currentStreak: currentStreak,
-      goalMinutes: profile?.dailyGoalMinutes ?? settings.studyDuration,
+      goalMinutes: (profile?.dailyGoalMinutes ?? settings.studyDuration) * 60,
       chartPoints: chartPoints,
       subjectBreakdown: subjectBreakdown,
       plannedMinutes: planTotals.plannedMinutes,
@@ -182,8 +182,8 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     }
 
     return _PlanTotals(
-      plannedMinutes: planned,
-      completedMinutes: completed,
+      plannedMinutes: planned * 60,
+      completedMinutes: completed * 60,
       completionPercent: planned == 0
           ? 0
           : ((completed / planned) * 100).round(),
@@ -205,7 +205,7 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
         session.startTime.month,
         session.startTime.day,
       );
-      final key = _chartKeyForPeriod(period, date, range.start);
+      final key = _chartKeyForPeriod(period, session.startTime, range.start);
       dayMap.update(
         key,
         (value) => value + session.duration,
@@ -238,12 +238,12 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
       values[i] = dayMap[labels[i]] ?? 0;
     }
     return [
-      const ChartPoint(label: '6a', minutes: 0),
-      const ChartPoint(label: '9a', minutes: 0),
-      const ChartPoint(label: '12p', minutes: 0),
-      const ChartPoint(label: '3p', minutes: 0),
-      const ChartPoint(label: '6p', minutes: 0),
-      const ChartPoint(label: '9p', minutes: 0),
+      ChartPoint(label: '6a', minutes: dayMap['6a'] ?? 0),
+      ChartPoint(label: '9a', minutes: dayMap['9a'] ?? 0),
+      ChartPoint(label: '12p', minutes: dayMap['12p'] ?? 0),
+      ChartPoint(label: '3p', minutes: dayMap['3p'] ?? 0),
+      ChartPoint(label: '6p', minutes: dayMap['6p'] ?? 0),
+      ChartPoint(label: '9p', minutes: dayMap['9p'] ?? 0),
     ];
   }
 

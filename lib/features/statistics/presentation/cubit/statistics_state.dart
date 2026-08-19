@@ -46,14 +46,19 @@ class StatisticsSnapshot {
 
   final StatisticsPeriod period;
   final String subtitle;
+  /// Completed study duration in seconds. The name is kept for API stability.
   final int studyMinutes;
   final int sessionCount;
   final int planCompletionPercent;
   final int currentStreak;
+  /// Daily goal duration in seconds. The name is kept for API stability.
   final int goalMinutes;
   final List<ChartPoint> chartPoints;
   final List<SubjectBreakdown> subjectBreakdown;
+  /// Planned duration in seconds. The name is kept for API stability.
   final int plannedMinutes;
+
+  /// Completed planned duration in seconds. The name is kept for API stability.
   final int completedPlannedMinutes;
   final int activeDays;
   final int longestStreak;
@@ -66,6 +71,8 @@ class ChartPoint {
   const ChartPoint({required this.label, required this.minutes});
 
   final String label;
+
+  /// Duration in seconds. The name is kept for API stability.
   final int minutes;
 }
 
@@ -78,6 +85,7 @@ class SubjectBreakdown {
   });
 
   final String name;
+  /// Duration in seconds. The name is kept for API stability.
   final int minutes;
   final int percent;
   final int color;

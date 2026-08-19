@@ -49,7 +49,7 @@ const AppSettingsCollectionSchema = CollectionSchema(
       name: r'theme',
       type: IsarType.string,
       enumMap: _AppSettingsCollectionthemeEnumValueMap,
-    )
+    ),
   },
   estimateSize: _appSettingsCollectionEstimateSize,
   serialize: _appSettingsCollectionSerialize,
@@ -98,15 +98,19 @@ AppSettingsCollection _appSettingsCollectionDeserialize(
 ) {
   final object = AppSettingsCollection();
   object.breakDuration = reader.readLong(offsets[0]);
-  object.focusSound = _AppSettingsCollectionfocusSoundValueEnumMap[
-          reader.readStringOrNull(offsets[1])] ??
+  object.focusSound =
+      _AppSettingsCollectionfocusSoundValueEnumMap[reader.readStringOrNull(
+        offsets[1],
+      )] ??
       FocusSoundMode.none;
   object.id = id;
   object.notificationsEnabled = reader.readBool(offsets[2]);
   object.soundEnabled = reader.readBool(offsets[3]);
   object.studyDuration = reader.readLong(offsets[4]);
-  object.theme = _AppSettingsCollectionthemeValueEnumMap[
-          reader.readStringOrNull(offsets[5])] ??
+  object.theme =
+      _AppSettingsCollectionthemeValueEnumMap[reader.readStringOrNull(
+        offsets[5],
+      )] ??
       AppThemeMode.system;
   return object;
 }
@@ -121,9 +125,10 @@ P _appSettingsCollectionDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (_AppSettingsCollectionfocusSoundValueEnumMap[
-              reader.readStringOrNull(offset)] ??
-          FocusSoundMode.none) as P;
+      return (_AppSettingsCollectionfocusSoundValueEnumMap[reader
+                  .readStringOrNull(offset)] ??
+              FocusSoundMode.none)
+          as P;
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
@@ -131,9 +136,11 @@ P _appSettingsCollectionDeserializeProp<P>(
     case 4:
       return (reader.readLong(offset)) as P;
     case 5:
-      return (_AppSettingsCollectionthemeValueEnumMap[
-              reader.readStringOrNull(offset)] ??
-          AppThemeMode.system) as P;
+      return (_AppSettingsCollectionthemeValueEnumMap[reader.readStringOrNull(
+                offset,
+              )] ??
+              AppThemeMode.system)
+          as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -169,39 +176,45 @@ Id _appSettingsCollectionGetId(AppSettingsCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _appSettingsCollectionGetLinks(
-    AppSettingsCollection object) {
+  AppSettingsCollection object,
+) {
   return [];
 }
 
 void _appSettingsCollectionAttach(
-    IsarCollection<dynamic> col, Id id, AppSettingsCollection object) {
+  IsarCollection<dynamic> col,
+  Id id,
+  AppSettingsCollection object,
+) {
   object.id = id;
 }
 
 extension AppSettingsCollectionQueryWhereSort
     on QueryBuilder<AppSettingsCollection, AppSettingsCollection, QWhere> {
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterWhere>
-      anyId() {
+  anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension AppSettingsCollectionQueryWhere on QueryBuilder<AppSettingsCollection,
-    AppSettingsCollection, QWhereClause> {
+extension AppSettingsCollectionQueryWhere
+    on
+        QueryBuilder<
+          AppSettingsCollection,
+          AppSettingsCollection,
+          QWhereClause
+        > {
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterWhereClause>
-      idEqualTo(Id id) {
+  idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -224,7 +237,7 @@ extension AppSettingsCollectionQueryWhere on QueryBuilder<AppSettingsCollection,
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -233,7 +246,7 @@ extension AppSettingsCollectionQueryWhere on QueryBuilder<AppSettingsCollection,
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -242,129 +255,170 @@ extension AppSettingsCollectionQueryWhere on QueryBuilder<AppSettingsCollection,
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterWhereClause>
-      idBetween(
+  idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
 
-extension AppSettingsCollectionQueryFilter on QueryBuilder<
-    AppSettingsCollection, AppSettingsCollection, QFilterCondition> {
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> breakDurationEqualTo(int value) {
+extension AppSettingsCollectionQueryFilter
+    on
+        QueryBuilder<
+          AppSettingsCollection,
+          AppSettingsCollection,
+          QFilterCondition
+        > {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  breakDurationEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'breakDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'breakDuration', value: value),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> breakDurationGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  breakDurationGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'breakDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'breakDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> breakDurationLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  breakDurationLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'breakDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'breakDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> breakDurationBetween(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  breakDurationBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'breakDuration',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'breakDuration',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundEqualTo(
-    FocusSoundMode value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundEqualTo(FocusSoundMode value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'focusSound',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'focusSound',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundGreaterThan(
-    FocusSoundMode value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'focusSound',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundLessThan(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundGreaterThan(
     FocusSoundMode value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'focusSound',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'focusSound',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundBetween(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundLessThan(
+    FocusSoundMode value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'focusSound',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundBetween(
     FocusSoundMode lower,
     FocusSoundMode upper, {
     bool includeLower = true,
@@ -372,269 +426,351 @@ extension AppSettingsCollectionQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'focusSound',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'focusSound',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'focusSound',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'focusSound',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'focusSound',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'focusSound',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-          QAfterFilterCondition>
-      focusSoundContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'focusSound',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'focusSound',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-          QAfterFilterCondition>
-      focusSoundMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'focusSound',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'focusSound',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundIsEmpty() {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'focusSound',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'focusSound', value: ''),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> focusSoundIsNotEmpty() {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  focusSoundIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'focusSound',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'focusSound', value: ''),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> idBetween(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> notificationsEnabledEqualTo(bool value) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  notificationsEnabledEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'notificationsEnabled',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'notificationsEnabled',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> soundEnabledEqualTo(bool value) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  soundEnabledEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'soundEnabled',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'soundEnabled', value: value),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> studyDurationEqualTo(int value) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  studyDurationEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'studyDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'studyDuration', value: value),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> studyDurationGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  studyDurationGreaterThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'studyDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'studyDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> studyDurationLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  studyDurationLessThan(int value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'studyDuration',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'studyDuration',
+          value: value,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> studyDurationBetween(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  studyDurationBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'studyDuration',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'studyDuration',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeEqualTo(
-    AppThemeMode value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeEqualTo(AppThemeMode value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'theme',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'theme',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeGreaterThan(
-    AppThemeMode value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'theme',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeLessThan(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeGreaterThan(
     AppThemeMode value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'theme',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'theme',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeBetween(
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeLessThan(
+    AppThemeMode value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'theme',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeBetween(
     AppThemeMode lower,
     AppThemeMode upper, {
     bool includeLower = true,
@@ -642,177 +778,211 @@ extension AppSettingsCollectionQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'theme',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'theme',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'theme',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'theme',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'theme',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'theme',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-          QAfterFilterCondition>
-      themeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'theme',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'theme',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-          QAfterFilterCondition>
-      themeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'theme',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'theme',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeIsEmpty() {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'theme',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'theme', value: ''),
+      );
     });
   }
 
-  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
-      QAfterFilterCondition> themeIsNotEmpty() {
+  QueryBuilder<
+    AppSettingsCollection,
+    AppSettingsCollection,
+    QAfterFilterCondition
+  >
+  themeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'theme',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'theme', value: ''),
+      );
     });
   }
 }
 
-extension AppSettingsCollectionQueryObject on QueryBuilder<
-    AppSettingsCollection, AppSettingsCollection, QFilterCondition> {}
+extension AppSettingsCollectionQueryObject
+    on
+        QueryBuilder<
+          AppSettingsCollection,
+          AppSettingsCollection,
+          QFilterCondition
+        > {}
 
-extension AppSettingsCollectionQueryLinks on QueryBuilder<AppSettingsCollection,
-    AppSettingsCollection, QFilterCondition> {}
+extension AppSettingsCollectionQueryLinks
+    on
+        QueryBuilder<
+          AppSettingsCollection,
+          AppSettingsCollection,
+          QFilterCondition
+        > {}
 
 extension AppSettingsCollectionQuerySortBy
     on QueryBuilder<AppSettingsCollection, AppSettingsCollection, QSortBy> {
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByBreakDuration() {
+  sortByBreakDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'breakDuration', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByBreakDurationDesc() {
+  sortByBreakDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'breakDuration', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByFocusSound() {
+  sortByFocusSound() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'focusSound', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByFocusSoundDesc() {
+  sortByFocusSoundDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'focusSound', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByNotificationsEnabled() {
+  sortByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByNotificationsEnabledDesc() {
+  sortByNotificationsEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortBySoundEnabled() {
+  sortBySoundEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'soundEnabled', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortBySoundEnabledDesc() {
+  sortBySoundEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'soundEnabled', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByStudyDuration() {
+  sortByStudyDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'studyDuration', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByStudyDurationDesc() {
+  sortByStudyDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'studyDuration', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByTheme() {
+  sortByTheme() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'theme', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      sortByThemeDesc() {
+  sortByThemeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'theme', Sort.desc);
     });
@@ -822,98 +992,98 @@ extension AppSettingsCollectionQuerySortBy
 extension AppSettingsCollectionQuerySortThenBy
     on QueryBuilder<AppSettingsCollection, AppSettingsCollection, QSortThenBy> {
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByBreakDuration() {
+  thenByBreakDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'breakDuration', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByBreakDurationDesc() {
+  thenByBreakDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'breakDuration', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByFocusSound() {
+  thenByFocusSound() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'focusSound', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByFocusSoundDesc() {
+  thenByFocusSoundDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'focusSound', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenById() {
+  thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByIdDesc() {
+  thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByNotificationsEnabled() {
+  thenByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByNotificationsEnabledDesc() {
+  thenByNotificationsEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenBySoundEnabled() {
+  thenBySoundEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'soundEnabled', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenBySoundEnabledDesc() {
+  thenBySoundEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'soundEnabled', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByStudyDuration() {
+  thenByStudyDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'studyDuration', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByStudyDurationDesc() {
+  thenByStudyDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'studyDuration', Sort.desc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByTheme() {
+  thenByTheme() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'theme', Sort.asc);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
-      thenByThemeDesc() {
+  thenByThemeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'theme', Sort.desc);
     });
@@ -923,50 +1093,55 @@ extension AppSettingsCollectionQuerySortThenBy
 extension AppSettingsCollectionQueryWhereDistinct
     on QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct> {
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
-      distinctByBreakDuration() {
+  distinctByBreakDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'breakDuration');
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
-      distinctByFocusSound({bool caseSensitive = true}) {
+  distinctByFocusSound({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'focusSound', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
-      distinctByNotificationsEnabled() {
+  distinctByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notificationsEnabled');
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
-      distinctBySoundEnabled() {
+  distinctBySoundEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'soundEnabled');
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
-      distinctByStudyDuration() {
+  distinctByStudyDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'studyDuration');
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
-      distinctByTheme({bool caseSensitive = true}) {
+  distinctByTheme({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'theme', caseSensitive: caseSensitive);
     });
   }
 }
 
-extension AppSettingsCollectionQueryProperty on QueryBuilder<
-    AppSettingsCollection, AppSettingsCollection, QQueryProperty> {
+extension AppSettingsCollectionQueryProperty
+    on
+        QueryBuilder<
+          AppSettingsCollection,
+          AppSettingsCollection,
+          QQueryProperty
+        > {
   QueryBuilder<AppSettingsCollection, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -974,42 +1149,42 @@ extension AppSettingsCollectionQueryProperty on QueryBuilder<
   }
 
   QueryBuilder<AppSettingsCollection, int, QQueryOperations>
-      breakDurationProperty() {
+  breakDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'breakDuration');
     });
   }
 
   QueryBuilder<AppSettingsCollection, FocusSoundMode, QQueryOperations>
-      focusSoundProperty() {
+  focusSoundProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'focusSound');
     });
   }
 
   QueryBuilder<AppSettingsCollection, bool, QQueryOperations>
-      notificationsEnabledProperty() {
+  notificationsEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'notificationsEnabled');
     });
   }
 
   QueryBuilder<AppSettingsCollection, bool, QQueryOperations>
-      soundEnabledProperty() {
+  soundEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'soundEnabled');
     });
   }
 
   QueryBuilder<AppSettingsCollection, int, QQueryOperations>
-      studyDurationProperty() {
+  studyDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'studyDuration');
     });
   }
 
   QueryBuilder<AppSettingsCollection, AppThemeMode, QQueryOperations>
-      themeProperty() {
+  themeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'theme');
     });
