@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:study_planner/core/app_colors.dart';
-import 'package:study_planner/core/routes/app_router.dart';
 import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_state.dart';
+import 'package:study_planner/features/dashboard/presentation/pages/widgets/daily_phrase_card.dart';
 import 'package:study_planner/features/dashboard/presentation/pages/widgets/dashboard_row.dart';
-import 'package:study_planner/shared/domain/value_objects/day_time.dart';
 
 class DashboardContent extends StatelessWidget {
   const DashboardContent({super.key, required this.state});
@@ -36,6 +34,8 @@ class DashboardContent extends StatelessWidget {
                 color: colors.mutedForeground,
               ),
             ),
+            const SizedBox(height: 16),
+            DailyPhraseCard(name: profile.name),
             const SizedBox(height: 24),
             Card(
               shape: RoundedRectangleBorder(
@@ -102,11 +102,13 @@ class DashboardContent extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Center(
-                      child: Icon(
-                        Icons.bookmark_outline,
-                        size: 88,
-                        color: theme.colorScheme.primary,
+                    Expanded(
+                      child: Center(
+                        child: Icon(
+                          Icons.bookmark_outline,
+                          size: 66,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -146,11 +148,5 @@ class DashboardContent extends StatelessWidget {
     if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
     if (hours > 0) return '${hours}h';
     return '${remainder}m';
-  }
-
-  static String _formatDayTime(DayTime time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
   }
 }

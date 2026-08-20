@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:study_planner/core/services/sound_service.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
 import 'package:study_planner/shared/domain/entities/study_session.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
+import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
 
 part 'session_state.dart';
@@ -16,23 +18,35 @@ class SessionCubit extends Cubit<SessionState> {
     required int plannedMinutes,
     int breakDurationMinutes = 5,
     AppSettingsRepository? settingsRepository,
+    SoundService? soundService,
   }) : _timerService = timerService,
        _subject = subject,
        _plannedMinutes = plannedMinutes,
        _settingsRepository = settingsRepository,
+       _soundService = soundService,
        _breakDurationMinutes = breakDurationMinutes,
        super(SessionInitial());
+
+  // ignore: prefer_initializing_formals
+
 
   final StudyTimerService _timerService;
   final Subject _subject;
   final int _plannedMinutes;
   final AppSettingsRepository? _settingsRepository;
+  final SoundService? _soundService;
   int _breakDurationMinutes;
+
+  /// Sound settings loaded from preferences.
+  bool _soundEnabled = true;
+  FocusSoundMode _focusSound = FocusSoundMode.rain;
 
   Timer? _timer;
 
   int get totalSeconds => _plannedMinutes * 60;
   int get breakTotalSeconds => _breakDurationMinutes * 60;
+
+  // ── Settings helpers ──────────────────────────────────────────────────────
 
   Future<void> loadBreakDuration() async {
     final settings = await _settingsRepository?.getSettings();
@@ -41,12 +55,55 @@ class SessionCubit extends Cubit<SessionState> {
     }
   }
 
+  Future<void> _loadSoundSettings() async {
+    final settings = await _settingsRepository?.getSettings();
+    if (settings != null) {
+      _soundEnabled = settings.soundEnabled;
+      _focusSound = settings.focusSound;
+    }
+  }
+
+  // ── Sound control ─────────────────────────────────────────────────────────
+
+  Future<void> _startSound() async {
+    if (!_soundEnabled || _focusSound == FocusSoundMode.none) return;
+    await _soundService?.play(_focusSound);
+  }
+
+  Future<void> _pauseSound() async {
+    await _soundService?.pause();
+  }
+
+  Future<void> _stopSound() async {
+    await _soundService?.stop();
+  }
+
+  /// Toggle mute from the session UI button.
+  Future<void> toggleMute() async {
+    await _soundService?.toggleMute();
+    final muted = _soundService?.isMuted ?? false;
+
+    final current = state;
+    if (current is SessionActive) {
+      _emitState(current.copyWith(isMuted: muted));
+    } else if (current is SessionPaused) {
+      _emitState(current.copyWith(isMuted: muted));
+    }
+  }
+
+  // ── Session lifecycle ─────────────────────────────────────────────────────
+
   Future<void> restoreOrStartSession() async {
     try {
       await loadBreakDuration();
+      await _loadSoundSettings();
       final restored = await _timerService.restoreForSubject(_subject);
       if (restored != null) {
         _emitSnapshot(restored);
+        // Only play sound if the timer is actively running (not paused).
+        if (restored.timer?.phase == ActiveTimerPhase.study) {
+          await _startSound();
+        }
         _startProjectionTicker();
         return;
       }
@@ -75,11 +132,13 @@ class SessionCubit extends Cubit<SessionState> {
 
     try {
       await loadBreakDuration();
+      await _loadSoundSettings();
       final snapshot = await _timerService.startStudy(
         subject: _subject,
         plannedDurationSeconds: totalSeconds,
       );
       _emitSnapshot(snapshot);
+      await _startSound();
       _startProjectionTicker();
     } catch (error) {
       _emitState(SessionError(error.toString()));
@@ -92,6 +151,7 @@ class SessionCubit extends Cubit<SessionState> {
       if (snapshot == null) return;
       _timer?.cancel();
       _timer = null;
+      await _pauseSound();
       _emitSnapshot(snapshot);
     } catch (error) {
       _emitState(SessionError(error.toString()));
@@ -103,6 +163,7 @@ class SessionCubit extends Cubit<SessionState> {
       final snapshot = await _timerService.resume(_subject);
       if (snapshot == null) return;
       _emitSnapshot(snapshot);
+      await _startSound();
       _startProjectionTicker();
     } catch (error) {
       _emitState(SessionError(error.toString()));
@@ -113,6 +174,7 @@ class SessionCubit extends Cubit<SessionState> {
     try {
       final snapshot = await _timerService.finishStudy(_subject);
       if (snapshot == null) return;
+      await _stopSound();
       _emitSnapshot(snapshot);
       _startProjectionTicker();
     } catch (error) {
@@ -141,11 +203,14 @@ class SessionCubit extends Cubit<SessionState> {
       await _timerService.cancel(_subject);
       _timer?.cancel();
       _timer = null;
+      await _stopSound();
       _emitState(SessionError('Session cancelled'));
     } catch (error) {
       _emitState(SessionError(error.toString()));
     }
   }
+
+  // ── Internal ticker ───────────────────────────────────────────────────────
 
   void _startProjectionTicker() {
     _timer?.cancel();
@@ -157,6 +222,7 @@ class SessionCubit extends Cubit<SessionState> {
         if (snapshot == null) {
           _timer?.cancel();
           _timer = null;
+          await _stopSound();
           _emitState(
             SessionBreakComplete(
               subject: _subject,
@@ -170,11 +236,17 @@ class SessionCubit extends Cubit<SessionState> {
           _timer?.cancel();
           _timer = null;
         }
+        // If the phase just changed to breakTime, stop study sound.
+        if (snapshot.timer?.phase == ActiveTimerPhase.breakTime) {
+          await _stopSound();
+        }
       } catch (error) {
         _emitState(SessionError(error.toString()));
       }
     });
   }
+
+  // ── State helpers ─────────────────────────────────────────────────────────
 
   void _emitSnapshot(StudyTimerSnapshot snapshot) {
     if (isClosed) return;
@@ -188,6 +260,8 @@ class SessionCubit extends Cubit<SessionState> {
       );
       return;
     }
+
+    final muted = _soundService?.isMuted ?? false;
 
     switch (timer.phase) {
       case ActiveTimerPhase.study:
@@ -207,6 +281,8 @@ class SessionCubit extends Cubit<SessionState> {
             subject: _subject,
             totalSeconds: timer.plannedDurationSeconds,
             remainingSeconds: snapshot.remainingSeconds,
+            isMuted: muted,
+            soundEnabled: _soundEnabled && _focusSound != FocusSoundMode.none,
           ),
         );
       case ActiveTimerPhase.paused:
@@ -226,6 +302,8 @@ class SessionCubit extends Cubit<SessionState> {
             subject: _subject,
             totalSeconds: timer.plannedDurationSeconds,
             remainingSeconds: snapshot.remainingSeconds,
+            isMuted: muted,
+            soundEnabled: _soundEnabled && _focusSound != FocusSoundMode.none,
           ),
         );
       case ActiveTimerPhase.breakTime:
@@ -251,8 +329,9 @@ class SessionCubit extends Cubit<SessionState> {
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
     _timer?.cancel();
+    await _stopSound();
     return super.close();
   }
 }

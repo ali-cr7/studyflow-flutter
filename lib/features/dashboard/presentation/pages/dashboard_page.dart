@@ -18,12 +18,7 @@ class DashboardPage extends StatelessWidget {
         profileRepository: getIt<StudentProfileRepository>(),
         settingsRepository: getIt<AppSettingsRepository>(),
       )..loadDashboard(),
-      child:  DashboardView(),
+      child: DashboardView(),
     );
   }
 }
-
-
-
-
-

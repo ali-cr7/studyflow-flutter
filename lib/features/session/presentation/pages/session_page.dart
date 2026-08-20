@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
+import 'package:study_planner/core/services/sound_service.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/features/session/cubit/session_cubit.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
@@ -34,6 +35,7 @@ class SessionPage extends StatelessWidget {
           SessionCubit(
               timerService: getIt<StudyTimerService>(),
               settingsRepository: getIt<AppSettingsRepository>(),
+              soundService: getIt<SoundService>(),
               subject: subject,
               plannedMinutes: plannedMinutes,
             )
@@ -100,6 +102,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
         final paused = state is SessionPaused ? state : null;
         final breakActive = state is SessionBreakActive ? state : null;
         final breakComplete = state is SessionBreakComplete ? state : null;
+
         final subject =
             active?.subject ??
             paused?.subject ??
@@ -146,6 +149,14 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
             ? 'Focus block'
             : 'All set';
 
+        // ── Sound state ───────────────────────────────────────────────────
+        // Show the sound control only during active study or paused states
+        // and only when a sound other than 'none' is configured.
+        final showSoundButton =
+            (active?.soundEnabled ?? paused?.soundEnabled ?? false);
+        final isMuted = active?.isMuted ?? paused?.isMuted ?? false;
+
+        // ── Action section ────────────────────────────────────────────────
         Widget actionSection;
 
         if (active != null) {
@@ -183,7 +194,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                 child: FilledButton.icon(
                   onPressed: () => _cubit.resumeSession(),
                   icon: const Icon(Icons.play_arrow_rounded),
-                  label: const Text('Start'),
+                  label: const Text('Resume'),
                 ),
               ),
             ],
@@ -195,15 +206,6 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
               onPressed: () => _cubit.completeBreak(),
               icon: const Icon(Icons.arrow_forward_rounded),
               label: const Text('Next session'),
-            ),
-          );
-        } else if (breakComplete != null) {
-          actionSection = SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: () => context.pop(),
-              icon: const Icon(Icons.arrow_back_rounded),
-              label: const Text('Back to plan'),
             ),
           );
         } else {
@@ -218,7 +220,24 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
         }
 
         return Scaffold(
-          appBar: AppBar(title: const Text('Study session')),
+          appBar: AppBar(
+            title: const Text('Study session'),
+            actions: [
+              if (showSoundButton)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: IconButton(
+                    tooltip: isMuted ? 'Unmute sound' : 'Mute sound',
+                    icon: Icon(
+                      isMuted
+                          ? Icons.volume_off_rounded
+                          : Icons.volume_up_rounded,
+                    ),
+                    onPressed: () => _cubit.toggleMute(),
+                  ),
+                ),
+            ],
+          ),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -282,12 +301,17 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                                 : paused != null
                                 ? 'Ready when you are'
                                 : active != null
-                                ? '${_formatDuration(totalSeconds - remainingSeconds, totalSeconds)} completed'
+                                ? '${_formatDuration(totalSeconds - remainingSeconds)} completed'
                                 : 'Session complete',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: colors.mutedForeground,
                             ),
                           ),
+                          // ── Sound indicator pill ───────────────────────
+                          if (showSoundButton) ...[
+                            const SizedBox(height: 12),
+                            _SoundIndicator(isMuted: isMuted),
+                          ],
                         ],
                       ),
                     ),
@@ -303,10 +327,9 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
     );
   }
 
-  static String _formatDuration(int elapsedSeconds, int totalSeconds) {
-    final actualDuration = totalSeconds == 0 ? elapsedSeconds : elapsedSeconds;
-    final minutes = (actualDuration ~/ 60).toString().padLeft(2, '0');
-    final seconds = (actualDuration % 60).toString().padLeft(2, '0');
+  static String _formatDuration(int elapsedSeconds) {
+    final minutes = (elapsedSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (elapsedSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -324,5 +347,40 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
       'code': Icons.code_outlined,
     };
     return map[key] ?? Icons.book_rounded;
+  }
+}
+
+/// Small pill that shows the current sound playback state.
+class _SoundIndicator extends StatelessWidget {
+  const _SoundIndicator({required this.isMuted});
+
+  final bool isMuted;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = isMuted
+        ? theme.colorScheme.onSurface.withValues(alpha: 0.38)
+        : theme.colorScheme.primary;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      child: Row(
+        key: ValueKey(isMuted),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isMuted ? Icons.volume_off_rounded : Icons.graphic_eq_rounded,
+            size: 16,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            isMuted ? 'Sound muted' : 'Ambient sound playing',
+            style: theme.textTheme.labelSmall?.copyWith(color: color),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -33,7 +33,11 @@ const PlannedSubjectCollectionSchema = CollectionSchema(
       name: r'plannedMinutes',
       type: IsarType.long,
     ),
-    r'priority': PropertySchema(id: 3, name: r'priority', type: IsarType.long),
+    r'priority': PropertySchema(
+      id: 3,
+      name: r'priority',
+      type: IsarType.long,
+    ),
     r'sortOrder': PropertySchema(
       id: 4,
       name: r'sortOrder',
@@ -43,7 +47,7 @@ const PlannedSubjectCollectionSchema = CollectionSchema(
       id: 5,
       name: r'subjectId',
       type: IsarType.long,
-    ),
+    )
   },
   estimateSize: _plannedSubjectCollectionEstimateSize,
   serialize: _plannedSubjectCollectionSerialize,
@@ -66,9 +70,9 @@ const PlannedSubjectCollectionSchema = CollectionSchema(
           name: r'sortOrder',
           type: IndexType.value,
           caseSensitive: false,
-        ),
+        )
       ],
-    ),
+    )
   },
   links: {},
   embeddedSchemas: {},
@@ -147,35 +151,26 @@ Id _plannedSubjectCollectionGetId(PlannedSubjectCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _plannedSubjectCollectionGetLinks(
-  PlannedSubjectCollection object,
-) {
+    PlannedSubjectCollection object) {
   return [];
 }
 
 void _plannedSubjectCollectionAttach(
-  IsarCollection<dynamic> col,
-  Id id,
-  PlannedSubjectCollection object,
-) {
+    IsarCollection<dynamic> col, Id id, PlannedSubjectCollection object) {
   object.id = id;
 }
 
-extension PlannedSubjectCollectionQueryWhereSort
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QWhere
-        > {
+extension PlannedSubjectCollectionQueryWhereSort on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QWhere> {
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterWhere>
-  anyId() {
+      anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterWhere>
-  anyDailyPlanIdSortOrder() {
+      anyDailyPlanIdSortOrder() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'dailyPlanId_sortOrder'),
@@ -184,30 +179,20 @@ extension PlannedSubjectCollectionQueryWhereSort
   }
 }
 
-extension PlannedSubjectCollectionQueryWhere
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QWhereClause
-        > {
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  idEqualTo(Id id) {
+extension PlannedSubjectCollectionQueryWhere on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QWhereClause> {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  idNotEqualTo(Id id) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -229,12 +214,8 @@ extension PlannedSubjectCollectionQueryWhere
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -242,12 +223,8 @@ extension PlannedSubjectCollectionQueryWhere
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  idLessThan(Id id, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -255,265 +232,197 @@ extension PlannedSubjectCollectionQueryWhere
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  idBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.between(
-          lower: lowerId,
-          includeLower: includeLower,
-          upper: upperId,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdEqualToAnySortOrder(int dailyPlanId) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdEqualToAnySortOrder(int dailyPlanId) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(
-          indexName: r'dailyPlanId_sortOrder',
-          value: [dailyPlanId],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'dailyPlanId_sortOrder',
+        value: [dailyPlanId],
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdNotEqualToAnySortOrder(int dailyPlanId) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdNotEqualToAnySortOrder(int dailyPlanId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [],
-                upper: [dailyPlanId],
-                includeUpper: false,
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [dailyPlanId],
-                includeLower: false,
-                upper: [],
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [],
+              upper: [dailyPlanId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [dailyPlanId],
+              includeLower: false,
+              upper: [],
+            ));
       } else {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [dailyPlanId],
-                includeLower: false,
-                upper: [],
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [],
-                upper: [dailyPlanId],
-                includeUpper: false,
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [dailyPlanId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [],
+              upper: [dailyPlanId],
+              includeUpper: false,
+            ));
       }
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdGreaterThanAnySortOrder(int dailyPlanId, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdGreaterThanAnySortOrder(
+    int dailyPlanId, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'dailyPlanId_sortOrder',
-          lower: [dailyPlanId],
-          includeLower: include,
-          upper: [],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dailyPlanId_sortOrder',
+        lower: [dailyPlanId],
+        includeLower: include,
+        upper: [],
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdLessThanAnySortOrder(int dailyPlanId, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdLessThanAnySortOrder(
+    int dailyPlanId, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'dailyPlanId_sortOrder',
-          lower: [],
-          upper: [dailyPlanId],
-          includeUpper: include,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dailyPlanId_sortOrder',
+        lower: [],
+        upper: [dailyPlanId],
+        includeUpper: include,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdBetweenAnySortOrder(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdBetweenAnySortOrder(
     int lowerDailyPlanId,
     int upperDailyPlanId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'dailyPlanId_sortOrder',
-          lower: [lowerDailyPlanId],
-          includeLower: includeLower,
-          upper: [upperDailyPlanId],
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dailyPlanId_sortOrder',
+        lower: [lowerDailyPlanId],
+        includeLower: includeLower,
+        upper: [upperDailyPlanId],
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdSortOrderEqualTo(int dailyPlanId, int sortOrder) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+          QAfterWhereClause>
+      dailyPlanIdSortOrderEqualTo(int dailyPlanId, int sortOrder) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(
-          indexName: r'dailyPlanId_sortOrder',
-          value: [dailyPlanId, sortOrder],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'dailyPlanId_sortOrder',
+        value: [dailyPlanId, sortOrder],
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdEqualToSortOrderNotEqualTo(int dailyPlanId, int sortOrder) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+          QAfterWhereClause>
+      dailyPlanIdEqualToSortOrderNotEqualTo(int dailyPlanId, int sortOrder) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [dailyPlanId],
-                upper: [dailyPlanId, sortOrder],
-                includeUpper: false,
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [dailyPlanId, sortOrder],
-                includeLower: false,
-                upper: [dailyPlanId],
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [dailyPlanId],
+              upper: [dailyPlanId, sortOrder],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [dailyPlanId, sortOrder],
+              includeLower: false,
+              upper: [dailyPlanId],
+            ));
       } else {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [dailyPlanId, sortOrder],
-                includeLower: false,
-                upper: [dailyPlanId],
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'dailyPlanId_sortOrder',
-                lower: [dailyPlanId],
-                upper: [dailyPlanId, sortOrder],
-                includeUpper: false,
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [dailyPlanId, sortOrder],
+              includeLower: false,
+              upper: [dailyPlanId],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dailyPlanId_sortOrder',
+              lower: [dailyPlanId],
+              upper: [dailyPlanId, sortOrder],
+              includeUpper: false,
+            ));
       }
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdEqualToSortOrderGreaterThan(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdEqualToSortOrderGreaterThan(
     int dailyPlanId,
     int sortOrder, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'dailyPlanId_sortOrder',
-          lower: [dailyPlanId, sortOrder],
-          includeLower: include,
-          upper: [dailyPlanId],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dailyPlanId_sortOrder',
+        lower: [dailyPlanId, sortOrder],
+        includeLower: include,
+        upper: [dailyPlanId],
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdEqualToSortOrderLessThan(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdEqualToSortOrderLessThan(
     int dailyPlanId,
     int sortOrder, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'dailyPlanId_sortOrder',
-          lower: [dailyPlanId],
-          upper: [dailyPlanId, sortOrder],
-          includeUpper: include,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dailyPlanId_sortOrder',
+        lower: [dailyPlanId],
+        upper: [dailyPlanId, sortOrder],
+        includeUpper: include,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterWhereClause
-  >
-  dailyPlanIdEqualToSortOrderBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterWhereClause> dailyPlanIdEqualToSortOrderBetween(
     int dailyPlanId,
     int lowerSortOrder,
     int upperSortOrder, {
@@ -521,737 +430,607 @@ extension PlannedSubjectCollectionQueryWhere
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'dailyPlanId_sortOrder',
-          lower: [dailyPlanId, lowerSortOrder],
-          includeLower: includeLower,
-          upper: [dailyPlanId, upperSortOrder],
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dailyPlanId_sortOrder',
+        lower: [dailyPlanId, lowerSortOrder],
+        includeLower: includeLower,
+        upper: [dailyPlanId, upperSortOrder],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
 
-extension PlannedSubjectCollectionQueryFilter
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QFilterCondition
-        > {
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  completedEqualTo(bool value) {
+extension PlannedSubjectCollectionQueryFilter on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QFilterCondition> {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> completedEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'completed', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completed',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  dailyPlanIdEqualTo(int value) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> dailyPlanIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'dailyPlanId', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dailyPlanId',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  dailyPlanIdGreaterThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> dailyPlanIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'dailyPlanId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'dailyPlanId',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  dailyPlanIdLessThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> dailyPlanIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'dailyPlanId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'dailyPlanId',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  dailyPlanIdBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> dailyPlanIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'dailyPlanId',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dailyPlanId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  idEqualTo(Id value) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'id', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  idGreaterThan(Id value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  idLessThan(Id value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  idBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'id',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  plannedMinutesEqualTo(int value) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> plannedMinutesEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'plannedMinutes', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'plannedMinutes',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  plannedMinutesGreaterThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> plannedMinutesGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'plannedMinutes',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'plannedMinutes',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  plannedMinutesLessThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> plannedMinutesLessThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'plannedMinutes',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'plannedMinutes',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  plannedMinutesBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> plannedMinutesBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'plannedMinutes',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'plannedMinutes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  priorityEqualTo(int value) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> priorityEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'priority', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'priority',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  priorityGreaterThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> priorityGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'priority',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'priority',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  priorityLessThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> priorityLessThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'priority',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'priority',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  priorityBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> priorityBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'priority',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'priority',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  sortOrderEqualTo(int value) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> sortOrderEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'sortOrder', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'sortOrder',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  sortOrderGreaterThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> sortOrderGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'sortOrder',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'sortOrder',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  sortOrderLessThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> sortOrderLessThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'sortOrder',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'sortOrder',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  sortOrderBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> sortOrderBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'sortOrder',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'sortOrder',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  subjectIdEqualTo(int value) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> subjectIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'subjectId', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'subjectId',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  subjectIdGreaterThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> subjectIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'subjectId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'subjectId',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  subjectIdLessThan(int value, {bool include = false}) {
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> subjectIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'subjectId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'subjectId',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<
-    PlannedSubjectCollection,
-    PlannedSubjectCollection,
-    QAfterFilterCondition
-  >
-  subjectIdBetween(
+  QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection,
+      QAfterFilterCondition> subjectIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'subjectId',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'subjectId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
 
-extension PlannedSubjectCollectionQueryObject
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QFilterCondition
-        > {}
+extension PlannedSubjectCollectionQueryObject on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QFilterCondition> {}
 
-extension PlannedSubjectCollectionQueryLinks
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QFilterCondition
-        > {}
+extension PlannedSubjectCollectionQueryLinks on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QFilterCondition> {}
 
-extension PlannedSubjectCollectionQuerySortBy
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QSortBy
-        > {
+extension PlannedSubjectCollectionQuerySortBy on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QSortBy> {
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByCompleted() {
+      sortByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByCompletedDesc() {
+      sortByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByDailyPlanId() {
+      sortByDailyPlanId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyPlanId', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByDailyPlanIdDesc() {
+      sortByDailyPlanIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyPlanId', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByPlannedMinutes() {
+      sortByPlannedMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'plannedMinutes', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByPlannedMinutesDesc() {
+      sortByPlannedMinutesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'plannedMinutes', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByPriority() {
+      sortByPriority() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priority', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortByPriorityDesc() {
+      sortByPriorityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priority', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortBySortOrder() {
+      sortBySortOrder() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sortOrder', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortBySortOrderDesc() {
+      sortBySortOrderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sortOrder', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortBySubjectId() {
+      sortBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  sortBySubjectIdDesc() {
+      sortBySubjectIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.desc);
     });
   }
 }
 
-extension PlannedSubjectCollectionQuerySortThenBy
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QSortThenBy
-        > {
+extension PlannedSubjectCollectionQuerySortThenBy on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QSortThenBy> {
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByCompleted() {
+      thenByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByCompletedDesc() {
+      thenByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByDailyPlanId() {
+      thenByDailyPlanId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyPlanId', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByDailyPlanIdDesc() {
+      thenByDailyPlanIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyPlanId', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenById() {
+      thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByIdDesc() {
+      thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByPlannedMinutes() {
+      thenByPlannedMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'plannedMinutes', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByPlannedMinutesDesc() {
+      thenByPlannedMinutesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'plannedMinutes', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByPriority() {
+      thenByPriority() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priority', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenByPriorityDesc() {
+      thenByPriorityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priority', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenBySortOrder() {
+      thenBySortOrder() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sortOrder', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenBySortOrderDesc() {
+      thenBySortOrderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sortOrder', Sort.desc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenBySubjectId() {
+      thenBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.asc);
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QAfterSortBy>
-  thenBySubjectIdDesc() {
+      thenBySubjectIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'subjectId', Sort.desc);
     });
   }
 }
 
-extension PlannedSubjectCollectionQueryWhereDistinct
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QDistinct
-        > {
+extension PlannedSubjectCollectionQueryWhereDistinct on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QDistinct> {
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QDistinct>
-  distinctByCompleted() {
+      distinctByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'completed');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QDistinct>
-  distinctByDailyPlanId() {
+      distinctByDailyPlanId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dailyPlanId');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QDistinct>
-  distinctByPlannedMinutes() {
+      distinctByPlannedMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'plannedMinutes');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QDistinct>
-  distinctByPriority() {
+      distinctByPriority() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'priority');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QDistinct>
-  distinctBySortOrder() {
+      distinctBySortOrder() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'sortOrder');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, PlannedSubjectCollection, QDistinct>
-  distinctBySubjectId() {
+      distinctBySubjectId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'subjectId');
     });
   }
 }
 
-extension PlannedSubjectCollectionQueryProperty
-    on
-        QueryBuilder<
-          PlannedSubjectCollection,
-          PlannedSubjectCollection,
-          QQueryProperty
-        > {
+extension PlannedSubjectCollectionQueryProperty on QueryBuilder<
+    PlannedSubjectCollection, PlannedSubjectCollection, QQueryProperty> {
   QueryBuilder<PlannedSubjectCollection, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -1259,42 +1038,42 @@ extension PlannedSubjectCollectionQueryProperty
   }
 
   QueryBuilder<PlannedSubjectCollection, bool, QQueryOperations>
-  completedProperty() {
+      completedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'completed');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, int, QQueryOperations>
-  dailyPlanIdProperty() {
+      dailyPlanIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dailyPlanId');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, int, QQueryOperations>
-  plannedMinutesProperty() {
+      plannedMinutesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'plannedMinutes');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, int, QQueryOperations>
-  priorityProperty() {
+      priorityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'priority');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, int, QQueryOperations>
-  sortOrderProperty() {
+      sortOrderProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'sortOrder');
     });
   }
 
   QueryBuilder<PlannedSubjectCollection, int, QQueryOperations>
-  subjectIdProperty() {
+      subjectIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subjectId');
     });

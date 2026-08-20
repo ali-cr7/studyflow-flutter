@@ -37,6 +37,7 @@ class IsarDatabase {
         ActiveTimerCollectionSchema,
         AchievementCollectionSchema,
         AppSettingsCollectionSchema,
+        LicenseCollectionSchema,
       ],
       directory: path,
       name: 'study_planner_v2',

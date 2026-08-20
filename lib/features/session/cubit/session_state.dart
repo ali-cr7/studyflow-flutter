@@ -10,17 +10,39 @@ final class SessionActive extends SessionState {
     required this.subject,
     required this.totalSeconds,
     required this.remainingSeconds,
+    this.isMuted = false,
+    this.soundEnabled = true,
   });
 
   final StudySession session;
   final Subject subject;
   final int totalSeconds;
   final int remainingSeconds;
+  final bool isMuted;
+  final bool soundEnabled;
 
   String get formattedRemainingTime {
     final minutes = (remainingSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (remainingSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+
+  SessionActive copyWith({
+    StudySession? session,
+    Subject? subject,
+    int? totalSeconds,
+    int? remainingSeconds,
+    bool? isMuted,
+    bool? soundEnabled,
+  }) {
+    return SessionActive(
+      session: session ?? this.session,
+      subject: subject ?? this.subject,
+      totalSeconds: totalSeconds ?? this.totalSeconds,
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
+      isMuted: isMuted ?? this.isMuted,
+      soundEnabled: soundEnabled ?? this.soundEnabled,
+    );
   }
 }
 
@@ -30,17 +52,39 @@ final class SessionPaused extends SessionState {
     required this.subject,
     required this.totalSeconds,
     required this.remainingSeconds,
+    this.isMuted = false,
+    this.soundEnabled = true,
   });
 
   final StudySession session;
   final Subject subject;
   final int totalSeconds;
   final int remainingSeconds;
+  final bool isMuted;
+  final bool soundEnabled;
 
   String get formattedRemainingTime {
     final minutes = (remainingSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (remainingSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+
+  SessionPaused copyWith({
+    StudySession? session,
+    Subject? subject,
+    int? totalSeconds,
+    int? remainingSeconds,
+    bool? isMuted,
+    bool? soundEnabled,
+  }) {
+    return SessionPaused(
+      session: session ?? this.session,
+      subject: subject ?? this.subject,
+      totalSeconds: totalSeconds ?? this.totalSeconds,
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
+      isMuted: isMuted ?? this.isMuted,
+      soundEnabled: soundEnabled ?? this.soundEnabled,
+    );
   }
 }
 

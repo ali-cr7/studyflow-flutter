@@ -36,7 +36,7 @@ class _MainShellPageState extends State<MainShellPage> {
     NavigationDestination(
       icon: Icon(Icons.timer_outlined),
       selectedIcon: Icon(Icons.timer_rounded),
-      label: 'Study Session',
+      label: 'Study',
     ),
     NavigationDestination(
       icon: Icon(Icons.school_outlined),
