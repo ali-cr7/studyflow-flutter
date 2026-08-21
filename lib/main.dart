@@ -9,7 +9,7 @@ import 'package:study_planner/core/services/study_timer_background_service.dart'
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
 import 'package:study_planner/core/theme.dart';
-import 'package:study_planner/data/database/isar.dart';
+import 'package:study_planner/shared/data/database/isar.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';

@@ -1,4 +1,4 @@
-import 'package:study_planner/data/database/collections/planned_subject_collection.dart';
+import 'package:study_planner/shared/data/database/collections/planned_subject_collection.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
 
 abstract final class PlannedSubjectMapper {

@@ -14,7 +14,6 @@ import 'package:study_planner/shared/domain/repositories/app_settings_repository
 import 'package:study_planner/shared/domain/repositories/daily_plan_repository.dart';
 import 'package:study_planner/shared/domain/repositories/study_session_repository.dart';
 import 'package:study_planner/shared/domain/repositories/subject_repository.dart';
-
 void main() {
   group('SessionCubit', () {
     test('starts an active study session for the selected subject', () async {
@@ -25,9 +24,7 @@ void main() {
         subject: subject,
         plannedMinutes: 25,
       );
-
       await cubit.startSession();
-
       expect(cubit.state, isA<SessionActive>());
       final state = cubit.state as SessionActive;
       expect(state.session.subjectId, 9);
@@ -45,10 +42,8 @@ void main() {
         subject: subject,
         plannedMinutes: 25,
       );
-
       await cubit.startSession();
       await cubit.finishSession();
-
       expect(cubit.state, isA<SessionBreakActive>());
       final state = cubit.state as SessionBreakActive;
       expect(state.remainingSeconds, state.totalSeconds);
@@ -65,18 +60,14 @@ void main() {
           subject: subject,
           plannedMinutes: 25,
         );
-
         await cubit.startSession();
         await cubit.pauseSession();
-
         expect(cubit.state, isA<SessionPaused>());
         expect(repository.savedSessions.first.duration, 0);
-
         await cubit.resumeSession();
         expect(cubit.state, isA<SessionActive>());
       },
     );
-
     test(
       'lets the user continue to the next session after the break ends',
       () async {
@@ -88,11 +79,9 @@ void main() {
           plannedMinutes: 25,
           breakDurationMinutes: 1,
         );
-
         await cubit.startSession();
         await cubit.finishSession();
         await cubit.completeBreak();
-
         expect(cubit.state, isA<SessionBreakComplete>());
       },
     );
@@ -177,7 +166,6 @@ class _FakeStudySessionRepository implements StudySessionRepository {
     savedSessions.add(session);
     return session;
   }
-
   @override
   Future<void> delete(int id) async {
     savedSessions.removeWhere((session) => session.id == id);

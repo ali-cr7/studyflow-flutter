@@ -1,4 +1,4 @@
-import 'package:study_planner/data/database/collections/active_timer_collection.dart';
+import 'package:study_planner/shared/data/database/collections/active_timer_collection.dart';
 import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
 
 abstract final class ActiveTimerMapper {

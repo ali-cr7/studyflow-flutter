@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/core/utils/date_utils.dart';
 import 'package:study_planner/shared/domain/entities/daily_plan.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
-import 'package:study_planner/shared/domain/entities/student_profile.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/daily_plan_repository.dart';
 import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';

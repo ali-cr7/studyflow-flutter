@@ -1,5 +1,24 @@
 part of 'session_cubit.dart';
 
+// ── Celebration ───────────────────────────────────────────────────────────────
+
+/// Describes why a celebration card should be shown when a break starts.
+/// [none] means the session completed normally with no special milestone.
+enum CelebrationReason {
+  none,
+
+  /// The student finished the planned session for this specific subject.
+  subjectCompleted,
+
+  /// The student's total completed study time today reached the daily goal.
+  dailyGoalReached,
+
+  /// Both milestones happened at the same time.
+  both,
+}
+
+// ── States ────────────────────────────────────────────────────────────────────
+
 sealed class SessionState {}
 
 final class SessionInitial extends SessionState {}
@@ -93,11 +112,17 @@ final class SessionBreakActive extends SessionState {
     required this.subject,
     required this.totalSeconds,
     required this.remainingSeconds,
+    this.celebrationReason = CelebrationReason.none,
   });
 
   final Subject subject;
   final int totalSeconds;
   final int remainingSeconds;
+
+  /// Non-none when a milestone was just hit — drives the in-app celebration card.
+  final CelebrationReason celebrationReason;
+
+  bool get hasCelebration => celebrationReason != CelebrationReason.none;
 
   String get formattedRemainingTime {
     final minutes = (remainingSeconds ~/ 60).toString().padLeft(2, '0');

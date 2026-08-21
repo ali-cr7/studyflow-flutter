@@ -2,12 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:study_planner/core/services/study_timer_background_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
 import 'package:study_planner/core/utils/date_utils.dart';
+import 'package:study_planner/features/session/cubit/session_cubit.dart';
+
 import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
 import 'package:study_planner/shared/domain/entities/study_session.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/active_timer_repository.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
 import 'package:study_planner/shared/domain/repositories/daily_plan_repository.dart';
+import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';
 import 'package:study_planner/shared/domain/repositories/study_session_repository.dart';
 import 'package:study_planner/shared/domain/repositories/subject_repository.dart';
 
@@ -18,6 +21,7 @@ class StudyTimerSnapshot {
     required this.remainingSeconds,
     required this.elapsedSeconds,
     this.session,
+    this.celebrationReason = CelebrationReason.none,
   });
 
   final ActiveTimerState? timer;
@@ -25,6 +29,9 @@ class StudyTimerSnapshot {
   final StudySession? session;
   final int remainingSeconds;
   final int elapsedSeconds;
+
+  /// Non-none when a milestone was just hit and the UI should show a card.
+  final CelebrationReason celebrationReason;
 }
 
 class StudyTimerService {
@@ -35,6 +42,7 @@ class StudyTimerService {
     required AppSettingsRepository settingsRepository,
     required SubjectRepository subjectRepository,
     required TimerNotificationService notificationService,
+    required StudentProfileRepository studentProfileRepository,
     StudyTimerBackgroundService? backgroundService,
   }) : _activeTimerRepository = activeTimerRepository,
        _sessionRepository = sessionRepository,
@@ -42,6 +50,7 @@ class StudyTimerService {
        _settingsRepository = settingsRepository,
        _subjectRepository = subjectRepository,
        _notificationService = notificationService,
+       _studentProfileRepository = studentProfileRepository,
        _backgroundService = backgroundService;
 
   final ActiveTimerRepository _activeTimerRepository;
@@ -50,6 +59,7 @@ class StudyTimerService {
   final AppSettingsRepository _settingsRepository;
   final SubjectRepository _subjectRepository;
   final TimerNotificationService _notificationService;
+  final StudentProfileRepository _studentProfileRepository;
   final StudyTimerBackgroundService? _backgroundService;
 
   Future<StudyTimerSnapshot?> restoreForSubject(Subject subject) async {
@@ -153,9 +163,11 @@ class StudyTimerService {
       return null;
     }
 
-    await _completeStudy(timer, subject, manual: true);
+    final reason = await _completeStudy(timer, subject, manual: true);
     final next = await _activeTimerRepository.getActiveTimer();
-    return next == null ? null : _snapshot(next, subject);
+    return next == null
+        ? null
+        : _snapshot(next, subject, celebrationReason: reason);
   }
 
   Future<void> cancel(Subject subject) async {
@@ -200,14 +212,15 @@ class StudyTimerService {
 
     final now = DateTime.now();
     if (!timer.isExpired(now)) {
-      if (subject != null) return _snapshot(timer, subject);
-      return null;
+      return _snapshot(timer, subject);
     }
 
     if (timer.phase == ActiveTimerPhase.study) {
-      await _completeStudy(timer, subject, manual: false);
+      final reason = await _completeStudy(timer, subject, manual: false);
       final next = await _activeTimerRepository.getActiveTimer();
-      return next == null ? null : _snapshot(next, subject);
+      return next == null
+          ? null
+          : _snapshot(next, subject, celebrationReason: reason);
     }
 
     if (timer.phase == ActiveTimerPhase.breakTime) {
@@ -220,7 +233,12 @@ class StudyTimerService {
     return null;
   }
 
-  Future<void> _completeStudy(
+  // ── Core study-completion logic ───────────────────────────────────────────
+  //
+  // Returns the [CelebrationReason] detected so callers can embed it in the
+  // next snapshot without a separate repository round-trip.
+
+  Future<CelebrationReason> _completeStudy(
     ActiveTimerState timer,
     Subject subject, {
     required bool manual,
@@ -229,6 +247,8 @@ class StudyTimerService {
     final session = timer.sessionId == null
         ? null
         : await _sessionRepository.getById(timer.sessionId!);
+
+    var subjectJustCompleted = false;
 
     if (session != null && !session.completed) {
       final duration = manual
@@ -241,12 +261,29 @@ class StudyTimerService {
           completed: true,
         ),
       );
-      await _markDailyPlanSubjectComplete(subject.id);
+      subjectJustCompleted = await _markDailyPlanSubjectComplete(subject.id);
     }
 
     await _notificationService.cancelTimerSchedules();
     await _notificationService.showStudyComplete();
 
+    // ── Milestone detection ───────────────────────────────────────────────
+    final dailyGoalJustReached = await _checkDailyGoalReached();
+
+    final reason = _resolveCelebrationReason(
+      subjectCompleted: subjectJustCompleted,
+      dailyGoalReached: dailyGoalJustReached,
+    );
+
+    // Fire celebration notifications (in addition to the standard ones above).
+    if (subjectJustCompleted) {
+      await _notificationService.showSubjectCompleted(subject.name);
+    }
+    if (dailyGoalJustReached) {
+      await _notificationService.showDailyGoalReached();
+    }
+
+    // ── Create the break timer ────────────────────────────────────────────
     final settings = await _settingsRepository.getSettings();
     final breakSeconds = (settings.breakDuration * 60)
         .clamp(1, 24 * 60 * 60)
@@ -268,6 +305,73 @@ class StudyTimerService {
     await _notificationService.showBreakStarted();
     await _scheduleFor(breakTimer, subject);
     await _backgroundService?.start();
+
+    return reason;
+  }
+
+  /// Marks the matching [PlannedSubject] as completed.
+  /// Returns `true` if a subject was actually flipped to completed this call
+  /// (i.e. it was not already done), `false` otherwise.
+  Future<bool> _markDailyPlanSubjectComplete(int subjectId) async {
+    try {
+      final today = await _dailyPlanRepository.getByDate(
+        normalizeToLocalDate(DateTime.now()),
+      );
+      if (today == null) return false;
+      for (final planned in today.subjects) {
+        if (planned.subjectId == subjectId && !planned.completed) {
+          await _dailyPlanRepository.updatePlannedSubject(
+            planned.copyWith(completed: true),
+          );
+          return true;
+        }
+      }
+      return false;
+    } catch (error, stackTrace) {
+      debugPrint('Daily plan completion update failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  /// Returns `true` when today's completed planned minutes exactly meets or
+  /// first crosses the student's daily goal after this session.
+  ///
+  /// We check *after* saving the session so the freshly completed minutes are
+  /// already reflected in the plan.
+  Future<bool> _checkDailyGoalReached() async {
+    try {
+      final profile = await _studentProfileRepository.getProfile();
+      if (profile == null || profile.dailyGoalMinutes <= 0) return false;
+
+      final today = await _dailyPlanRepository.getByDate(
+        normalizeToLocalDate(DateTime.now()),
+      );
+      if (today == null) return false;
+
+      // completedPlannedMinutes is in minutes; dailyGoalMinutes is in minutes.
+      final completed = today.completedPlannedMinutes;
+      final goal = profile.dailyGoalMinutes;
+
+      // Fire only on the exact crossing — when completed just reached or
+      // surpassed the goal.  We consider it "just reached" if the completed
+      // count equals the goal (or we are within one session-worth above it).
+      return completed >= goal;
+    } catch (error, stackTrace) {
+      debugPrint('Daily goal check failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  static CelebrationReason _resolveCelebrationReason({
+    required bool subjectCompleted,
+    required bool dailyGoalReached,
+  }) {
+    if (subjectCompleted && dailyGoalReached) return CelebrationReason.both;
+    if (dailyGoalReached) return CelebrationReason.dailyGoalReached;
+    if (subjectCompleted) return CelebrationReason.subjectCompleted;
+    return CelebrationReason.none;
   }
 
   Future<void> _persistProgress(
@@ -285,26 +389,6 @@ class StudyTimerService {
         endTime: completed ? DateTime.now() : null,
       ),
     );
-  }
-
-  Future<void> _markDailyPlanSubjectComplete(int subjectId) async {
-    try {
-      final today = await _dailyPlanRepository.getByDate(
-        normalizeToLocalDate(DateTime.now()),
-      );
-      if (today == null) return;
-      for (final planned in today.subjects) {
-        if (planned.subjectId == subjectId && !planned.completed) {
-          await _dailyPlanRepository.updatePlannedSubject(
-            planned.copyWith(completed: true),
-          );
-          return;
-        }
-      }
-    } catch (error, stackTrace) {
-      debugPrint('Daily plan completion update failed: $error');
-      debugPrintStack(stackTrace: stackTrace);
-    }
   }
 
   Future<void> _scheduleFor(ActiveTimerState timer, Subject subject) async {
@@ -333,6 +417,7 @@ class StudyTimerService {
     ActiveTimerState timer,
     Subject subject, {
     StudySession? session,
+    CelebrationReason celebrationReason = CelebrationReason.none,
   }) async {
     final now = DateTime.now();
     final persistedSession = session ??
@@ -345,6 +430,7 @@ class StudyTimerService {
       session: persistedSession,
       remainingSeconds: timer.remainingSeconds(now),
       elapsedSeconds: timer.elapsedSeconds(now),
+      celebrationReason: celebrationReason,
     );
   }
 }

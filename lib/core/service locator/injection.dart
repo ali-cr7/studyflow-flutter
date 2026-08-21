@@ -5,16 +5,16 @@ import 'package:study_planner/core/services/sound_service.dart';
 import 'package:study_planner/core/services/study_timer_background_service.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
-import 'package:study_planner/data/database/isar.dart';
-import 'package:study_planner/data/datasources/supabase_activation_data_source.dart';
-import 'package:study_planner/data/repositories/achievement_repository_impl.dart';
-import 'package:study_planner/data/repositories/active_timer_repository_impl.dart';
-import 'package:study_planner/data/repositories/app_settings_repository_impl.dart';
-import 'package:study_planner/data/repositories/daily_plan_repository_impl.dart';
-import 'package:study_planner/data/repositories/license_repository_impl.dart';
-import 'package:study_planner/data/repositories/student_profile_repository_impl.dart';
-import 'package:study_planner/data/repositories/study_session_repository_impl.dart';
-import 'package:study_planner/data/repositories/subject_repository_impl.dart';
+import 'package:study_planner/shared/data/database/isar.dart';
+import 'package:study_planner/shared/data/datasources/supabase_activation_data_source.dart';
+import 'package:study_planner/shared/data/repositories/achievement_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/active_timer_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/app_settings_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/daily_plan_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/license_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/student_profile_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/study_session_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/subject_repository_impl.dart';
 import 'package:study_planner/features/statistics/data/repositories/statistics_repository.dart';
 import 'package:study_planner/features/statistics/data/repositories/statistics_repository_impl.dart';
 import 'package:study_planner/shared/domain/repositories/license_repository.dart';
@@ -93,6 +93,7 @@ Future<void> setupDependencies() async {
         settingsRepository: getIt<AppSettingsRepository>(),
         subjectRepository: getIt<SubjectRepository>(),
         notificationService: getIt<TimerNotificationService>(),
+        studentProfileRepository: getIt<StudentProfileRepository>(),
         backgroundService: getIt<StudyTimerBackgroundService>(),
       ),
     )

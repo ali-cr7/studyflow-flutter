@@ -1,5 +1,5 @@
 import 'package:study_planner/core/constants/database_constants.dart';
-import 'package:study_planner/data/database/collections/student_profile_collection.dart';
+import 'package:study_planner/shared/data/database/collections/student_profile_collection.dart';
 import 'package:study_planner/shared/domain/entities/student_profile.dart';
 import 'package:study_planner/shared/domain/value_objects/day_time.dart';
 

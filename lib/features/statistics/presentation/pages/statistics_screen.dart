@@ -44,10 +44,32 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
         final snapshot = state.snapshot;
         if (snapshot == null || state.status == StatisticsStatus.empty) {
-          return const StatisticsEmptyState(
-            title: 'Start your first study streak',
-            message:
-                'Complete a study session to unlock your progress dashboard.',
+          return Scaffold(
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                child: Column(
+                  children: [
+                    StatisticsPeriodSelector(
+                      selected: _selectedPeriod,
+                      onChanged: (period) {
+                        setState(() => _selectedPeriod = period);
+                        context.read<StatisticsCubit>().loadStatistics(
+                          period: period,
+                        );
+                      },
+                    ),
+                    const Expanded(
+                      child: StatisticsEmptyState(
+                        title: 'Start your first study streak',
+                        message:
+                            'Complete a study session to unlock your progress dashboard.',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         }
 

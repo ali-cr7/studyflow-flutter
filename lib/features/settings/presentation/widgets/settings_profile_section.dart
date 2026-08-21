@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
-import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
 
 class SettingsProfileSection extends StatelessWidget {
   const SettingsProfileSection({super.key});

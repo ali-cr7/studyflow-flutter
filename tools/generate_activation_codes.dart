@@ -72,6 +72,17 @@ void main(List<String> args) {
   final outputDir = Directory('tools/output');
   if (!outputDir.existsSync()) outputDir.createSync(recursive: true);
 
+  // Plain-text codes — keep this file private, never commit to git.
+  final plaintextFile = File('tools/output/codes_plaintext.txt');
+  plaintextFile.writeAsStringSync(
+    '# Study Planner — Plain-text activation codes\n'
+    '# Generated: ${DateTime.now().toIso8601String()}\n'
+    '# DO NOT commit this file. Keep it somewhere safe.\n'
+    '# Distribute one code per student.\n\n'
+    '${codeList.join('\n')}\n',
+  );
+  stdout.writeln('Plain-text codes saved to: ${plaintextFile.path}');
+
   final sqlFile = File('tools/output/codes_insert.sql');
   final buf = StringBuffer();
 

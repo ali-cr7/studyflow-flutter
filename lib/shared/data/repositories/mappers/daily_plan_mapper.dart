@@ -1,5 +1,5 @@
 import 'package:study_planner/core/utils/date_utils.dart';
-import 'package:study_planner/data/database/collections/daily_plan_collection.dart';
+import 'package:study_planner/shared/data/database/collections/daily_plan_collection.dart';
 import 'package:study_planner/shared/domain/entities/daily_plan.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
 

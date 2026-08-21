@@ -1,4 +1,4 @@
-import 'package:study_planner/data/database/collections/study_session_collection.dart';
+import 'package:study_planner/shared/data/database/collections/study_session_collection.dart';
 import 'package:study_planner/shared/domain/entities/study_session.dart';
 
 abstract final class StudySessionMapper {

@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:study_planner/data/database/collections/achievement_collection.dart';
-import 'package:study_planner/data/repositories/mappers/achievement_mapper.dart';
+import 'package:study_planner/shared/data/database/collections/achievement_collection.dart';
+import 'package:study_planner/shared/data/repositories/mappers/achievement_mapper.dart';
 import 'package:study_planner/shared/domain/entities/achievement.dart';
 import 'package:study_planner/shared/domain/enums/achievement_type.dart';
 import 'package:study_planner/shared/domain/repositories/achievement_repository.dart';

@@ -312,6 +312,7 @@ class SessionCubit extends Cubit<SessionState> {
             subject: _subject,
             totalSeconds: timer.plannedDurationSeconds,
             remainingSeconds: snapshot.remainingSeconds,
+            celebrationReason: snapshot.celebrationReason,
           ),
         );
       case ActiveTimerPhase.idle:

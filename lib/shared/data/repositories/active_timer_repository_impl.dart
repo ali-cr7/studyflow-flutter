@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:study_planner/data/database/collections/active_timer_collection.dart';
-import 'package:study_planner/data/repositories/mappers/active_timer_mapper.dart';
+import 'package:study_planner/shared/data/database/collections/active_timer_collection.dart';
+import 'package:study_planner/shared/data/repositories/mappers/active_timer_mapper.dart';
 import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
 import 'package:study_planner/shared/domain/repositories/active_timer_repository.dart';
 

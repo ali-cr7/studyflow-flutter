@@ -8,6 +8,7 @@ import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/core/services/sound_service.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/features/session/cubit/session_cubit.dart';
+import 'package:study_planner/features/session/presentation/widgets/celebration_card.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
 

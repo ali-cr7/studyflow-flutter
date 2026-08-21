@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:study_planner/core/constants/database_constants.dart';
-import 'package:study_planner/data/database/collections/student_profile_collection.dart';
-import 'package:study_planner/data/repositories/mappers/student_profile_mapper.dart';
+import 'package:study_planner/shared/data/database/collections/student_profile_collection.dart';
+import 'package:study_planner/shared/data/repositories/mappers/student_profile_mapper.dart';
 import 'package:study_planner/shared/domain/entities/student_profile.dart';
 import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';
 

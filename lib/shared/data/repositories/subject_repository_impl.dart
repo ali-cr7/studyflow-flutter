@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:study_planner/data/database/collections/subject_collection.dart';
-import 'package:study_planner/data/repositories/mappers/subject_mapper.dart';
+import 'package:study_planner/shared/data/database/collections/subject_collection.dart';
+import 'package:study_planner/shared/data/repositories/mappers/subject_mapper.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/subject_repository.dart';
 

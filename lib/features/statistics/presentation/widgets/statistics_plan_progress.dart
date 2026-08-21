@@ -32,7 +32,7 @@ class StatisticsPlanProgress extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${_formatMinutes(completedMinutes)} completed',
+                '${_formatDuration(completedMinutes)} completed',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
@@ -65,13 +65,13 @@ class StatisticsPlanProgress extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Planned ${_formatMinutes(plannedMinutes)}',
+                'Planned ${_formatDuration(plannedMinutes)}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: context.sfColors.mutedForeground,
                 ),
               ),
               Text(
-                'Completed ${_formatMinutes(completedMinutes)}',
+                'Completed ${_formatDuration(completedMinutes)}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: context.sfColors.mutedForeground,
                 ),
@@ -89,5 +89,29 @@ class StatisticsPlanProgress extends StatelessWidget {
     if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
     if (hours > 0) return '${hours}h';
     return '${remainder}m';
+  }
+
+  static String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final remainingSeconds = seconds % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return '${hours}h ${minutes}m';
+    }
+
+    if (hours > 0) {
+      return '${hours}h';
+    }
+
+    if (minutes > 0 && remainingSeconds > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+
+    if (minutes > 0) {
+      return '${minutes}m';
+    }
+
+    return '${remainingSeconds}s';
   }
 }

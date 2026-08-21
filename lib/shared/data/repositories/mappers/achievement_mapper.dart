@@ -1,4 +1,4 @@
-import 'package:study_planner/data/database/collections/achievement_collection.dart';
+import 'package:study_planner/shared/data/database/collections/achievement_collection.dart';
 import 'package:study_planner/shared/domain/entities/achievement.dart';
 
 abstract final class AchievementMapper {

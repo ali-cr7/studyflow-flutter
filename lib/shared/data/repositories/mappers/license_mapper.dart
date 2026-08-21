@@ -1,5 +1,5 @@
 import 'package:study_planner/core/constants/database_constants.dart';
-import 'package:study_planner/data/database/collections/license_collection.dart';
+import 'package:study_planner/shared/data/database/collections/license_collection.dart';
 import 'package:study_planner/shared/domain/entities/license.dart';
 
 abstract final class LicenseMapper {

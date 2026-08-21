@@ -16,6 +16,8 @@ class TimerNotificationService {
   static const int breakCompletionId = 7002;
   static const int breakStartedId = 7003;
   static const int scheduledStudyId = 7004;
+  static const int subjectCompletedId = 7005;
+  static const int dailyGoalReachedId = 7006;
 
   static const String timerChannelId = 'study_timer';
   static const String timerChannelName = 'Study timer';
@@ -134,6 +136,24 @@ class TimerNotificationService {
       id: breakCompletionId,
       title: 'Break finished',
       body: 'Break time is over. Ready to start studying again?',
+    );
+  }
+
+  /// Fired when the student finishes the planned session for a specific subject.
+  Future<void> showSubjectCompleted(String subjectName) {
+    return showNow(
+      id: subjectCompletedId,
+      title: '🎉 Subject complete!',
+      body: "You finished your planned session for $subjectName. Great work!",
+    );
+  }
+
+  /// Fired when the student's total study time today meets the daily goal.
+  Future<void> showDailyGoalReached() {
+    return showNow(
+      id: dailyGoalReachedId,
+      title: '🏆 Daily goal reached!',
+      body: "You've hit your study goal for today. Incredible effort!",
     );
   }
 

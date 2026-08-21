@@ -1,5 +1,5 @@
 import 'package:study_planner/core/constants/database_constants.dart';
-import 'package:study_planner/data/database/collections/app_settings_collection.dart';
+import 'package:study_planner/shared/data/database/collections/app_settings_collection.dart';
 import 'package:study_planner/shared/domain/entities/app_settings.dart';
 
 abstract final class AppSettingsMapper {

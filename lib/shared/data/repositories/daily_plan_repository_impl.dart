@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
 import 'package:study_planner/core/utils/date_utils.dart';
-import 'package:study_planner/data/database/collections/daily_plan_collection.dart';
-import 'package:study_planner/data/database/collections/planned_subject_collection.dart';
-import 'package:study_planner/data/repositories/mappers/daily_plan_mapper.dart';
-import 'package:study_planner/data/repositories/mappers/planned_subject_mapper.dart';
+import 'package:study_planner/shared/data/database/collections/daily_plan_collection.dart';
+import 'package:study_planner/shared/data/database/collections/planned_subject_collection.dart';
+import 'package:study_planner/shared/data/repositories/mappers/daily_plan_mapper.dart';
+import 'package:study_planner/shared/data/repositories/mappers/planned_subject_mapper.dart';
 import 'package:study_planner/shared/domain/entities/daily_plan.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
 import 'package:study_planner/shared/domain/repositories/daily_plan_repository.dart';

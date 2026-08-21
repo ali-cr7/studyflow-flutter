@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart';
 import 'package:study_planner/core/constants/database_constants.dart';
-import 'package:study_planner/data/database/collections/license_collection.dart';
-import 'package:study_planner/data/datasources/supabase_activation_data_source.dart';
-import 'package:study_planner/data/repositories/mappers/license_mapper.dart';
+import 'package:study_planner/shared/data/database/collections/license_collection.dart';
+import 'package:study_planner/shared/data/datasources/supabase_activation_data_source.dart';
+import 'package:study_planner/shared/data/repositories/mappers/license_mapper.dart';
 import 'package:study_planner/shared/domain/entities/activation_result.dart';
 import 'package:study_planner/shared/domain/entities/license.dart';
 import 'package:study_planner/shared/domain/enums/license_status.dart';

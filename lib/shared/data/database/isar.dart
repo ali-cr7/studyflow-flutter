@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:study_planner/data/database/collections/collections.dart';
+import 'package:study_planner/shared/data/database/collections/collections.dart';
 
 /// Opens and caches the single Isar instance for the app.
 ///

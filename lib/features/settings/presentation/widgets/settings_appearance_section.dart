@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
-import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
+
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
 
 class SettingsAppearanceSection extends StatelessWidget {

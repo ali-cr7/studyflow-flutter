@@ -48,13 +48,8 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
               session.completed && _isInPeriod(session.startTime, period),
         )
         .toList();
-    print('Relevant sessions for period $period: ${relevantSessions.length}');
 
-    for (final session in relevantSessions) {
-      print(
-        'Session: ${session.id}, Subject ID: ${session.subjectId}, Duration: ${session.duration} seconds, Start Time: ${session.startTime}',
-      );
-    }
+
 
     final range = _periodRange(period);
     final dailyPlans = await _loadPlansForRange(range.start, range.end);

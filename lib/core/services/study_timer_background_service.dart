@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:ui';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:isar/isar.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
-import 'package:study_planner/data/database/isar.dart';
-import 'package:study_planner/data/repositories/active_timer_repository_impl.dart';
-import 'package:study_planner/data/repositories/app_settings_repository_impl.dart';
-import 'package:study_planner/data/repositories/daily_plan_repository_impl.dart';
-import 'package:study_planner/data/repositories/study_session_repository_impl.dart';
-import 'package:study_planner/data/repositories/subject_repository_impl.dart';
+import 'package:study_planner/shared/data/database/isar.dart';
+import 'package:study_planner/shared/data/repositories/active_timer_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/app_settings_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/daily_plan_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/student_profile_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/study_session_repository_impl.dart';
+import 'package:study_planner/shared/data/repositories/subject_repository_impl.dart';
 import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
-
 class StudyTimerBackgroundService {
   StudyTimerBackgroundService({
     FlutterBackgroundService? service,
@@ -107,6 +105,8 @@ void _onStart(ServiceInstance service) async {
       if (subject == null) return;
 
       final coordinator = StudyTimerService(
+        studentProfileRepository: StudentProfileRepositoryImpl(isar)  ,
+
         activeTimerRepository: activeTimerRepository,
         sessionRepository: StudySessionRepositoryImpl(isar),
         dailyPlanRepository: DailyPlanRepositoryImpl(isar),
