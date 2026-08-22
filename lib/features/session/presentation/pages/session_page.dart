@@ -32,15 +32,13 @@ class SessionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          SessionCubit(
-              timerService: getIt<StudyTimerService>(),
-              settingsRepository: getIt<AppSettingsRepository>(),
-              soundService: getIt<SoundService>(),
-              subject: subject,
-              plannedMinutes: plannedMinutes,
-            )
-            ..restoreOrStartSession(),
+      create: (_) => SessionCubit(
+        timerService: getIt<StudyTimerService>(),
+        settingsRepository: getIt<AppSettingsRepository>(),
+        soundService: getIt<SoundService>(),
+        subject: subject,
+        plannedMinutes: plannedMinutes,
+      )..restoreOrStartSession(),
       child: const SessionView(),
     );
   }
@@ -90,7 +88,16 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
-    return BlocBuilder<SessionCubit, SessionState>(
+    return BlocConsumer<SessionCubit, SessionState>(
+      listener: (context, state) {
+        if (state is SessionBreakActive && state.hasCelebration) {
+          CelebrationCard.show(
+            context,
+            reason: state.celebrationReason,
+            subjectName: state.subject.name,
+          );
+        }
+      },
       builder: (context, state) {
         if (state is SessionError) {
           return Scaffold(
