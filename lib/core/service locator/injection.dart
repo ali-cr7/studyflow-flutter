@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
+import 'package:study_planner/core/services/achievement_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:study_planner/core/services/sound_service.dart';
 import 'package:study_planner/core/services/study_timer_background_service.dart';
@@ -72,14 +73,11 @@ Future<void> setupDependencies() async {
         activationDataSource: getIt<SupabaseActivationDataSource>(),
       ),
     )
-
     // ── Services ─────────────────────────────────────────────────────────
     ..registerLazySingleton<TimerNotificationService>(
       TimerNotificationService.new,
     )
-    ..registerLazySingleton<SoundService>(
-      SoundService.new,
-    )
+    ..registerLazySingleton<SoundService>(SoundService.new)
     ..registerLazySingleton<StudyTimerBackgroundService>(
       () => StudyTimerBackgroundService(
         notificationService: getIt<TimerNotificationService>(),
@@ -95,6 +93,13 @@ Future<void> setupDependencies() async {
         notificationService: getIt<TimerNotificationService>(),
         studentProfileRepository: getIt<StudentProfileRepository>(),
         backgroundService: getIt<StudyTimerBackgroundService>(),
+      ),
+    )
+    ..registerLazySingleton<AchievementService>(
+      () => AchievementService(
+        achievementRepository: getIt<AchievementRepository>(),
+        studySessionRepository: getIt<StudySessionRepository>(),
+        appSettingsRepository: getIt<AppSettingsRepository>(),
       ),
     )
     ..registerLazySingleton<StatisticsRepository>(

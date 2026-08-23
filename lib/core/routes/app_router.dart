@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
+import 'package:study_planner/features/achievements/presentation/achievement_page.dart';
 import 'package:study_planner/features/activation/presentation/activation_page.dart';
+import 'package:study_planner/features/ask_teacher/presentation/screens/ask_teacher_screen.dart';
 import 'package:study_planner/features/main_shell_page.dart';
 import 'package:study_planner/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:study_planner/features/planner/presentation/pages/daily_plan_page.dart';
 import 'package:study_planner/features/session/presentation/pages/session_page.dart';
+import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/license_repository.dart';
 import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';
 
@@ -16,6 +19,8 @@ abstract final class AppRoutes {
   static const subjects = '/subjects';
   static const dailyPlan = '/daily-plan';
   static const session = '/session';
+  static const askTeacher = '/ask-teacher';
+  static const achievements = '/achievements';
 }
 
 class AppRouter {
@@ -30,8 +35,25 @@ class AppRouter {
         builder: (context, state) => const OnboardingPage(),
       ),
       GoRoute(
+        path: AppRoutes.askTeacher,
+        builder: (context, state) {
+          final args = state.extra as AskTeacherRouteArgs?;
+          if (args == null) return const DailyPlanPage();
+          return AskTeacherScreen(
+            studentName: args.studentName,
+            subjects: args.subjects,
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoutes.activation,
         builder: (context, state) => const ActivationPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.achievements,
+        builder: (context, state) {
+          return const AchievementsPage();
+        },
       ),
       GoRoute(
         path: AppRoutes.dashboard,
@@ -78,8 +100,7 @@ class AppRouter {
     final location = state.matchedLocation;
 
     // ── Step 1: profile check ─────────────────────────────────────────────
-    final hasProfile =
-        await getIt<StudentProfileRepository>().hasProfile();
+    final hasProfile = await getIt<StudentProfileRepository>().hasProfile();
 
     if (!hasProfile) {
       // No profile yet → must onboard first.
@@ -92,8 +113,7 @@ class AppRouter {
     }
 
     // ── Step 2: license check ─────────────────────────────────────────────
-    final isActivated =
-        await getIt<LicenseRepository>().isActivated();
+    final isActivated = await getIt<LicenseRepository>().isActivated();
 
     if (!isActivated) {
       // Profile exists but not yet activated.
@@ -101,12 +121,21 @@ class AppRouter {
     }
 
     // Activated — redirect away from gate screens.
-    if (location == AppRoutes.onboarding ||
-        location == AppRoutes.activation) {
+    if (location == AppRoutes.onboarding || location == AppRoutes.activation) {
       return AppRoutes.dashboard;
     }
 
     // All checks passed — no redirect needed.
     return null;
   }
+}
+
+class AskTeacherRouteArgs {
+  const AskTeacherRouteArgs({
+    required this.studentName,
+    required this.subjects,
+  });
+
+  final String studentName;
+  final List<Subject> subjects;
 }

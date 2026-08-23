@@ -89,6 +89,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           final themeMode = _themeModeFromSettings(state.settings.theme);
 
           return MaterialApp.router(
+            
             debugShowCheckedModeBanner: false,
             title: 'StudyFlow',
             theme: AppTheme.light,
