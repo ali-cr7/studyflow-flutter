@@ -51,11 +51,11 @@ class DailyPlanView extends StatelessWidget {
       drawer: AppDrawer(
         onRecordsTap: () {
           // Navigate to Records
-         // Navigator.of(context).pop();
+          // Navigator.of(context).pop();
           context.push(AppRoutes.achievements);
         },
         onHistoryTap: () {
-          // Navigate to History
+          context.push(AppRoutes.history);
         },
         onAskTeacherTap: () {
           final dashboardState = context.read<DashboardCubit>().state;

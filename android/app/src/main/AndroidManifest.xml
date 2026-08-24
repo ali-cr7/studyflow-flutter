@@ -10,7 +10,7 @@
 
 
     <application
-        android:label="study_planner"
+        android:label="StudyRise"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">

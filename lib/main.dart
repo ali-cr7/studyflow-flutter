@@ -25,7 +25,8 @@ import 'package:study_planner/shared/domain/repositories/student_profile_reposit
 // Find them in: Supabase Dashboard → Project Settings → API
 // ─────────────────────────────────────────────────────────────────────────────
 const _supabaseUrl = 'https://wsqyhdvyejjcefhlsagm.supabase.co';
-const _supabasePublishableKey = 'sb_publishable_VGOFfXxUqMVXwlQAzaVSZQ__8qqEbgA';
+const _supabasePublishableKey =
+    'sb_publishable_VGOFfXxUqMVXwlQAzaVSZQ__8qqEbgA';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,10 @@ Future<void> main() async {
   //    when setupDependencies() registers the SupabaseActivationDataSource.
   //    The app works fully offline after activation; Supabase is only called
   //    once per device (during code redemption).
-  await Supabase.initialize(url: _supabaseUrl, publishableKey: _supabasePublishableKey);
+  await Supabase.initialize(
+    url: _supabaseUrl,
+    publishableKey: _supabasePublishableKey,
+  );
 
   // 3. GetIt DI — registers all repositories and services.
   await setupDependencies();
@@ -89,9 +93,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           final themeMode = _themeModeFromSettings(state.settings.theme);
 
           return MaterialApp.router(
-            
             debugShowCheckedModeBanner: false,
-            title: 'StudyFlow',
+            title: 'StudyRise',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeMode,

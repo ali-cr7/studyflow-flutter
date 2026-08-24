@@ -4,6 +4,7 @@ import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/features/achievements/presentation/achievement_page.dart';
 import 'package:study_planner/features/activation/presentation/activation_page.dart';
 import 'package:study_planner/features/ask_teacher/presentation/screens/ask_teacher_screen.dart';
+import 'package:study_planner/features/history/presentation/pages/history_page.dart';
 import 'package:study_planner/features/main_shell_page.dart';
 import 'package:study_planner/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:study_planner/features/planner/presentation/pages/daily_plan_page.dart';
@@ -21,6 +22,7 @@ abstract final class AppRoutes {
   static const session = '/session';
   static const askTeacher = '/ask-teacher';
   static const achievements = '/achievements';
+  static const history = '/history';
 }
 
 class AppRouter {
@@ -48,6 +50,12 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.activation,
         builder: (context, state) => const ActivationPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.history,
+        builder: (context, state) {
+          return const HistoryPage();
+        },
       ),
       GoRoute(
         path: AppRoutes.achievements,

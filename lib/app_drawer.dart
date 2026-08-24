@@ -321,7 +321,7 @@ class _AboutDialog extends StatelessWidget {
                 _SocialButton(
                   icon: Icons.telegram,
                   label: 'Telegram',
-                  url: 'https://t.me/YOUR_USERNAME',
+                  url: 'https://t.me/@aliali180',
                 ),
 
                 const SizedBox(width: 10),
@@ -329,7 +329,7 @@ class _AboutDialog extends StatelessWidget {
                 _SocialButton(
                   icon: Icons.facebook,
                   label: 'Facebook',
-                  url: 'https://facebook.com/YOUR_USERNAME',
+                  url: 'https://facebook.com/ali.ali.896594',
                 ),
 
                 const SizedBox(width: 10),
@@ -337,7 +337,7 @@ class _AboutDialog extends StatelessWidget {
                 _SocialButton(
                   icon: Icons.business_center_rounded,
                   label: 'LinkedIn',
-                  url: 'https://www.linkedin.com/in/YOUR_USERNAME/',
+                  url: 'https://www.linkedin.com/in/ali-al-ali-8b4643246/',
                 ),
 
                 const SizedBox(width: 10),
@@ -345,7 +345,7 @@ class _AboutDialog extends StatelessWidget {
                 _SocialButton(
                   icon: Icons.chat_rounded,
                   label: 'WhatsApp',
-                  url: 'https://wa.me/YOUR_PHONE_NUMBER',
+                  url: 'https://wa.me/963937543024',
                 ),
               ],
             ),
@@ -392,7 +392,7 @@ class _SocialButton extends StatelessWidget {
 
   Future<void> _openUrl() async {
     final uri = Uri.parse(url);
-
+    launchUrl(uri, mode: LaunchMode.externalApplication);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }

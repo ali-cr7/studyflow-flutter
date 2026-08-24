@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:study_planner/app_drawer.dart';
 import 'package:study_planner/core/routes/app_router.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
+import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:study_planner/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:study_planner/features/planner/cubit/subjects_cubit.dart';
 import 'package:study_planner/features/planner/presentation/pages/daily_plan_page.dart';
 import 'package:study_planner/features/planner/presentation/pages/subjects_page.dart';
 import 'package:study_planner/features/settings/presentation/pages/settings_page.dart';

@@ -25,11 +25,11 @@ extension FocusSoundModeLabel on FocusSoundMode {
       case FocusSoundMode.rain:
         return 'assets/sounds/rain.m4a';
       case FocusSoundMode.ocean:
-        return 'assets/sounds/ocean.mp3';
+        return 'assets/sounds/ocean.m4a';
       case FocusSoundMode.forest:
-        return 'assets/sounds/forest.mp3';
+        return 'assets/sounds/forest.m4a';
       case FocusSoundMode.cafe:
-        return 'assets/sounds/cafe.mp3';
+        return 'assets/sounds/cafe.m4a';
     }
   }
 
