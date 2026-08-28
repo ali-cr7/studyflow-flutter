@@ -12,6 +12,7 @@ class SubjectCollection {
 
   /// ARGB color value, e.g. `0xFF4CAF50`.
   late int color;
+  
 
   /// Icon identifier (Material icon name or custom asset key).
   late String icon;
