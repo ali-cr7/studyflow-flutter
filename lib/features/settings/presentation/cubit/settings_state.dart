@@ -1,5 +1,6 @@
 import 'package:study_planner/shared/domain/entities/app_settings.dart';
 import 'package:study_planner/shared/domain/entities/student_profile.dart';
+import 'package:study_planner/shared/domain/enums/app_language.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
 import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 
@@ -12,6 +13,7 @@ class SettingsState {
       notificationsEnabled: true,
       soundEnabled: true,
       focusSound: FocusSoundMode.rain,
+      language: AppLanguage.en,
     ),
     this.profile,
     this.isSaving = false,

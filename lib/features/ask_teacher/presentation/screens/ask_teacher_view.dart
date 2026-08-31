@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/ask_teacher/presentation/cubit/ask_teacher_cubit.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 class AskTeacherView extends StatelessWidget {
   const AskTeacherView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocConsumer<AskTeacherCubit, AskTeacherState>(
       listener: (context, state) {
         if (state is AskTeacherError) {
@@ -21,10 +23,8 @@ class AskTeacherView extends StatelessWidget {
 
         if (state is AskTeacherSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'WhatsApp opened successfully.',
-              ),
+            SnackBar(
+              content: Text(l10n.whatsAppOpened),
             ),
           );
         }
@@ -56,7 +56,7 @@ class AskTeacherView extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Ask the Teacher'),
+            title: Text(l10n.askTheTeacher),
           ),
           body: SafeArea(
             child: ListView(
@@ -87,7 +87,7 @@ class AskTeacherView extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 Text(
-                  'Your message will be sent through WhatsApp.',
+                  l10n.messageSentViaWhatsApp,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: context.sfColors.mutedForeground,
                       ),
@@ -115,8 +115,8 @@ class AskTeacherView extends StatelessWidget {
                           ),
                     label: Text(
                       isSending
-                          ? 'Opening WhatsApp...'
-                          : 'Send via WhatsApp',
+                          ? l10n.openingWhatsApp
+                          : l10n.sendViaWhatsApp,
                     ),
                   ),
                 ),
@@ -129,6 +129,7 @@ class AskTeacherView extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
@@ -170,14 +171,14 @@ class AskTeacherView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Need help?',
+                  l10n.needHelp,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Ask your teacher about anything you are struggling with.',
+                  l10n.askTeacherHeaderSubtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colors.mutedForeground,
                     height: 1.4,
@@ -192,6 +193,7 @@ class AskTeacherView extends StatelessWidget {
   }
 
   Widget _buildStudent(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final cubit = context.read<AskTeacherCubit>();
     final theme = Theme.of(context);
 
@@ -199,7 +201,7 @@ class AskTeacherView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Student',
+          l10n.student,
           style: theme.textTheme.labelLarge?.copyWith(
             color: context.sfColors.mutedForeground,
           ),
@@ -253,13 +255,14 @@ class AskTeacherView extends StatelessWidget {
     AskTeacherCubit cubit,
     Subject? selectedSubject,
   ) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Subject',
+          l10n.subject,
           style: theme.textTheme.labelLarge?.copyWith(
             color: context.sfColors.mutedForeground,
           ),
@@ -268,7 +271,7 @@ class AskTeacherView extends StatelessWidget {
         DropdownButtonFormField<Subject>(
           initialValue: selectedSubject,
           decoration: InputDecoration(
-            hintText: 'Select a subject',
+            hintText: l10n.selectSubject,
             prefixIcon: const Icon(
               Icons.menu_book_rounded,
             ),
@@ -295,11 +298,12 @@ class AskTeacherView extends StatelessWidget {
     AskTeacherCubit cubit,
     String question,
   ) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your question',
+          l10n.yourQuestion,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: context.sfColors.mutedForeground,
               ),
@@ -312,7 +316,7 @@ class AskTeacherView extends StatelessWidget {
           textInputAction: TextInputAction.newline,
           onChanged: cubit.updateQuestion,
           decoration: InputDecoration(
-            hintText: 'Describe what you are struggling with...',
+            hintText: l10n.describeStruggle,
             alignLabelWithHint: true,
             prefixIcon: const Padding(
               padding: EdgeInsets.only(

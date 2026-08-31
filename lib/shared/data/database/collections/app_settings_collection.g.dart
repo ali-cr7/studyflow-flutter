@@ -29,23 +29,29 @@ const AppSettingsCollectionSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _AppSettingsCollectionfocusSoundEnumValueMap,
     ),
-    r'notificationsEnabled': PropertySchema(
+    r'language': PropertySchema(
       id: 2,
+      name: r'language',
+      type: IsarType.string,
+      enumMap: _AppSettingsCollectionlanguageEnumValueMap,
+    ),
+    r'notificationsEnabled': PropertySchema(
+      id: 3,
       name: r'notificationsEnabled',
       type: IsarType.bool,
     ),
     r'soundEnabled': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'soundEnabled',
       type: IsarType.bool,
     ),
     r'studyDuration': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'studyDuration',
       type: IsarType.long,
     ),
     r'theme': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'theme',
       type: IsarType.string,
       enumMap: _AppSettingsCollectionthemeEnumValueMap,
@@ -72,6 +78,7 @@ int _appSettingsCollectionEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.focusSound.name.length * 3;
+  bytesCount += 3 + object.language.name.length * 3;
   bytesCount += 3 + object.theme.name.length * 3;
   return bytesCount;
 }
@@ -84,10 +91,11 @@ void _appSettingsCollectionSerialize(
 ) {
   writer.writeLong(offsets[0], object.breakDuration);
   writer.writeString(offsets[1], object.focusSound.name);
-  writer.writeBool(offsets[2], object.notificationsEnabled);
-  writer.writeBool(offsets[3], object.soundEnabled);
-  writer.writeLong(offsets[4], object.studyDuration);
-  writer.writeString(offsets[5], object.theme.name);
+  writer.writeString(offsets[2], object.language.name);
+  writer.writeBool(offsets[3], object.notificationsEnabled);
+  writer.writeBool(offsets[4], object.soundEnabled);
+  writer.writeLong(offsets[5], object.studyDuration);
+  writer.writeString(offsets[6], object.theme.name);
 }
 
 AppSettingsCollection _appSettingsCollectionDeserialize(
@@ -102,11 +110,14 @@ AppSettingsCollection _appSettingsCollectionDeserialize(
           reader.readStringOrNull(offsets[1])] ??
       FocusSoundMode.none;
   object.id = id;
-  object.notificationsEnabled = reader.readBool(offsets[2]);
-  object.soundEnabled = reader.readBool(offsets[3]);
-  object.studyDuration = reader.readLong(offsets[4]);
+  object.language = _AppSettingsCollectionlanguageValueEnumMap[
+          reader.readStringOrNull(offsets[2])] ??
+      AppLanguage.en;
+  object.notificationsEnabled = reader.readBool(offsets[3]);
+  object.soundEnabled = reader.readBool(offsets[4]);
+  object.studyDuration = reader.readLong(offsets[5]);
   object.theme = _AppSettingsCollectionthemeValueEnumMap[
-          reader.readStringOrNull(offsets[5])] ??
+          reader.readStringOrNull(offsets[6])] ??
       AppThemeMode.system;
   return object;
 }
@@ -125,12 +136,16 @@ P _appSettingsCollectionDeserializeProp<P>(
               reader.readStringOrNull(offset)] ??
           FocusSoundMode.none) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
+      return (_AppSettingsCollectionlanguageValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          AppLanguage.en) as P;
     case 3:
       return (reader.readBool(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 5:
+      return (reader.readLong(offset)) as P;
+    case 6:
       return (_AppSettingsCollectionthemeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           AppThemeMode.system) as P;
@@ -152,6 +167,14 @@ const _AppSettingsCollectionfocusSoundValueEnumMap = {
   r'ocean': FocusSoundMode.ocean,
   r'forest': FocusSoundMode.forest,
   r'cafe': FocusSoundMode.cafe,
+};
+const _AppSettingsCollectionlanguageEnumValueMap = {
+  r'en': r'en',
+  r'ar': r'ar',
+};
+const _AppSettingsCollectionlanguageValueEnumMap = {
+  r'en': AppLanguage.en,
+  r'ar': AppLanguage.ar,
 };
 const _AppSettingsCollectionthemeEnumValueMap = {
   r'system': r'system',
@@ -512,6 +535,144 @@ extension AppSettingsCollectionQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageEqualTo(
+    AppLanguage value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'language',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageGreaterThan(
+    AppLanguage value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'language',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageLessThan(
+    AppLanguage value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'language',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageBetween(
+    AppLanguage lower,
+    AppLanguage upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'language',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'language',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'language',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+          QAfterFilterCondition>
+      languageContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'language',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+          QAfterFilterCondition>
+      languageMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'language',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'language',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
+      QAfterFilterCondition> languageIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'language',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection,
       QAfterFilterCondition> notificationsEnabledEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -763,6 +924,20 @@ extension AppSettingsCollectionQuerySortBy
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      sortByLanguage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'language', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      sortByLanguageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'language', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
       sortByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.asc);
@@ -864,6 +1039,20 @@ extension AppSettingsCollectionQuerySortThenBy
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      thenByLanguage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'language', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
+      thenByLanguageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'language', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QAfterSortBy>
       thenByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notificationsEnabled', Sort.asc);
@@ -937,6 +1126,13 @@ extension AppSettingsCollectionQueryWhereDistinct
   }
 
   QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
+      distinctByLanguage({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'language', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppSettingsCollection, QDistinct>
       distinctByNotificationsEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notificationsEnabled');
@@ -984,6 +1180,13 @@ extension AppSettingsCollectionQueryProperty on QueryBuilder<
       focusSoundProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'focusSound');
+    });
+  }
+
+  QueryBuilder<AppSettingsCollection, AppLanguage, QQueryOperations>
+      languageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'language');
     });
   }
 

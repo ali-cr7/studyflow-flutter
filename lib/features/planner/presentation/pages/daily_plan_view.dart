@@ -11,6 +11,7 @@ import 'package:study_planner/features/planner/presentation/widgets/daily_plan_e
 import 'package:study_planner/features/planner/presentation/widgets/daily_plan_session_card.dart';
 import 'package:study_planner/features/planner/presentation/widgets/daily_plan_summary_card.dart';
 import 'package:study_planner/features/session/presentation/pages/session_page.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 
@@ -45,6 +46,7 @@ class DailyPlanView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -79,12 +81,12 @@ class DailyPlanView extends StatelessWidget {
         },
       ),
       appBar: AppBar(
-        title: const Text('Daily plan'),
+        title: Text(l10n.dailyPlanTitle),
         actions: [
           IconButton(
             onPressed: () => context.go(AppRoutes.subjects),
             icon: const Icon(Icons.school_outlined),
-            tooltip: 'Subjects',
+            tooltip: l10n.subjects,
           ),
         ],
       ),
@@ -98,7 +100,7 @@ class DailyPlanView extends StatelessWidget {
             heroTag: 'add_daily_plan_subject',
             onPressed: () => _openAddSheet(context),
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Add subject'),
+            label: Text(l10n.addSubject),
           );
         },
       ),
@@ -112,11 +114,11 @@ class DailyPlanView extends StatelessWidget {
               }
 
               if (state is DailyPlanError) {
-                return Center(child: Text('Error: ${state.message}'));
+                return Center(child: Text(l10n.error(state.message)));
               }
 
               if (state is! DailyPlanLoaded) {
-                return const Center(child: Text('Loading your plan...'));
+                return Center(child: Text(l10n.loadingYourPlan));
               }
 
               final plan = state.plan;
@@ -152,7 +154,7 @@ class DailyPlanView extends StatelessWidget {
                     completedPlannedMinutes: plan.completedPlannedMinutes,
                   ),
                   const SizedBox(height: 22),
-                  Text('Today’s schedule', style: theme.textTheme.titleLarge),
+                  Text(l10n.todaysSchedule, style: theme.textTheme.titleLarge),
                   const SizedBox(height: 14),
                   if (plan.subjects.isEmpty)
                     const Expanded(child: DailyPlanEmptyState())

@@ -21,6 +21,7 @@ import 'package:study_planner/features/statistics/presentation/widgets/statistic
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_plan_progress.dart';
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_section_header.dart';
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_subject_breakdown.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -34,6 +35,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocBuilder<StatisticsCubit, StatisticsState>(
       builder: (context, state) {
         if (state.status == StatisticsStatus.loading) {
@@ -41,9 +43,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         }
 
         if (state.status == StatisticsStatus.failure) {
-          return const StatisticsEmptyState(
-            title: 'Unable to load statistics',
-            message: 'Your study data could not be loaded right now.',
+          return StatisticsEmptyState(
+            title: l10n.unableToLoadStatistics,
+            message: l10n.statisticsLoadError,
           );
         }
 
@@ -94,11 +96,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         );
                       },
                     ),
-                    const Expanded(
+                    Expanded(
                       child: StatisticsEmptyState(
-                        title: 'Start your first study streak',
-                        message:
-                            'Complete a study session to unlock your progress dashboard.',
+                        title: l10n.startFirstStreak,
+                        message: l10n.completeSessionToUnlock,
                       ),
                     ),
                   ],
@@ -120,7 +121,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
               children: [
                 StatisticsHeader(
-                  title: 'Your Progress',
+                  title: l10n.yourProgress,
                   subtitle: snapshot.subtitle,
                   streak: snapshot.currentStreak,
                 ),
@@ -164,7 +165,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Study time',
+                              l10n.studyTime,
                               style: Theme.of(context).textTheme.labelLarge
                                   ?.copyWith(
                                     color: context.sfColors.mutedForeground,
@@ -178,7 +179,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '${snapshot.sessionCount} sessions completed',
+                              l10n.sessionsCompleted(snapshot.sessionCount),
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     color: context.sfColors.mutedForeground,
@@ -214,71 +215,73 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   crossAxisSpacing: 12,
                   children: [
                     StatisticsMetricCard(
-                      title: 'Study Time',
+                      title: l10n.studyTimeMetric,
                       value: _formatDuration(snapshot.studyMinutes),
-                      subtitle: '${snapshot.sessionCount} completed sessions',
+                      subtitle: l10n.completedSessionsMetric(snapshot.sessionCount),
                       icon: Icons.timer_rounded,
                       tint: context.sfColors.chart1,
                     ),
                     StatisticsMetricCard(
-                      title: 'Sessions',
+                      title: l10n.sessionsMetric,
                       value: '${snapshot.sessionCount}',
-                      subtitle: 'completed',
+                      subtitle: l10n.completed,
                       icon: Icons.check_circle_rounded,
                       tint: context.sfColors.chart2,
                     ),
                     StatisticsMetricCard(
-                      title: 'Plan Completion',
+                      title: l10n.planCompletion,
                       value: '${snapshot.planCompletionPercent}%',
-                      subtitle:
-                          '${_formatDuration(snapshot.completedPlannedMinutes)} of ${_formatDuration(snapshot.plannedMinutes)}',
+                      subtitle: l10n.plannedVsCompleted(
+                        _formatDuration(snapshot.completedPlannedMinutes),
+                        _formatDuration(snapshot.plannedMinutes),
+                      ),
                       icon: Icons.task_alt_rounded,
                       tint: context.sfColors.chart3,
                     ),
                     StatisticsMetricCard(
-                      title: 'Current Streak',
+                      title: l10n.currentStreak,
                       value: '${snapshot.currentStreak}d',
-                      subtitle: 'active streak',
+                      subtitle: l10n.activeStreak,
                       icon: Icons.local_fire_department_rounded,
                       tint: context.sfColors.accent,
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Study Activity'),
+                StatisticsSectionHeader(title: l10n.studyActivity),
                 const SizedBox(height: 10),
                 StatisticsActivityChart(
                   chartPoints: snapshot.chartPoints,
                   goalMinutes: snapshot.goalMinutes,
                 ),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Study by Subject'),
+                StatisticsSectionHeader(title: l10n.studyBySubject),
                 const SizedBox(height: 10),
                 StatisticsSubjectBreakdown(subjects: snapshot.subjectBreakdown),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Planned vs Completed'),
+                StatisticsSectionHeader(title: l10n.plannedVsCompletedHeader),
                 const SizedBox(height: 10),
                 StatisticsPlanProgress(
                   plannedMinutes: snapshot.plannedMinutes,
                   completedMinutes: snapshot.completedPlannedMinutes,
                 ),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Consistency'),
+                StatisticsSectionHeader(title: l10n.consistency),
                 const SizedBox(height: 10),
                 StatisticsHeatmap(
                   activeDays: snapshot.activeDays,
                   longestStreak: snapshot.longestStreak,
                 ),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Insights'),
+                StatisticsSectionHeader(title: l10n.insights),
                 const SizedBox(height: 10),
                 StatisticsInsights(insights: snapshot.insights),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Best Records'),
+                StatisticsSectionHeader(title: l10n.bestRecords),
                 const SizedBox(height: 10),
                 StatisticsBestRecords(records: snapshot.bestRecords),
                 const SizedBox(height: 20),
-                const StatisticsSectionHeader(title: 'Recent Achievements'),
+                StatisticsSectionHeader(title: l10n.recentAchievements),
                 const SizedBox(height: 10),
                 StatisticsAchievementPreview(
                   achievements: snapshot.recentAchievements,

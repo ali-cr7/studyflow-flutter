@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
-import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 
 class SettingsFocusSection extends StatelessWidget {
@@ -9,13 +9,14 @@ class SettingsFocusSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final cubit = context.read<SettingsCubit>();
     final settings = context.watch<SettingsCubit>().state.settings;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Focus settings', style: Theme.of(context).textTheme.titleLarge),
+        Text(l10n.focusSettings, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
         Card(
           child: Padding(
@@ -26,19 +27,19 @@ class SettingsFocusSection extends StatelessWidget {
                 SwitchListTile(
                   value: settings.notificationsEnabled,
                   onChanged: cubit.updateNotifications,
-                  title: const Text('Notifications'),
-                  subtitle: const Text('Reminders for study blocks'),
+                  title: Text(l10n.notifications),
+                  subtitle: Text(l10n.notificationsSubtitle),
                 ),
                 const Divider(height: 1),
                 SwitchListTile(
                   value: settings.soundEnabled,
                   onChanged: cubit.updateSoundEffects,
-                  title: const Text('Sound effects'),
-                  subtitle: const Text('Session alerts and sound cues'),
+                  title: Text(l10n.soundEffects),
+                  subtitle: Text(l10n.soundEffectsSubtitle),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  title: const Text('Focus sound'),
+                  title: Text(l10n.focusSound),
                   subtitle: Text(settings.focusSound.label),
                   trailing: const Icon(Icons.music_note_rounded),
                 ),

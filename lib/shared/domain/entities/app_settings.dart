@@ -1,3 +1,4 @@
+import 'package:study_planner/shared/domain/enums/app_language.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
 import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 
@@ -10,6 +11,7 @@ class AppSettings {
     required this.notificationsEnabled,
     required this.soundEnabled,
     required this.focusSound,
+    required this.language,
   });
 
   final AppThemeMode theme;
@@ -18,6 +20,7 @@ class AppSettings {
   final bool notificationsEnabled;
   final bool soundEnabled;
   final FocusSoundMode focusSound;
+  final AppLanguage language;
 
   /// Sensible defaults for a first launch before onboarding completes.
   factory AppSettings.defaults() {
@@ -28,6 +31,7 @@ class AppSettings {
       notificationsEnabled: true,
       soundEnabled: true,
       focusSound: FocusSoundMode.rain,
+      language: AppLanguage.en,
     );
   }
 
@@ -38,6 +42,7 @@ class AppSettings {
     bool? notificationsEnabled,
     bool? soundEnabled,
     FocusSoundMode? focusSound,
+    AppLanguage? language,
   }) {
     return AppSettings(
       theme: theme ?? this.theme,
@@ -46,6 +51,7 @@ class AppSettings {
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       soundEnabled: soundEnabled ?? this.soundEnabled,
       focusSound: focusSound ?? this.focusSound,
+      language: language ?? this.language,
     );
   }
 
@@ -57,7 +63,8 @@ class AppSettings {
         other.breakDuration == breakDuration &&
         other.notificationsEnabled == notificationsEnabled &&
         other.soundEnabled == soundEnabled &&
-        other.focusSound == focusSound;
+        other.focusSound == focusSound &&
+        other.language == language;
   }
 
   @override
@@ -68,5 +75,6 @@ class AppSettings {
     notificationsEnabled,
     soundEnabled,
     focusSound,
+    language,
   );
 }

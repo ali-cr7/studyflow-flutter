@@ -4,16 +4,18 @@ import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/history/presentation/cubit/history_cubit.dart';
 import 'package:study_planner/features/history/presentation/widgets/history_card.dart';
 import 'package:study_planner/features/history/presentation/widgets/history_monthly_selector.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class HistoryView extends StatelessWidget {
   const HistoryView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('History')),
+      appBar: AppBar(title: Text(l10n.history)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
@@ -34,7 +36,7 @@ class HistoryView extends StatelessWidget {
                     if (state is HistoryError) {
                       return Center(
                         child: Text(
-                          'Error: ${state.message}',
+                          l10n.error(state.message),
                           textAlign: TextAlign.center,
                         ),
                       );
@@ -56,7 +58,7 @@ class HistoryView extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         Text(
-                          'Study days',
+                          l10n.studyDays,
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -95,6 +97,7 @@ class _MonthlySummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
@@ -112,7 +115,7 @@ class _MonthlySummary extends StatelessWidget {
           Expanded(
             child: _SummaryItem(
               value: '${state.totalSessions}',
-              label: 'Sessions',
+              label: l10n.sessions,
               icon: Icons.timer_outlined,
             ),
           ),
@@ -120,7 +123,7 @@ class _MonthlySummary extends StatelessWidget {
           Expanded(
             child: _SummaryItem(
               value: '${state.activeDays}',
-              label: 'Active days',
+              label: l10n.activeDays,
               icon: Icons.calendar_today_outlined,
             ),
           ),
@@ -128,7 +131,7 @@ class _MonthlySummary extends StatelessWidget {
           Expanded(
             child: _SummaryItem(
               value: HistoryCubit.formatDuration(state.totalSeconds),
-              label: 'Study time',
+              label: l10n.studyTime,
               icon: Icons.schedule_outlined,
             ),
           ),
@@ -187,6 +190,7 @@ class _EmptyHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
@@ -213,7 +217,7 @@ class _EmptyHistory extends StatelessWidget {
             const SizedBox(height: 18),
 
             Text(
-              'No study history',
+              l10n.noStudyHistory,
               textAlign: TextAlign.center,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w700,
@@ -223,8 +227,7 @@ class _EmptyHistory extends StatelessWidget {
             const SizedBox(height: 8),
 
             Text(
-              'You have no completed study sessions '
-              'for this month yet.',
+              l10n.noStudyHistoryMessage,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colors.mutedForeground,

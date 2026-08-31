@@ -10,7 +10,9 @@ import 'package:study_planner/features/settings/presentation/cubit/settings_stat
 import 'package:study_planner/features/settings/presentation/widgets/settings_appearance_section.dart';
 import 'package:study_planner/features/settings/presentation/widgets/settings_duration_section.dart';
 import 'package:study_planner/features/settings/presentation/widgets/settings_focus_section.dart';
+import 'package:study_planner/features/settings/presentation/widgets/settings_language_section.dart';
 import 'package:study_planner/features/settings/presentation/widgets/settings_profile_section.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -18,6 +20,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context);
         return Scaffold(
           drawer: AppDrawer(
             onRecordsTap: () {
@@ -49,7 +52,7 @@ class SettingsPage extends StatelessWidget {
               );
             },
           ),
-          appBar: AppBar(title: const Text('Settings')),
+          appBar: AppBar(title: Text(l10n.settingsTitle)),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -58,6 +61,8 @@ class SettingsPage extends StatelessWidget {
                   const SettingsProfileSection(),
                   const SizedBox(height: 20),
                   const SettingsAppearanceSection(),
+                  const SizedBox(height: 20),
+                  const SettingsLanguageSection(),
                   const SizedBox(height: 20),
                   const SettingsFocusSection(),
                   const SizedBox(height: 20),

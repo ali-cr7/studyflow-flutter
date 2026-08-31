@@ -4,6 +4,7 @@ import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/core/services/achievement_service.dart';
 import 'package:study_planner/features/achievements/cubit/achievements_cubit.dart';
 import 'package:study_planner/features/achievements/presentation/widgets/achievement_grid.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/achievement_definition.dart';
 
 
@@ -26,9 +27,10 @@ class _AchievementsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Achievements'),
+        title: Text(l10n.achievements),
       ),
       body: BlocBuilder<AchievementsCubit, AchievementsState>(
         builder: (context, state) {
@@ -76,7 +78,7 @@ class _AchievementsView extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 Text(
-                  'Your achievements',
+                  l10n.yourAchievements,
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge
@@ -110,6 +112,7 @@ class _AchievementSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     final progress = totalCount == 0
@@ -150,7 +153,7 @@ class _AchievementSummary extends StatelessWidget {
                       CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '$unlockedCount of $totalCount unlocked',
+                      l10n.achievementsUnlocked(unlockedCount, totalCount),
                       style: theme.textTheme.titleMedium
                           ?.copyWith(
                         fontWeight: FontWeight.w700,
@@ -158,7 +161,7 @@ class _AchievementSummary extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Keep studying to unlock more!',
+                      l10n.keepStudyingToUnlockMore,
                       style: theme.textTheme.bodySmall,
                     ),
                   ],

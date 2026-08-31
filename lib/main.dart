@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/core/routes/app_router.dart';
@@ -9,8 +11,10 @@ import 'package:study_planner/core/services/study_timer_background_service.dart'
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
 import 'package:study_planner/core/theme.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/data/database/isar.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:study_planner/shared/domain/enums/app_language.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
 import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';
@@ -88,9 +92,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         profileRepository: getIt<StudentProfileRepository>(),
         settingsRepository: getIt<AppSettingsRepository>(),
       )..loadSettings(),
-      child: BlocBuilder<SettingsCubit, dynamic>(
+      child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           final themeMode = _themeModeFromSettings(state.settings.theme);
+
+          final locale = Locale(state.settings.language.localeCode);
 
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
@@ -98,6 +104,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeMode,
+            locale: locale,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             routerConfig: AppRouter.router,
           );
         },

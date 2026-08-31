@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/onboarding/presentation/pages/illustration_card.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({
@@ -16,6 +17,7 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       key: const ValueKey('welcome'),
       child: Column(
@@ -37,17 +39,17 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 28),
-          Text('StudyFlow', style: theme.textTheme.displayMedium),
+          Text(l10n.onboardingAppName, style: theme.textTheme.displayMedium),
           const SizedBox(height: 12),
           Text(
-            'Plan smarter. Study consistently. Achieve more.',
+            l10n.onboardingTagline,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colors.mutedForeground,
             ),
           ),
           const SizedBox(height: 28),
           Text(
-            'Welcome to StudyFlow — your personal study coach for staying on track. We’ll ask a few questions to tailor your experience.',
+            l10n.onboardingWelcomeMessage,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colors.mutedForeground,
             ),
@@ -57,7 +59,7 @@ class WelcomePage extends StatelessWidget {
           const SizedBox(height: 32),
           Center(
             child: Text(
-              'Get started and build a study plan that fits your day.',
+              l10n.onboardingGetStartedMessage,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colors.mutedForeground,

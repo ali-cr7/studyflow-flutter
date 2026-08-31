@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:study_planner/l10n/app_localizations.dart';
+import 'package:study_planner/shared/domain/enums/app_language.dart';
 
-import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
-
-class SettingsAppearanceSection extends StatelessWidget {
-  const SettingsAppearanceSection({super.key});
+class SettingsLanguageSection extends StatelessWidget {
+  const SettingsLanguageSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +16,25 @@ class SettingsAppearanceSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.appearance, style: Theme.of(context).textTheme.titleLarge),
+        Text(l10n.language, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: SegmentedButton<AppThemeMode>(
+            child: SegmentedButton<AppLanguage>(
               segments: [
-                ButtonSegment(value: AppThemeMode.light, label: Text(l10n.light)),
-                ButtonSegment(value: AppThemeMode.dark, label: Text(l10n.dark)),
+                ButtonSegment(
+                  value: AppLanguage.en,
+                  label: Text(l10n.languageEnglish),
+                ),
+                ButtonSegment(
+                  value: AppLanguage.ar,
+                  label: Text(l10n.languageArabic),
+                ),
               ],
-              selected: {settings.theme},
+              selected: {settings.language},
               onSelectionChanged: (selection) async {
-                await cubit.updateTheme(selection.first);
+                await cubit.updateLanguage(selection.first);
               },
             ),
           ),

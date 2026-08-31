@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
 import 'package:study_planner/shared/domain/entities/app_settings.dart';
 import 'package:study_planner/shared/domain/entities/student_profile.dart';
+import 'package:study_planner/shared/domain/enums/app_language.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
 import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
@@ -62,6 +63,10 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateBreakDuration(int minutes) async {
     if (minutes <= 0) return;
     await _persistSettings(state.settings.copyWith(breakDuration: minutes));
+  }
+
+  Future<void> updateLanguage(AppLanguage language) async {
+    await _persistSettings(state.settings.copyWith(language: language));
   }
 
   Future<void> updateProfile({

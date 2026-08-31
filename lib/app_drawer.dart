@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
@@ -17,6 +18,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
@@ -52,7 +54,7 @@ class AppDrawer extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   Text(
-                    'Study Planner',
+                    l10n.appName,
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: theme.colorScheme.onPrimary,
                       fontWeight: FontWeight.w700,
@@ -62,7 +64,7 @@ class AppDrawer extends StatelessWidget {
                   const SizedBox(height: 4),
 
                   Text(
-                    'Study smarter. Stay consistent.',
+                    l10n.appTagline,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onPrimary.withValues(
                         alpha: 0.75,
@@ -85,8 +87,8 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   _DrawerItem(
                     icon: Icons.emoji_events_rounded,
-                    title: 'Records',
-                    subtitle: 'Your best study achievements',
+                    title: l10n.records,
+                    subtitle: l10n.recordsSubtitle,
                     onTap: () {
                       Navigator.pop(context);
                       onRecordsTap();
@@ -95,8 +97,8 @@ class AppDrawer extends StatelessWidget {
 
                   _DrawerItem(
                     icon: Icons.history_rounded,
-                    title: 'History',
-                    subtitle: 'Review your study sessions',
+                    title: l10n.history,
+                    subtitle: l10n.historySubtitle,
                     onTap: () {
                       Navigator.pop(context);
                       onHistoryTap();
@@ -105,8 +107,8 @@ class AppDrawer extends StatelessWidget {
 
                   _DrawerItem(
                     icon: Icons.chat_rounded,
-                    title: 'Ask Teacher',
-                    subtitle: 'Need help? Contact your teacher',
+                    title: l10n.askTeacher,
+                    subtitle: l10n.askTeacherSubtitle,
                     iconColor: colors.primaryLight,
                     onTap: () {
                       Navigator.pop(context);
@@ -122,8 +124,8 @@ class AppDrawer extends StatelessWidget {
 
                   _DrawerItem(
                     icon: Icons.info_outline_rounded,
-                    title: 'About',
-                    subtitle: 'About Study Planner',
+                    title: l10n.about,
+                    subtitle: l10n.aboutSubtitle,
                     onTap: () {
                       _showAboutDialog(context);
                     },
@@ -138,7 +140,7 @@ class AppDrawer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
               child: Text(
-                'Study Planner • v1.0.0',
+                '${l10n.appName} • ${l10n.versionWithNumber('1.0.0')}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colors.mutedForeground,
                 ),
@@ -234,6 +236,7 @@ class _AboutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
@@ -264,7 +267,7 @@ class _AboutDialog extends StatelessWidget {
             const SizedBox(height: 16),
 
             Text(
-              'Study Planner',
+              l10n.appName,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -273,7 +276,7 @@ class _AboutDialog extends StatelessWidget {
             const SizedBox(height: 8),
 
             Text(
-              'A simple study companion designed to help students organize their time, stay consistent, and achieve their goals.',
+              l10n.aboutLongDescription,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colors.mutedForeground,
@@ -284,7 +287,7 @@ class _AboutDialog extends StatelessWidget {
             const SizedBox(height: 20),
 
             Text(
-              'Created by Ali Al Ali',
+              l10n.createdBy,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -293,7 +296,7 @@ class _AboutDialog extends StatelessWidget {
             const SizedBox(height: 4),
 
             Text(
-              'Software Engineer • Flutter Developer',
+              l10n.developerRole,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colors.mutedForeground,
@@ -307,7 +310,7 @@ class _AboutDialog extends StatelessWidget {
             const SizedBox(height: 12),
 
             Text(
-              'Connect with me',
+              l10n.connectWithMe,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -353,7 +356,7 @@ class _AboutDialog extends StatelessWidget {
             const SizedBox(height: 20),
 
             Text(
-              'Version 1.0.0',
+              l10n.versionWithNumber('1.0.0'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colors.mutedForeground,
               ),
@@ -365,7 +368,7 @@ class _AboutDialog extends StatelessWidget {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                child: Text(l10n.close),
               ),
             ),
           ],

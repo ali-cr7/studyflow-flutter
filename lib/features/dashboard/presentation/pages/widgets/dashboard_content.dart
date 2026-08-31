@@ -9,6 +9,7 @@ import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_st
 import 'package:study_planner/features/dashboard/presentation/pages/widgets/daily_phrase_card.dart';
 import 'package:study_planner/features/dashboard/presentation/pages/widgets/dashboard_row.dart';
 import 'package:study_planner/features/planner/cubit/subjects_cubit.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class DashboardContent extends StatelessWidget {
   const DashboardContent({super.key, required this.state});
@@ -17,14 +18,14 @@ class DashboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final profile = state.profile!;
     final settings = state.settings!;
     final theme = Theme.of(context);
     final colors = context.sfColors;
 
     return Scaffold(
-      drawer: 
-      AppDrawer(
+      drawer: AppDrawer(
         onRecordsTap: () {
           // Navigate to Records
           // Navigator.of(context).pop();
@@ -54,19 +55,19 @@ class DashboardContent extends StatelessWidget {
           );
         },
       ),
-      appBar: AppBar(title: const Text('Dashboard')),
+      appBar: AppBar(title: Text(l10n.dashboardTitle)),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Good morning, ${profile.name}',
+              _getGreeting(l10n, profile.name),
               style: theme.textTheme.displaySmall,
             ),
             const SizedBox(height: 12),
             Text(
-              'Ready to reach your study goals today?',
+              l10n.readyToReachGoals,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: colors.mutedForeground,
               ),
@@ -84,36 +85,27 @@ class DashboardContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Study plan summary',
+                      l10n.studyPlanSummary,
                       style: theme.textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
-                    DashboardRow(label: 'Grade', value: profile.grade),
+                    DashboardRow(label: l10n.grade, value: profile.grade),
                     const SizedBox(height: 10),
                     DashboardRow(
-                      label: 'Daily goal',
+                      label: l10n.dailyGoal,
                       value: _formatMinutes(profile.dailyGoalMinutes),
                     ),
                     const SizedBox(height: 10),
                     DashboardRow(
-                      label: 'Session length',
-                      value: '${profile.preferredSessionDuration} min',
+                      label: l10n.sessionLength,
+                      value: '${profile.preferredSessionDuration} ${l10n.min}',
                     ),
                     const SizedBox(height: 10),
                     DashboardRow(
-                      label: 'Break duration',
-                      value: '${settings.breakDuration} min',
+                      label: l10n.breakDuration,
+                      value: '${settings.breakDuration} ${l10n.min}',
                     ),
                     const SizedBox(height: 10),
-                    // DashboardRow(
-                    //   label: 'Wake up',
-                    //   value: _formatDayTime(profile.wakeUpTime),
-                    // ),
-                    // const SizedBox(height: 10),
-                    // DashboardRow(
-                    //   label: 'Sleep',
-                    //   value: _formatDayTime(profile.sleepTime),
-                    // ),
                   ],
                 ),
               ),
@@ -130,10 +122,13 @@ class DashboardContent extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Today’s focus', style: theme.textTheme.titleLarge),
+                    Text(l10n.todaysFocus, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 12),
                     Text(
-                      'Focus for ${settings.studyDuration} minutes, then take ${settings.breakDuration} minutes to recharge.',
+                      l10n.focusForMinutes(
+                        settings.studyDuration,
+                        settings.breakDuration,
+                      ),
                       style: theme.textTheme.bodyLarge?.copyWith(
                         color: colors.primaryDark,
                       ),
@@ -149,25 +144,6 @@ class DashboardContent extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: FilledButton.icon(
-                    //         onPressed: () => context.go(AppRoutes.subjects),
-                    //         icon: const Icon(Icons.school_outlined),
-                    //         label: const Text('Subjects'),
-                    //       ),
-                    //     ),
-                    //     const SizedBox(width: 12),
-                    //     Expanded(
-                    //       child: FilledButton.icon(
-                    //         onPressed: () => context.go(AppRoutes.dailyPlan),
-                    //         icon: const Icon(Icons.calendar_today_outlined),
-                    //         label: const Text('Daily Plan'),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     const Spacer(),
                   ],
                 ),
@@ -177,6 +153,17 @@ class DashboardContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static String _getGreeting(AppLocalizations l10n, String name) {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return l10n.goodMorning(name);
+    } else if (hour < 18) {
+      return l10n.goodAfternoon(name);
+    } else {
+      return l10n.goodEvening(name);
+    }
   }
 
   static String _formatMinutes(int minutes) {

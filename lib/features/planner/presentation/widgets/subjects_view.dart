@@ -9,6 +9,7 @@ import 'package:study_planner/features/planner/presentation/widgets/subject_card
 import 'package:study_planner/features/planner/presentation/widgets/subject_form_sheet.dart';
 import 'package:study_planner/features/planner/presentation/widgets/subjects_empty_state.dart';
 import 'package:study_planner/features/planner/presentation/widgets/subjects_header.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 
 class SubjectsView extends StatelessWidget {
@@ -35,18 +36,19 @@ class SubjectsView extends StatelessWidget {
   }
 
   Future<void> _deleteSubject(BuildContext context, Subject subject) async {
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final cubit = context.read<SubjectsCubit>();
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete subject?'),
-        content: Text('Remove ${subject.name} from your subject list?'),
+        title: Text(l10n.deleteSubjectConfirm),
+        content: Text(l10n.removeSubjectConfirm(subject.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -54,7 +56,7 @@ class SubjectsView extends StatelessWidget {
               backgroundColor: colorScheme.error,
               foregroundColor: colorScheme.onError,
             ),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -67,6 +69,7 @@ class SubjectsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -101,12 +104,12 @@ class SubjectsView extends StatelessWidget {
         },
       ),
       appBar: AppBar(
-        title: const Text('Subjects'),
+        title: Text(l10n.subjects),
         actions: [
           TextButton.icon(
             onPressed: () => context.go(AppRoutes.dailyPlan),
             icon: const Icon(Icons.calendar_today_outlined),
-            label: const Text('Daily plan'),
+            label: Text(l10n.dailyPlanTitle),
           ),
         ],
       ),
@@ -114,7 +117,7 @@ class SubjectsView extends StatelessWidget {
         heroTag: 'add_subject',
         onPressed: () => _openEditor(context),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Add subject'),
+        label: Text(l10n.addSubject),
       ),
       body: SafeArea(
         child: Padding(
@@ -131,7 +134,7 @@ class SubjectsView extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 24),
-              Text('Your subjects', style: theme.textTheme.titleLarge),
+              Text(l10n.yourSubjects, style: theme.textTheme.titleLarge),
               const SizedBox(height: 14),
               Expanded(
                 child: BlocBuilder<SubjectsCubit, SubjectsState>(
@@ -141,7 +144,7 @@ class SubjectsView extends StatelessWidget {
                     }
 
                     if (state is SubjectsError) {
-                      return Center(child: Text('Error: ${state.message}'));
+                      return Center(child: Text(l10n.error(state.message)));
                     }
 
                     final subjects = state is SubjectsLoaded

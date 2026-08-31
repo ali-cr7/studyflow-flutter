@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
-import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class SettingsDurationSection extends StatelessWidget {
   const SettingsDurationSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final cubit = context.read<SettingsCubit>();
     final settings = context.watch<SettingsCubit>().state.settings;
 
@@ -18,7 +19,7 @@ class SettingsDurationSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Session defaults',
+              l10n.sessionDefaults,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
@@ -28,7 +29,7 @@ class SettingsDurationSection extends StatelessWidget {
               children: [25, 45, 60].map((minutes) {
                 final selected = settings.studyDuration == minutes;
                 return ChoiceChip(
-                  label: Text('$minutes min'),
+                  label: Text('$minutes ${l10n.min}'),
                   selected: selected,
                   onSelected: (_) async {
                     await cubit.updateStudyDuration(minutes);
@@ -38,7 +39,7 @@ class SettingsDurationSection extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Break defaults',
+              l10n.breakDefaults,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
@@ -48,7 +49,7 @@ class SettingsDurationSection extends StatelessWidget {
               children: [5, 10, 15, 20].map((minutes) {
                 final selected = settings.breakDuration == minutes;
                 return ChoiceChip(
-                  label: Text('$minutes min'),
+                  label: Text('$minutes ${l10n.min}'),
                   selected: selected,
                   onSelected: (_) async {
                     await cubit.updateBreakDuration(minutes);

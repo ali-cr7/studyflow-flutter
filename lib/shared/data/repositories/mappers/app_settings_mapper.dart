@@ -11,6 +11,7 @@ abstract final class AppSettingsMapper {
       notificationsEnabled: collection.notificationsEnabled,
       soundEnabled: collection.soundEnabled,
       focusSound: collection.focusSound,
+      language: collection.language,
     );
   }
 
@@ -22,6 +23,7 @@ abstract final class AppSettingsMapper {
       ..studyDuration = settings.studyDuration
       ..breakDuration = settings.breakDuration
       ..notificationsEnabled = settings.notificationsEnabled
-      ..soundEnabled = settings.soundEnabled;
+      ..soundEnabled = settings.soundEnabled
+      ..language = settings.language;
   }
 }

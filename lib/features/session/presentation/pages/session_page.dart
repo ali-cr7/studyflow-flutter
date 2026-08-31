@@ -9,6 +9,7 @@ import 'package:study_planner/core/services/sound_service.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/features/session/cubit/session_cubit.dart';
 import 'package:study_planner/features/session/presentation/widgets/celebration_card.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
 
@@ -99,10 +100,11 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
         }
       },
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context);
         if (state is SessionError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Study session')),
-            body: Center(child: Text('Error: ${state.message}')),
+            appBar: AppBar(title: Text(l10n.studySession)),
+            body: Center(child: Text(l10n.error(state.message))),
           );
         }
 
@@ -116,9 +118,9 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
             paused?.subject ??
             breakActive?.subject ??
             breakComplete?.subject ??
-            const Subject(
+            Subject(
               id: 0,
-              name: 'Study session',
+              name: l10n.studySession,
               color: 0xFF4C6FFF,
               icon: 'book',
             );
@@ -150,12 +152,12 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
             : 0.0;
 
         final modeLabel = breakActive != null
-            ? 'Break time'
+            ? l10n.breakTimeLabel
             : paused != null
-            ? 'Paused'
+            ? l10n.paused
             : active != null
-            ? 'Focus block'
-            : 'All set';
+            ? l10n.focusBlock
+            : l10n.allSet;
 
         // ── Sound state ───────────────────────────────────────────────────
         // Show the sound control only during active study or paused states
@@ -174,7 +176,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                 child: OutlinedButton.icon(
                   onPressed: () => _cubit.pauseSession(),
                   icon: const Icon(Icons.pause_rounded),
-                  label: const Text('Pause'),
+                  label: Text(l10n.pause),
                 ),
               ),
               const SizedBox(width: 12),
@@ -182,7 +184,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                 child: FilledButton.icon(
                   onPressed: () => _cubit.finishSession(),
                   icon: const Icon(Icons.check_rounded),
-                  label: const Text('Finish'),
+                  label: Text(l10n.finish),
                 ),
               ),
             ],
@@ -194,7 +196,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                 child: OutlinedButton.icon(
                   onPressed: () => _cubit.cancelSession(),
                   icon: const Icon(Icons.close_rounded),
-                  label: const Text('Cancel'),
+                  label: Text(l10n.cancel),
                 ),
               ),
               const SizedBox(width: 12),
@@ -202,7 +204,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                 child: FilledButton.icon(
                   onPressed: () => _cubit.resumeSession(),
                   icon: const Icon(Icons.play_arrow_rounded),
-                  label: const Text('Resume'),
+                  label: Text(l10n.resume),
                 ),
               ),
             ],
@@ -213,7 +215,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
             child: FilledButton.icon(
               onPressed: () => _cubit.completeBreak(),
               icon: const Icon(Icons.arrow_forward_rounded),
-              label: const Text('Next session'),
+              label: Text(l10n.nextSession),
             ),
           );
         } else {
@@ -222,20 +224,20 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
             child: FilledButton.icon(
               onPressed: () => context.pop(),
               icon: const Icon(Icons.arrow_back_rounded),
-              label: const Text('Back to plan'),
+              label: Text(l10n.backToPlan),
             ),
           );
         }
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Study session'),
+            title: Text(l10n.studySession),
             actions: [
               if (showSoundButton)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: IconButton(
-                    tooltip: isMuted ? 'Unmute sound' : 'Mute sound',
+                    tooltip: isMuted ? l10n.unmuteSound : l10n.muteSound,
                     icon: Icon(
                       isMuted
                           ? Icons.volume_off_rounded
@@ -305,12 +307,12 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                           const SizedBox(height: 16),
                           Text(
                             breakActive != null
-                                ? 'Break ends soon'
+                                ? l10n.breakEndsSoon
                                 : paused != null
-                                ? 'Ready when you are'
+                                ? l10n.readyWhenYouAre
                                 : active != null
-                                ? '${_formatDuration(totalSeconds - remainingSeconds)} completed'
-                                : 'Session complete',
+                                ? '${_formatDuration(totalSeconds - remainingSeconds)} ${l10n.completed}'
+                                : l10n.sessionComplete,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: colors.mutedForeground,
                             ),
@@ -318,7 +320,7 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                           // ── Sound indicator pill ───────────────────────
                           if (showSoundButton) ...[
                             const SizedBox(height: 12),
-                            _SoundIndicator(isMuted: isMuted),
+                            _SoundIndicator(l10n: l10n, isMuted: isMuted),
                           ],
                         ],
                       ),
@@ -360,8 +362,9 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
 
 /// Small pill that shows the current sound playback state.
 class _SoundIndicator extends StatelessWidget {
-  const _SoundIndicator({required this.isMuted});
+  const _SoundIndicator({required this.l10n, required this.isMuted});
 
+  final AppLocalizations l10n;
   final bool isMuted;
 
   @override
@@ -384,7 +387,7 @@ class _SoundIndicator extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            isMuted ? 'Sound muted' : 'Ambient sound playing',
+            isMuted ? l10n.soundMuted : l10n.ambientSoundPlaying,
             style: theme.textTheme.labelSmall?.copyWith(color: color),
           ),
         ],
