@@ -23,6 +23,7 @@ class DailyPlanPage extends StatelessWidget {
             dailyPlanRepository: getIt<DailyPlanRepository>(),
             subjectRepository: getIt<SubjectRepository>(),
             profileRepository: getIt<StudentProfileRepository>(),
+            appSettingsRepository: getIt<AppSettingsRepository>(),
           )..loadPlanForDate(DateTime.now()),
         ),
 

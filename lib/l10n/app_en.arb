@@ -206,5 +206,5 @@
   "sessionLength": "Session length",
   "breakDuration": "Break duration",
   "todaysFocus": "Today's focus",
-  "focusForMinutes": "Focus for {studyMinutes} minutes, then take {breakMinutes} minutes to recharge."
+  "focusForMinutes": "Focus for {breakMinutes} minutes, then take {studyMinutes} minutes to recharge."
 }

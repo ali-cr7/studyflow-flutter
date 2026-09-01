@@ -111,7 +111,7 @@ class AppDrawer extends StatelessWidget {
                     subtitle: l10n.askTeacherSubtitle,
                     iconColor: colors.primaryLight,
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).pop();
                       onAskTeacherTap();
                     },
                   ),

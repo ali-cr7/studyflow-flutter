@@ -647,6 +647,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String focusForMinutes(Object breakMinutes, Object studyMinutes) {
-    return 'ركز لمدة $studyMinutes دقيقة، ثم خذ $breakMinutes دقيقة للاستراحة.';
+    return 'ركز لمدة $breakMinutes دقيقة، ثم خذ $studyMinutes دقيقة للاستراحة.';
   }
 }

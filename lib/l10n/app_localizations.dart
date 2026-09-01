@@ -1319,7 +1319,7 @@ abstract class AppLocalizations {
   /// No description provided for @focusForMinutes.
   ///
   /// In en, this message translates to:
-  /// **'Focus for {studyMinutes} minutes, then take {breakMinutes} minutes to recharge.'**
+  /// **'Focus for {breakMinutes} minutes, then take {studyMinutes} minutes to recharge.'**
   String focusForMinutes(Object breakMinutes, Object studyMinutes);
 }
 

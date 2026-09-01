@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
@@ -55,7 +57,7 @@ Future<void> main() async {
   await getIt<StudyTimerBackgroundService>().configure();
   await getIt<StudyTimerService>().reconcile();
 
-  runApp(const MyApp());
+  runApp(DevicePreview(enabled: false, builder: (context) => const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -87,16 +89,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SettingsCubit(
-        profileRepository: getIt<StudentProfileRepository>(),
-        settingsRepository: getIt<AppSettingsRepository>(),
-      )..loadSettings(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => SettingsCubit(
+            profileRepository: getIt<StudentProfileRepository>(),
+            settingsRepository: getIt<AppSettingsRepository>(),
+          )..loadSettings(),
+        ),
+        BlocProvider(
+          create: (_) => DashboardCubit(
+            profileRepository: getIt<StudentProfileRepository>(),
+            settingsRepository: getIt<AppSettingsRepository>(),
+          )..loadDashboard(),
+        ),
+      ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           final themeMode = _themeModeFromSettings(state.settings.theme);
 
-          final locale = Locale(state.settings.language.localeCode);
+          final locale =
+              DevicePreview.locale(context) ??
+              Locale(state.settings.language.localeCode);
 
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
@@ -105,6 +119,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             darkTheme: AppTheme.dark,
             themeMode: themeMode,
             locale: locale,
+            builder: DevicePreview.appBuilder,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: [
               AppLocalizations.delegate,

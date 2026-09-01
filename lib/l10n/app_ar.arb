@@ -206,5 +206,5 @@
   "sessionLength": "مدة الجلسة",
   "breakDuration": "مدة الاستراحة",
   "todaysFocus": "تركيز اليوم",
-  "focusForMinutes": "ركز لمدة {studyMinutes} دقيقة، ثم خذ {breakMinutes} دقيقة للاستراحة."
+  "focusForMinutes": "ركز لمدة {breakMinutes} دقيقة، ثم خذ {studyMinutes} دقيقة للاستراحة."
 }

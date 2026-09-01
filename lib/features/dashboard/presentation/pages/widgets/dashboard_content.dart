@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:study_planner/app_drawer.dart';
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/core/routes/app_router.dart';
+import 'package:study_planner/core/widgets/application_drawer.dart';
 import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_state.dart';
 import 'package:study_planner/features/dashboard/presentation/pages/widgets/daily_phrase_card.dart';
@@ -25,38 +26,9 @@ class DashboardContent extends StatelessWidget {
     final colors = context.sfColors;
 
     return Scaffold(
-      drawer: AppDrawer(
-        onRecordsTap: () {
-          // Navigate to Records
-          // Navigator.of(context).pop();
-          context.push(AppRoutes.achievements);
-        },
-        onHistoryTap: () {
-          context.push(AppRoutes.history);
-        },
-        onAskTeacherTap: () {
-          final dashboardState = context.read<DashboardCubit>().state;
-          final subjectsState = context.read<SubjectsCubit>().state;
-
-          if (dashboardState.profile == null) {
-            return;
-          }
-
-          if (subjectsState is! SubjectsLoaded) {
-            return;
-          }
-
-          context.push(
-            AppRoutes.askTeacher,
-            extra: AskTeacherRouteArgs(
-              studentName: dashboardState.profile!.name,
-              subjects: subjectsState.subjects,
-            ),
-          );
-        },
-      ),
+      drawer: ApplicationDrawer(),
       appBar: AppBar(title: Text(l10n.dashboardTitle)),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +70,7 @@ class DashboardContent extends StatelessWidget {
                     const SizedBox(height: 10),
                     DashboardRow(
                       label: l10n.sessionLength,
-                      value: '${profile.preferredSessionDuration} ${l10n.min}',
+                      value: '${settings.studyDuration} ${l10n.min}',
                     ),
                     const SizedBox(height: 10),
                     DashboardRow(
@@ -111,42 +83,38 @@ class DashboardContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: colors.primaryLight,
-                  borderRadius: BorderRadius.circular(AppColors.radiusLg),
-                ),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.todaysFocus, style: theme.textTheme.titleLarge),
-                    const SizedBox(height: 12),
-                    Text(
-                      l10n.focusForMinutes(
-                        settings.studyDuration,
-                        settings.breakDuration,
-                      ),
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: colors.primaryDark,
-                      ),
+            Container(
+              width: double.infinity,
+              constraints: const BoxConstraints(minHeight: 200),
+              decoration: BoxDecoration(
+                color: colors.primaryLight,
+                borderRadius: BorderRadius.circular(AppColors.radiusLg),
+              ),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.todaysFocus, style: theme.textTheme.titleLarge),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.focusForMinutes(
+                      settings.studyDuration,
+                      settings.breakDuration,
                     ),
-                    const Spacer(),
-                    Expanded(
-                      child: Center(
-                        child: Icon(
-                          Icons.bookmark_outline,
-                          size: 66,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: colors.primaryDark,
                     ),
-                    const SizedBox(height: 20),
-                    const Spacer(),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 24),
+                  Center(
+                    child: Icon(
+                      Icons.bookmark_outline,
+                      size: 66,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
             ),
           ],

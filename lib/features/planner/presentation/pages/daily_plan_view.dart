@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner/app_drawer.dart';
 import 'package:study_planner/core/routes/app_router.dart';
+import 'package:study_planner/core/widgets/application_drawer.dart';
 import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:study_planner/features/planner/cubit/daily_plan_cubit.dart';
 import 'package:study_planner/features/planner/cubit/subjects_cubit.dart';
@@ -50,36 +51,7 @@ class DailyPlanView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      drawer: AppDrawer(
-        onRecordsTap: () {
-          // Navigate to Records
-          // Navigator.of(context).pop();
-          context.push(AppRoutes.achievements);
-        },
-        onHistoryTap: () {
-          context.push(AppRoutes.history);
-        },
-        onAskTeacherTap: () {
-          final dashboardState = context.read<DashboardCubit>().state;
-          final subjectsState = context.read<SubjectsCubit>().state;
-
-          if (dashboardState.profile == null) {
-            return;
-          }
-
-          if (subjectsState is! SubjectsLoaded) {
-            return;
-          }
-
-          context.push(
-            AppRoutes.askTeacher,
-            extra: AskTeacherRouteArgs(
-              studentName: dashboardState.profile!.name,
-              subjects: subjectsState.subjects,
-            ),
-          );
-        },
-      ),
+      drawer: ApplicationDrawer(),
       appBar: AppBar(
         title: Text(l10n.dailyPlanTitle),
         actions: [

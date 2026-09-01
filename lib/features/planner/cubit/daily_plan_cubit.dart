@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/core/utils/date_utils.dart';
+import 'package:study_planner/shared/domain/domain.dart';
 import 'package:study_planner/shared/domain/entities/daily_plan.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
@@ -14,14 +15,17 @@ class DailyPlanCubit extends Cubit<DailyPlanState> {
     required DailyPlanRepository dailyPlanRepository,
     required SubjectRepository subjectRepository,
     required StudentProfileRepository profileRepository,
+    required AppSettingsRepository appSettingsRepository,
   }) : _dailyPlanRepository = dailyPlanRepository,
        _subjectRepository = subjectRepository,
        _profileRepository = profileRepository,
+       _appSettingsRepository = appSettingsRepository,
        super(DailyPlanInitial());
 
   final DailyPlanRepository _dailyPlanRepository;
   final SubjectRepository _subjectRepository;
   final StudentProfileRepository _profileRepository;
+  final AppSettingsRepository _appSettingsRepository;
   DateTime _selectedDate = normalizeToLocalDate(DateTime.now());
 
   Future<void> loadPlanForDate(DateTime date) async {
@@ -29,8 +33,8 @@ class DailyPlanCubit extends Cubit<DailyPlanState> {
     emit(DailyPlanLoading());
 
     try {
-      final profile = await _profileRepository.getProfile();
-      final sessionDurationMinutes = profile?.preferredSessionDuration ?? 25;
+      final settings = await _appSettingsRepository.getSettings();
+      final sessionDurationMinutes = settings.studyDuration;
       final plan = await _dailyPlanRepository.getOrCreateForDate(_selectedDate);
       final allSubjects = await _subjectRepository.getAll();
       final subjectMap = {

@@ -652,6 +652,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String focusForMinutes(Object breakMinutes, Object studyMinutes) {
-    return 'Focus for $studyMinutes minutes, then take $breakMinutes minutes to recharge.';
+    return 'Focus for $breakMinutes minutes, then take $studyMinutes minutes to recharge.';
   }
 }
