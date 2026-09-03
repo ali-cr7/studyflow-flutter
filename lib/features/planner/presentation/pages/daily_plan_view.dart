@@ -23,9 +23,11 @@ class DailyPlanView extends StatelessWidget {
     final cubit = context.read<DailyPlanCubit>();
     final state = cubit.state;
 
-    if (state is! DailyPlanLoaded || state.availableSubjects.isEmpty) {
+    if (state is! DailyPlanLoaded || state.subjectsById.isEmpty) {
       return;
     }
+
+    final allSubjects = state.subjectsById.values.toList();
 
     await showModalBottomSheet<void>(
       context: context,
@@ -37,7 +39,7 @@ class DailyPlanView extends StatelessWidget {
         return BlocProvider.value(
           value: cubit,
           child: DailyPlanAddSubjectSheet(
-            availableSubjects: state.availableSubjects,
+            availableSubjects: allSubjects,
             sessionDurationMinutes: state.sessionDurationMinutes,
           ),
         );
@@ -45,7 +47,10 @@ class DailyPlanView extends StatelessWidget {
     );
   }
 
-  Future<void> _openSession(BuildContext context, _DailyPlanDisplayItem item) async {
+  Future<void> _openSession(
+    BuildContext context,
+    _DailyPlanDisplayItem item,
+  ) async {
     await context.push(
       AppRoutes.session,
       extra: SessionRouteArgs(
@@ -78,7 +83,10 @@ class DailyPlanView extends StatelessWidget {
       ),
       floatingActionButton: BlocBuilder<DailyPlanCubit, DailyPlanState>(
         builder: (context, state) {
-          if (state is! DailyPlanLoaded || state.availableSubjects.isEmpty) {
+          print(
+            'DailyPlanView: FloatingActionButton builder called with state: $state',
+          );
+          if (state is! DailyPlanLoaded) {
             return const SizedBox.shrink();
           }
 

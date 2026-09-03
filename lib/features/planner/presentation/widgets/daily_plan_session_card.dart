@@ -28,83 +28,94 @@ class DailyPlanSessionCard extends StatelessWidget {
     final subjectColor = Color(subject.color);
     final cubit = context.read<DailyPlanCubit>();
 
+    final isCompleted = plannedSubject.completed;
+
     return Material(
       color: theme.cardColor,
       borderRadius: BorderRadius.circular(AppColors.radiusLg),
       child: InkWell(
-        onTap: onTap,
+        onTap: isCompleted ? null : onTap,
         borderRadius: BorderRadius.circular(AppColors.radiusLg),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            borderRadius: BorderRadius.circular(AppColors.radiusLg),
-            border: Border.all(color: colors.border, width: 1),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  color: subjectColor.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Icon(
-                  _subjectIcon(subject.icon),
-                  color: subjectColor,
-                  size: 28,
-                ),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: isCompleted ? 0.65 : 1.0,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.cardColor,
+              borderRadius: BorderRadius.circular(AppColors.radiusLg),
+              border: Border.all(
+                color: isCompleted ? colors.success : colors.border,
+                width: 1,
               ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 54,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    color: subjectColor.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Icon(
+                    _subjectIcon(subject.icon),
+                    color: subjectColor,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        subject.name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        _sessionSummary(),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colors.mutedForeground,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
                   children: [
-                    Text(
-                      subject.name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+                    IconButton(
+                      onPressed: () =>
+                          cubit.togglePlannedSubject(plannedSubject),
+                      icon: Icon(
+                        plannedSubject.completed
+                            ? Icons.check_circle_rounded
+                            : Icons.radio_button_unchecked_rounded,
+                        color: plannedSubject.completed
+                            ? colors.success
+                            : colors.mutedForeground,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      tooltip: 'Toggle completion',
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      _sessionSummary(),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colors.mutedForeground,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    IconButton(
+                      onPressed: () =>
+                          cubit.deletePlannedSubject(plannedSubject.id),
+                      icon: const Icon(Icons.delete_outline_rounded),
+                      tooltip: 'Delete planned subject',
                     ),
                   ],
                 ),
-              ),
-              Column(
-                children: [
-                  IconButton(
-                    onPressed: () => cubit.togglePlannedSubject(plannedSubject),
-                    icon: Icon(
-                      plannedSubject.completed
-                          ? Icons.check_circle_rounded
-                          : Icons.radio_button_unchecked_rounded,
-                      color: plannedSubject.completed
-                          ? colors.success
-                          : colors.mutedForeground,
-                    ),
-                    tooltip: 'Toggle completion',
-                  ),
-                  IconButton(
-                    onPressed: () =>
-                        cubit.deletePlannedSubject(plannedSubject.id),
-                    icon: const Icon(Icons.delete_outline_rounded),
-                    tooltip: 'Delete planned subject',
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
