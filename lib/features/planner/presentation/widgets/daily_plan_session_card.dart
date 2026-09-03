@@ -67,6 +67,8 @@ class DailyPlanSessionCard extends StatelessWidget {
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
                     Text(
@@ -74,6 +76,8 @@ class DailyPlanSessionCard extends StatelessWidget {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: colors.mutedForeground,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

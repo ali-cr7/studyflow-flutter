@@ -147,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
-  String get totalStudyTime => 'Total study time';
+  String get totalStudyTime => 'Total';
 
   @override
   String get totalSessions => 'Total sessions';
@@ -654,4 +654,161 @@ class AppLocalizationsEn extends AppLocalizations {
   String focusForMinutes(Object breakMinutes, Object studyMinutes) {
     return 'Focus for $breakMinutes minutes, then take $studyMinutes minutes to recharge.';
   }
+
+  @override
+  String get subjectDistributionTitle => 'Subject Distribution';
+
+  @override
+  String get subjectDistributionEmpty => 'No subject data for this period';
+
+  @override
+  String get otherSubjects => 'Other';
+
+  @override
+  String streakDays(Object count) {
+    return '$count-day streak';
+  }
+
+  @override
+  String get noRecordsYet => 'No records yet';
+
+  @override
+  String get keepStudyingForRecords =>
+      'Keep studying to unlock your best streaks and milestones.';
+
+  @override
+  String average(Object duration) {
+    return 'Average $duration';
+  }
+
+  @override
+  String goal(Object duration) {
+    return 'Goal $duration';
+  }
+
+  @override
+  String get goalLabel => 'Goal';
+
+  @override
+  String get noSubjectDataYet => 'No subject data yet';
+
+  @override
+  String get completeSessionsForBreakdown =>
+      'Complete sessions to see your breakdown by subject.';
+
+  @override
+  String percent(Object value) {
+    return '$value%';
+  }
+
+  @override
+  String activeDaysCount(Object count) {
+    return '$count active days';
+  }
+
+  @override
+  String longestStreak(Object count) {
+    return 'Longest streak $count';
+  }
+
+  @override
+  String get periodToday => 'Today';
+
+  @override
+  String get periodWeek => 'Week';
+
+  @override
+  String get periodMonth => 'Month';
+
+  @override
+  String get periodYear => 'Year';
+
+  @override
+  String get periodAllTime => 'All Time';
+
+  @override
+  String get noInsightsYet => 'No insights yet';
+
+  @override
+  String get buildConsistentRhythm =>
+      'Build a consistent study rhythm to unlock personalized insights.';
+
+  @override
+  String get noAchievementsYetStats => 'No achievements yet';
+
+  @override
+  String get completeSessionsForAchievements =>
+      'Complete study sessions and reach your goals to unlock milestones.';
+
+  @override
+  String get couldNotLoadStatistics => 'Could not load your statistics.';
+
+  @override
+  String completedFormat(Object duration) {
+    return '$duration completed';
+  }
+
+  @override
+  String plannedFormat(Object duration) {
+    return 'Planned $duration';
+  }
+
+  @override
+  String completedLabel(Object duration) {
+    return 'Completed $duration';
+  }
+
+  @override
+  String mostStudiedSubject(Object period, Object subject) {
+    return '$subject is your most studied subject $period.';
+  }
+
+  @override
+  String planCompletionInsight(Object percent) {
+    return 'You completed $percent% of your planned study time.';
+  }
+
+  @override
+  String currentStreakInsight(Object count) {
+    return 'Your current streak is $count days.';
+  }
+
+  @override
+  String longestStreakInsight(Object count) {
+    return 'Your longest streak is $count days.';
+  }
+
+  @override
+  String get periodLabelToday => 'today';
+
+  @override
+  String get periodLabelWeek => 'this week';
+
+  @override
+  String get periodLabelMonth => 'this month';
+
+  @override
+  String get periodLabelYear => 'this year';
+
+  @override
+  String get periodLabelAllTime => 'overall';
+
+  @override
+  String get longestStreakRecord => 'Longest streak';
+
+  @override
+  String get mostProductiveDay => 'Most productive day';
+
+  @override
+  String get mostStudiedSubjectRecord => 'Most studied subject';
+
+  @override
+  String get longestSession => 'Longest session';
+
+  @override
+  String get noStudySessionsRecorded =>
+      'No study sessions recorded yet for this period.';
+
+  @override
+  String get na => 'N/A';
 }

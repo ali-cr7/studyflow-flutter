@@ -1,79 +1,101 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class StatisticsPlanProgress extends StatelessWidget {
   const StatisticsPlanProgress({
     super.key,
-    required this.plannedMinutes,
-    required this.completedMinutes,
+    required this.plannedSeconds,
+    required this.completedSeconds,
   });
 
-  final int plannedMinutes;
-  final int completedMinutes;
-
-  double get completionRatio => plannedMinutes <= 0
-      ? 0
-      : (completedMinutes / plannedMinutes).clamp(0.0, 1.0);
+  /// Duration stored/calculated in seconds.
+  final int plannedSeconds;
+  final int completedSeconds;
 
   @override
   Widget build(BuildContext context) {
-    final percent = (completionRatio * 100).round();
+    final theme = Theme.of(context);
+    final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final safePlannedSeconds = plannedSeconds < 0 ? 0 : plannedSeconds;
+    final safeCompletedSeconds = completedSeconds < 0 ? 0 : completedSeconds;
+
+    final percent = safePlannedSeconds > 0
+        ? ((safeCompletedSeconds / safePlannedSeconds) * 100).round()
+        : 0;
+
+    // Prevent the progress indicator from receiving a value > 1.
+    final progress = safePlannedSeconds > 0
+        ? (safeCompletedSeconds / safePlannedSeconds).clamp(0.0, 1.0)
+        : 0.0;
 
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(AppColors.radiusXl),
-        border: Border.all(color: context.sfColors.border, width: 1),
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(AppColors.radiusLg),
+        border: Border.all(color: colors.border, width: 1),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '${_formatDuration(completedMinutes)} completed',
-                style: Theme.of(context).textTheme.titleMedium,
+              Flexible(
+                child: Text(
+                  l10n.planCompletion,
+                  style: theme.textTheme.titleMedium,
+                ),
               ),
+              const SizedBox(width: 12),
               Text(
-                '$percent%',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: completionRatio >= 0.8
-                      ? context.sfColors.success
-                      : Theme.of(context).colorScheme.primary,
+                l10n.percent(percent),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+
+          const SizedBox(height: 12),
+
           ClipRRect(
             borderRadius: BorderRadius.circular(999),
             child: LinearProgressIndicator(
-              value: completionRatio,
-              minHeight: 14,
-              backgroundColor: context.sfColors.muted,
-              valueColor: AlwaysStoppedAnimation(
-                completionRatio >= 0.8
-                    ? context.sfColors.success
-                    : Theme.of(context).colorScheme.primary,
+              value: progress,
+              minHeight: 10,
+              backgroundColor: colors.muted,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                theme.colorScheme.primary,
               ),
             ),
           ),
+
           const SizedBox(height: 12),
+
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Planned ${_formatDuration(plannedMinutes)}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.sfColors.mutedForeground,
+              Expanded(
+                child: Text(
+                  l10n.plannedFormat(_formatDuration(safePlannedSeconds)),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colors.mutedForeground,
+                  ),
                 ),
               ),
-              Text(
-                'Completed ${_formatDuration(completedMinutes)}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.sfColors.mutedForeground,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.completedLabel(_formatDuration(safeCompletedSeconds)),
+                  textAlign: TextAlign.end,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colors.mutedForeground,
+                  ),
                 ),
               ),
             ],
@@ -83,18 +105,11 @@ class StatisticsPlanProgress extends StatelessWidget {
     );
   }
 
-  static String _formatMinutes(int minutes) {
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (hours > 0 && remainder > 0) return '${hours}h ${remainder}m';
-    if (hours > 0) return '${hours}h';
-    return '${remainder}m';
-  }
-
+  /// Formats a duration stored in seconds for display.
   static String _formatDuration(int seconds) {
-    final hours = seconds ~/ 3600;
-    final minutes = (seconds % 3600) ~/ 60;
-    final remainingSeconds = seconds % 60;
+    final totalMinutes = seconds ~/ 60;
+    final hours = totalMinutes ~/ 60;
+    final minutes = totalMinutes % 60;
 
     if (hours > 0 && minutes > 0) {
       return '${hours}h ${minutes}m';
@@ -104,14 +119,6 @@ class StatisticsPlanProgress extends StatelessWidget {
       return '${hours}h';
     }
 
-    if (minutes > 0 && remainingSeconds > 0) {
-      return '${minutes}m ${remainingSeconds}s';
-    }
-
-    if (minutes > 0) {
-      return '${minutes}m';
-    }
-
-    return '${remainingSeconds}s';
+    return '${minutes}m';
   }
 }

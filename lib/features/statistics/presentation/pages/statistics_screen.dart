@@ -20,6 +20,7 @@ import 'package:study_planner/features/statistics/presentation/widgets/statistic
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_plan_progress.dart';
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_section_header.dart';
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_subject_breakdown.dart';
+import 'package:study_planner/features/statistics/presentation/widgets/statistics_subject_donut_chart.dart';
 import 'package:study_planner/l10n/app_localizations.dart';
 
 class StatisticsScreen extends StatefulWidget {
@@ -176,46 +177,63 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.35,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  children: [
-                    StatisticsMetricCard(
-                      title: l10n.studyTimeMetric,
-                      value: _formatDuration(snapshot.studyMinutes),
-                      subtitle: l10n.completedSessionsMetric(snapshot.sessionCount),
-                      icon: Icons.timer_rounded,
-                      tint: context.sfColors.chart1,
-                    ),
-                    StatisticsMetricCard(
-                      title: l10n.sessionsMetric,
-                      value: '${snapshot.sessionCount}',
-                      subtitle: l10n.completed,
-                      icon: Icons.check_circle_rounded,
-                      tint: context.sfColors.chart2,
-                    ),
-                    StatisticsMetricCard(
-                      title: l10n.planCompletion,
-                      value: '${snapshot.planCompletionPercent}%',
-                      subtitle: l10n.plannedVsCompleted(
-                        _formatDuration(snapshot.completedPlannedMinutes),
-                        _formatDuration(snapshot.plannedMinutes),
-                      ),
-                      icon: Icons.task_alt_rounded,
-                      tint: context.sfColors.chart3,
-                    ),
-                    StatisticsMetricCard(
-                      title: l10n.currentStreak,
-                      value: '${snapshot.currentStreak}d',
-                      subtitle: l10n.activeStreak,
-                      icon: Icons.local_fire_department_rounded,
-                      tint: context.sfColors.accent,
-                    ),
-                  ],
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final width = constraints.maxWidth;
+
+                    final cardHeight = width < 360
+                        ? 145.0
+                        : width < 600
+                        ? 150.0
+                        : 158.0;
+
+                    return GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisExtent: cardHeight,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      children: [
+                        StatisticsMetricCard(
+                          title: l10n.studyTimeMetric,
+                          value: _formatDuration(snapshot.studyMinutes),
+                          subtitle: l10n.completedSessionsMetric(
+                            snapshot.sessionCount,
+                          ),
+                          icon: Icons.timer_rounded,
+                          tint: context.sfColors.chart1,
+                        ),
+
+                        StatisticsMetricCard(
+                          title: l10n.sessionsMetric,
+                          value: '${snapshot.sessionCount}',
+                          subtitle: l10n.completed,
+                          icon: Icons.check_circle_rounded,
+                          tint: context.sfColors.chart2,
+                        ),
+
+                        StatisticsMetricCard(
+                          title: l10n.planCompletion,
+                          value: '${snapshot.planCompletionPercent}%',
+                          subtitle: l10n.plannedVsCompleted(
+                            _formatDuration(snapshot.completedPlannedMinutes),
+                            _formatDuration(snapshot.plannedMinutes),
+                          ),
+                          icon: Icons.task_alt_rounded,
+                          tint: context.sfColors.chart3,
+                        ),
+
+                        StatisticsMetricCard(
+                          title: l10n.currentStreak,
+                          value: '${snapshot.currentStreak}d',
+                          subtitle: l10n.activeStreak,
+                          icon: Icons.local_fire_department_rounded,
+                          tint: context.sfColors.accent,
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 StatisticsSectionHeader(title: l10n.studyActivity),
@@ -227,13 +245,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 const SizedBox(height: 20),
                 StatisticsSectionHeader(title: l10n.studyBySubject),
                 const SizedBox(height: 10),
+                StatisticsSubjectDonutChart(
+                  subjects: snapshot.subjectBreakdown,
+                ),
+                const SizedBox(height: 12),
                 StatisticsSubjectBreakdown(subjects: snapshot.subjectBreakdown),
                 const SizedBox(height: 20),
                 StatisticsSectionHeader(title: l10n.plannedVsCompletedHeader),
                 const SizedBox(height: 10),
                 StatisticsPlanProgress(
-                  plannedMinutes: snapshot.plannedMinutes,
-                  completedMinutes: snapshot.completedPlannedMinutes,
+                  plannedSeconds: snapshot.plannedMinutes,
+                  completedSeconds: snapshot.completedPlannedMinutes,
                 ),
                 const SizedBox(height: 20),
                 StatisticsSectionHeader(title: l10n.consistency),

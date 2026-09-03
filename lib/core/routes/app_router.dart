@@ -40,7 +40,7 @@ class AppRouter {
         path: AppRoutes.askTeacher,
         builder: (context, state) {
           final args = state.extra as AskTeacherRouteArgs?;
-          if (args == null) return const DailyPlanPage();
+          if (args == null) return const MainShellPage();
           return AskTeacherScreen(
             studentName: args.studentName,
             subjects: args.subjects,
@@ -79,7 +79,7 @@ class AppRouter {
         path: AppRoutes.session,
         builder: (context, state) {
           final args = state.extra as SessionRouteArgs?;
-          if (args == null) return const DailyPlanPage();
+          if (args == null) return const MainShellPage();
           return SessionPage(
             subject: args.subject,
             plannedMinutes: args.plannedMinutes,

@@ -23,6 +23,13 @@ class MainShellPage extends StatefulWidget {
 
 class _MainShellPageState extends State<MainShellPage> {
   int _selectedIndex = 0;
+  int _refreshCounter = 0;
+
+  /// Notifies when a different tab is selected
+  final tabIndexNotifier = ValueNotifier<int>(0);
+  
+  /// Notifies when the currently selected tab is tapped again (refresh request)
+  final refreshNotifier = ValueNotifier<int>(0);
 
   static const List<NavigationDestination> _destinations = [
     NavigationDestination(
@@ -57,14 +64,35 @@ class _MainShellPageState extends State<MainShellPage> {
     ),
   ];
 
-  final List<Widget> _views = const [
-    DashboardPage(),
-    DailyPlanPage(),
-    SizedBox.shrink(),
-    SubjectsPage(),
-    StatisticsPage(),
-    SettingsPage(),
-  ];
+  late final List<Widget> _views;
+
+  @override
+  void initState() {
+    super.initState();
+    _views = [
+      DashboardPage(
+        tabIndexNotifier: tabIndexNotifier,
+        refreshNotifier: refreshNotifier,
+      ),
+      DailyPlanPage(
+        tabIndexNotifier: tabIndexNotifier,
+        refreshNotifier: refreshNotifier,
+      ),
+      const SizedBox.shrink(),
+      SubjectsPage(
+        tabIndexNotifier: tabIndexNotifier,
+        refreshNotifier: refreshNotifier,
+      ),
+      StatisticsPage(
+        tabIndexNotifier: tabIndexNotifier,
+        refreshNotifier: refreshNotifier,
+      ),
+      SettingsPage(
+        tabIndexNotifier: tabIndexNotifier,
+        refreshNotifier: refreshNotifier,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +105,15 @@ class _MainShellPageState extends State<MainShellPage> {
             await _openStudySession(context);
             return;
           }
-          setState(() => _selectedIndex = index);
+          if (index == _selectedIndex) {
+            // Same tab tapped again - trigger refresh
+            _refreshCounter++;
+            refreshNotifier.value = _refreshCounter;
+          } else {
+            // Different tab selected
+            setState(() => _selectedIndex = index);
+            tabIndexNotifier.value = index;
+          }
         },
         destinations: _destinations,
       ),

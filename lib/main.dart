@@ -5,7 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_cubit.dart';
+import 'package:study_planner/features/planner/cubit/daily_plan_cubit.dart';
+import 'package:study_planner/features/planner/cubit/subjects_cubit.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
+import 'package:study_planner/features/statistics/presentation/cubit/statistics_cubit.dart';
+import 'package:study_planner/features/statistics/presentation/cubit/statistics_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:study_planner/core/service%20locator/injection.dart';
 import 'package:study_planner/core/routes/app_router.dart';
@@ -18,8 +22,11 @@ import 'package:study_planner/shared/data/database/isar.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:study_planner/shared/domain/enums/app_language.dart';
 import 'package:study_planner/shared/domain/enums/app_theme_mode.dart';
+import 'package:study_planner/features/statistics/data/repositories/statistics_repository.dart';
 import 'package:study_planner/shared/domain/repositories/app_settings_repository.dart';
+import 'package:study_planner/shared/domain/repositories/daily_plan_repository.dart';
 import 'package:study_planner/shared/domain/repositories/student_profile_repository.dart';
+import 'package:study_planner/shared/domain/repositories/subject_repository.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUPABASE CONFIGURATION
@@ -102,6 +109,23 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             profileRepository: getIt<StudentProfileRepository>(),
             settingsRepository: getIt<AppSettingsRepository>(),
           )..loadDashboard(),
+        ),
+        BlocProvider(
+          create: (_) => DailyPlanCubit(
+            dailyPlanRepository: getIt<DailyPlanRepository>(),
+            subjectRepository: getIt<SubjectRepository>(),
+            profileRepository: getIt<StudentProfileRepository>(),
+            appSettingsRepository: getIt<AppSettingsRepository>(),
+          )..loadPlanForDate(DateTime.now()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              SubjectsCubit(getIt<SubjectRepository>())..loadSubjects(),
+        ),
+        BlocProvider(
+          create: (_) =>
+              StatisticsCubit(repository: getIt<StatisticsRepository>())
+                ..loadStatistics(period: StatisticsPeriod.week),
         ),
       ],
       child: BlocBuilder<SettingsCubit, SettingsState>(

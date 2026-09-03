@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class StatisticsHeader extends StatelessWidget {
   const StatisticsHeader({
@@ -15,6 +16,7 @@ class StatisticsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,7 +51,7 @@ class StatisticsHeader extends StatelessWidget {
               const Text('🔥', style: TextStyle(fontSize: 18)),
               const SizedBox(width: 6),
               Text(
-                '$streak-day streak',
+                l10n.streakDays(streak),
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: context.sfColors.accentDark,
                   fontWeight: FontWeight.w700,

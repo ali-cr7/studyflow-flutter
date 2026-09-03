@@ -377,7 +377,7 @@ abstract class AppLocalizations {
   /// No description provided for @totalStudyTime.
   ///
   /// In en, this message translates to:
-  /// **'Total study time'**
+  /// **'Total'**
   String get totalStudyTime;
 
   /// No description provided for @totalSessions.
@@ -1321,6 +1321,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Focus for {breakMinutes} minutes, then take {studyMinutes} minutes to recharge.'**
   String focusForMinutes(Object breakMinutes, Object studyMinutes);
+
+  /// No description provided for @subjectDistributionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject Distribution'**
+  String get subjectDistributionTitle;
+
+  /// No description provided for @subjectDistributionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No subject data for this period'**
+  String get subjectDistributionEmpty;
+
+  /// No description provided for @otherSubjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get otherSubjects;
+
+  /// No description provided for @streakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}-day streak'**
+  String streakDays(Object count);
+
+  /// No description provided for @noRecordsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No records yet'**
+  String get noRecordsYet;
+
+  /// No description provided for @keepStudyingForRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep studying to unlock your best streaks and milestones.'**
+  String get keepStudyingForRecords;
+
+  /// No description provided for @average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average {duration}'**
+  String average(Object duration);
+
+  /// No description provided for @goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal {duration}'**
+  String goal(Object duration);
+
+  /// No description provided for @goalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goalLabel;
+
+  /// No description provided for @noSubjectDataYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No subject data yet'**
+  String get noSubjectDataYet;
+
+  /// No description provided for @completeSessionsForBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete sessions to see your breakdown by subject.'**
+  String get completeSessionsForBreakdown;
+
+  /// No description provided for @percent.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}%'**
+  String percent(Object value);
+
+  /// No description provided for @activeDaysCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active days'**
+  String activeDaysCount(Object count);
+
+  /// No description provided for @longestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest streak {count}'**
+  String longestStreak(Object count);
+
+  /// No description provided for @periodToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get periodToday;
+
+  /// No description provided for @periodWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get periodWeek;
+
+  /// No description provided for @periodMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get periodMonth;
+
+  /// No description provided for @periodYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get periodYear;
+
+  /// No description provided for @periodAllTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get periodAllTime;
+
+  /// No description provided for @noInsightsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No insights yet'**
+  String get noInsightsYet;
+
+  /// No description provided for @buildConsistentRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a consistent study rhythm to unlock personalized insights.'**
+  String get buildConsistentRhythm;
+
+  /// No description provided for @noAchievementsYetStats.
+  ///
+  /// In en, this message translates to:
+  /// **'No achievements yet'**
+  String get noAchievementsYetStats;
+
+  /// No description provided for @completeSessionsForAchievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete study sessions and reach your goals to unlock milestones.'**
+  String get completeSessionsForAchievements;
+
+  /// No description provided for @couldNotLoadStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your statistics.'**
+  String get couldNotLoadStatistics;
+
+  /// No description provided for @completedFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} completed'**
+  String completedFormat(Object duration);
+
+  /// No description provided for @plannedFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned {duration}'**
+  String plannedFormat(Object duration);
+
+  /// No description provided for @completedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed {duration}'**
+  String completedLabel(Object duration);
+
+  /// No description provided for @mostStudiedSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'{subject} is your most studied subject {period}.'**
+  String mostStudiedSubject(Object period, Object subject);
+
+  /// No description provided for @planCompletionInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'You completed {percent}% of your planned study time.'**
+  String planCompletionInsight(Object percent);
+
+  /// No description provided for @currentStreakInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current streak is {count} days.'**
+  String currentStreakInsight(Object count);
+
+  /// No description provided for @longestStreakInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Your longest streak is {count} days.'**
+  String longestStreakInsight(Object count);
+
+  /// No description provided for @periodLabelToday.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get periodLabelToday;
+
+  /// No description provided for @periodLabelWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'this week'**
+  String get periodLabelWeek;
+
+  /// No description provided for @periodLabelMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'this month'**
+  String get periodLabelMonth;
+
+  /// No description provided for @periodLabelYear.
+  ///
+  /// In en, this message translates to:
+  /// **'this year'**
+  String get periodLabelYear;
+
+  /// No description provided for @periodLabelAllTime.
+  ///
+  /// In en, this message translates to:
+  /// **'overall'**
+  String get periodLabelAllTime;
+
+  /// No description provided for @longestStreakRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest streak'**
+  String get longestStreakRecord;
+
+  /// No description provided for @mostProductiveDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Most productive day'**
+  String get mostProductiveDay;
+
+  /// No description provided for @mostStudiedSubjectRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Most studied subject'**
+  String get mostStudiedSubjectRecord;
+
+  /// No description provided for @longestSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest session'**
+  String get longestSession;
+
+  /// No description provided for @noStudySessionsRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'No study sessions recorded yet for this period.'**
+  String get noStudySessionsRecorded;
+
+  /// No description provided for @na.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get na;
 }
 
 class _AppLocalizationsDelegate

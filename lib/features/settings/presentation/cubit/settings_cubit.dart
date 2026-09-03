@@ -20,6 +20,9 @@ class SettingsCubit extends Cubit<SettingsState> {
   final StudentProfileRepository _profileRepository;
   final AppSettingsRepository _settingsRepository;
 
+  /// Refreshes the settings data by reloading from repositories
+  void refresh() => loadSettings();
+
   Future<void> loadSettings() async {
     try {
       final profile = await _profileRepository.getProfile();

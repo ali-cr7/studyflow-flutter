@@ -45,6 +45,20 @@ class DailyPlanView extends StatelessWidget {
     );
   }
 
+  Future<void> _openSession(BuildContext context, _DailyPlanDisplayItem item) async {
+    await context.push(
+      AppRoutes.session,
+      extra: SessionRouteArgs(
+        subject: item.subject,
+        plannedMinutes: item.plannedSubject.plannedMinutes,
+      ),
+    );
+    // Refresh the daily plan when returning from a session
+    if (context.mounted) {
+      context.read<DailyPlanCubit>().refresh();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -142,16 +156,7 @@ class DailyPlanView extends StatelessWidget {
                             subject: item.subject,
                             sessionNumber: item.sessionNumber,
                             totalSessions: item.totalSessions,
-                            onTap: () {
-                              context.push(
-                                AppRoutes.session,
-                                extra: SessionRouteArgs(
-                                  subject: item.subject,
-                                  plannedMinutes:
-                                      item.plannedSubject.plannedMinutes,
-                                ),
-                              );
-                            },
+                            onTap: () => _openSession(context, item),
                           );
                         },
                       ),

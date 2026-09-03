@@ -147,13 +147,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get edit => 'تعديل';
 
   @override
-  String get totalStudyTime => 'إجمالي وقت الدراسة';
+  String get totalStudyTime => 'المجموع';
 
   @override
   String get totalSessions => 'إجمالي الجلسات';
 
   @override
-  String get streak => 'سلسلة';
+  String get streak => 'السلسلة';
 
   @override
   String get days => 'أيام';
@@ -171,7 +171,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noSubjects => 'لا توجد مواد بعد';
 
   @override
-  String get addYourFirstSubject => 'أضف مادتك الأولى للبدء';
+  String get addYourFirstSubject => 'أضف أول مادة للبدء';
 
   @override
   String get noAchievements => 'لا توجد إنجازات بعد';
@@ -180,7 +180,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get keepStudying => 'واصل الدراسة لفتح الإنجازات';
 
   @override
-  String get question => 'السؤال';
+  String get question => 'سؤال';
 
   @override
   String get typeYourQuestion => 'اكتب سؤالك...';
@@ -204,7 +204,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get drawer => 'القائمة';
 
   @override
-  String get studySession => 'جلسة الدراسة';
+  String get studySession => 'جلسة دراسة';
 
   @override
   String error(Object message) {
@@ -218,10 +218,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get paused => 'متوقف مؤقتاً';
 
   @override
-  String get focusBlock => 'جلسة تركيز';
+  String get focusBlock => 'كتلة تركيز';
 
   @override
-  String get allSet => 'جاهز';
+  String get allSet => 'كل شيء جاهز';
 
   @override
   String get finish => 'إنهاء';
@@ -233,7 +233,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backToPlan => 'العودة للخطة';
 
   @override
-  String get unmuteSound => 'تشغيل الصوت';
+  String get unmuteSound => 'إلغاء كتم الصوت';
 
   @override
   String get muteSound => 'كتم الصوت';
@@ -242,7 +242,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get breakEndsSoon => 'الاستراحة تنتهي قريباً';
 
   @override
-  String get readyWhenYouAre => 'جاهز عندما تكون مستعداً';
+  String get readyWhenYouAre => 'جاهز عندما تكون أنت';
 
   @override
   String get completed => 'مكتمل';
@@ -254,7 +254,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get soundMuted => 'الصوت مكتوم';
 
   @override
-  String get ambientSoundPlaying => 'صوت المحيط يعمل';
+  String get ambientSoundPlaying => 'صوت المحيط قيد التشغيل';
 
   @override
   String get dashboardTitle => 'لوحة التحكم';
@@ -272,13 +272,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get goalReached => 'تم تحقيق الهدف!';
 
   @override
-  String get remaining => 'متبقي';
+  String get remaining => 'المتبقي';
 
   @override
   String get quickActions => 'إجراءات سريعة';
 
   @override
-  String get startSession => 'بدء جلسة';
+  String get startSession => 'بدء الجلسة';
 
   @override
   String get viewStatistics => 'عرض الإحصائيات';
@@ -317,7 +317,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sessions => 'الجلسات';
 
   @override
-  String get averagePerDay => 'المعدل اليومي';
+  String get averagePerDay => 'المتوسط اليومي';
 
   @override
   String get bestDay => 'أفضل يوم';
@@ -370,7 +370,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingTitle => 'مرحباً';
 
   @override
-  String get onboardingSubtitle => 'رحلة دراستك تبدأ من هنا';
+  String get onboardingSubtitle => 'رحلة دراستك تبدأ هنا';
 
   @override
   String get next => 'التالي';
@@ -388,7 +388,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createBackup => 'إنشاء نسخة احتياطية';
 
   @override
-  String get restoreBackup => 'استعادة النسخة الاحتياطية';
+  String get restoreBackup => 'استعادة نسخة احتياطية';
 
   @override
   String get backupCreated => 'تم إنشاء النسخة الاحتياطية بنجاح';
@@ -400,7 +400,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aboutTitle => 'حول التطبيق';
 
   @override
-  String get aboutDescription => 'تطبيق تخطيط الدراسة مصمم للطلاب';
+  String get aboutDescription => 'تطبيق تخطيط دراسي مصمم للطلاب';
 
   @override
   String versionLabel(Object version) {
@@ -423,10 +423,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get recordsSubtitle => 'أفضل إنجازاتك الدراسية';
 
   @override
-  String get historySubtitle => 'مراجعة جلسات دراستك';
+  String get historySubtitle => 'راجع جلسات دراستك';
 
   @override
-  String get askTeacherSubtitle => 'تحتاج مساعدة؟ تواصل مع معلمك';
+  String get askTeacherSubtitle => 'هل تحتاج مساعدة؟ تواصل مع معلمك';
 
   @override
   String get aboutSubtitle => 'حول مخطط الدراسة';
@@ -460,7 +460,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingWelcomeMessage =>
-      'مرحباً بك في StudyFlow — مدربك الدراسي الشخصي للبقاء على المسار الصحيح. سنطرح عليك بعض الأسئلة لتخصيص تجربتك.';
+      'مرحباً بك في StudyFlow — مدربك الدراسي الشخصي للبقاء على المسار الصحيح. سنطرح بعض الأسئلة لتخصيص تجربتك.';
 
   @override
   String get onboardingGetStartedMessage => 'ابدأ وابنِ خطة دراسة تناسب يومك.';
@@ -472,17 +472,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get whatsAppOpened => 'تم فتح WhatsApp بنجاح.';
 
   @override
-  String get needHelp => 'تحتاج مساعدة؟';
+  String get needHelp => 'هل تحتاج مساعدة؟';
 
   @override
   String get askTeacherHeaderSubtitle =>
       'اسأل معلمك عن أي شيء تواجه صعوبة فيه.';
 
   @override
-  String get student => 'الطالب';
+  String get student => 'طالب';
 
   @override
-  String get subject => 'المادة';
+  String get subject => 'مادة';
 
   @override
   String get selectSubject => 'اختر مادة';
@@ -649,4 +649,160 @@ class AppLocalizationsAr extends AppLocalizations {
   String focusForMinutes(Object breakMinutes, Object studyMinutes) {
     return 'ركز لمدة $breakMinutes دقيقة، ثم خذ $studyMinutes دقيقة للاستراحة.';
   }
+
+  @override
+  String get subjectDistributionTitle => 'توزيع المواد';
+
+  @override
+  String get subjectDistributionEmpty => 'لا توجد بيانات مواد لهذه الفترة';
+
+  @override
+  String get otherSubjects => 'أخرى';
+
+  @override
+  String streakDays(Object count) {
+    return 'سلسلة $count أيام';
+  }
+
+  @override
+  String get noRecordsYet => 'لا توجد سجلات بعد';
+
+  @override
+  String get keepStudyingForRecords =>
+      'واصل الدراسة لفتح أفضل سلاسل وإنجازاتك.';
+
+  @override
+  String average(Object duration) {
+    return 'المتوسط $duration';
+  }
+
+  @override
+  String goal(Object duration) {
+    return 'الهدف $duration';
+  }
+
+  @override
+  String get goalLabel => 'الهدف';
+
+  @override
+  String get noSubjectDataYet => 'لا توجد بيانات مواد بعد';
+
+  @override
+  String get completeSessionsForBreakdown =>
+      'أكمل الجلسات لرؤية التفصيل حسب المادة.';
+
+  @override
+  String percent(Object value) {
+    return '$value%';
+  }
+
+  @override
+  String activeDaysCount(Object count) {
+    return '$count أيام نشطة';
+  }
+
+  @override
+  String longestStreak(Object count) {
+    return 'أطول سلسلة $count';
+  }
+
+  @override
+  String get periodToday => 'اليوم';
+
+  @override
+  String get periodWeek => 'الأسبوع';
+
+  @override
+  String get periodMonth => 'الشهر';
+
+  @override
+  String get periodYear => 'السنة';
+
+  @override
+  String get periodAllTime => 'كل الأوقات';
+
+  @override
+  String get noInsightsYet => 'لا توجد رؤى بعد';
+
+  @override
+  String get buildConsistentRhythm => 'ابنِ إيقاع دراسة منتظم لفتح رؤى مخصصة.';
+
+  @override
+  String get noAchievementsYetStats => 'لا توجد إنجازات بعد';
+
+  @override
+  String get completeSessionsForAchievements =>
+      'أكمل جلسات الدراسة وحقق أهدافك لفتح الإنجازات.';
+
+  @override
+  String get couldNotLoadStatistics => 'تعذر تحميل الإحصائيات الخاصة بك.';
+
+  @override
+  String completedFormat(Object duration) {
+    return 'تم إكمال $duration';
+  }
+
+  @override
+  String plannedFormat(Object duration) {
+    return 'مخطط $duration';
+  }
+
+  @override
+  String completedLabel(Object duration) {
+    return 'مكتمل $duration';
+  }
+
+  @override
+  String mostStudiedSubject(Object period, Object subject) {
+    return '$subject هي المادة الأكثر دراسة $period.';
+  }
+
+  @override
+  String planCompletionInsight(Object percent) {
+    return 'لقد أكملت $percent% من وقت الدراسة المخطط.';
+  }
+
+  @override
+  String currentStreakInsight(Object count) {
+    return 'سلسلتك الحالية $count أيام.';
+  }
+
+  @override
+  String longestStreakInsight(Object count) {
+    return 'أطول سلسلة لك $count أيام.';
+  }
+
+  @override
+  String get periodLabelToday => 'اليوم';
+
+  @override
+  String get periodLabelWeek => 'هذا الأسبوع';
+
+  @override
+  String get periodLabelMonth => 'هذا الشهر';
+
+  @override
+  String get periodLabelYear => 'هذه السنة';
+
+  @override
+  String get periodLabelAllTime => 'بشكل عام';
+
+  @override
+  String get longestStreakRecord => 'أطول سلسلة';
+
+  @override
+  String get mostProductiveDay => 'أكثر يوم إنتاجية';
+
+  @override
+  String get mostStudiedSubjectRecord => 'المادة الأكثر دراسة';
+
+  @override
+  String get longestSession => 'أطول جلسة';
+
+  @override
+  String get noStudySessionsRecorded =>
+      'لم يتم تسجيل جلسات دراسة لهذه الفترة بعد.';
+
+  @override
+  String get na => 'غير متاح';
 }

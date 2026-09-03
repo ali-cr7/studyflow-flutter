@@ -36,6 +36,8 @@ class DashboardContent extends StatelessWidget {
             Text(
               _getGreeting(l10n, profile.name),
               style: theme.textTheme.displaySmall,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 12),
             Text(

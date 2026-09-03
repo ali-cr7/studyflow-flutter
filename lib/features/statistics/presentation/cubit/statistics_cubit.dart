@@ -3,26 +3,22 @@ import 'package:study_planner/features/statistics/data/repositories/statistics_r
 import 'package:study_planner/features/statistics/presentation/cubit/statistics_state.dart';
 
 class StatisticsCubit extends Cubit<StatisticsState> {
-  StatisticsCubit({required StatisticsRepository repository})
-    : _repository = repository,
-      super(StatisticsState.initial());
+  StatisticsCubit({required this.repository})
+      : super(StatisticsState.initial());
 
-  final StatisticsRepository _repository;
+  final StatisticsRepository repository;
 
-  Future<void> loadStatistics({
-    StatisticsPeriod period = StatisticsPeriod.week,
-  }) async {
+  Future<void> loadStatistics({required StatisticsPeriod period}) async {
     emit(StatisticsState.loading());
-
     try {
-      final snapshot = await _repository.loadStatistics(period: period);
-      if (snapshot.subjectBreakdown.isEmpty && snapshot.studyMinutes == 0) {
-        emit(StatisticsState.empty());
-        return;
-      }
+      final snapshot = await repository.loadStatistics(period: period);
       emit(StatisticsState.loaded(snapshot));
     } catch (_) {
       emit(StatisticsState.failure('Could not load your statistics.'));
     }
+  }
+
+  Future<void> refresh() async {
+    await loadStatistics(period: state.snapshot?.period ?? StatisticsPeriod.week);
   }
 }

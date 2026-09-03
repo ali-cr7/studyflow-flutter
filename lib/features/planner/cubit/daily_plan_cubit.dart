@@ -28,6 +28,9 @@ class DailyPlanCubit extends Cubit<DailyPlanState> {
   final AppSettingsRepository _appSettingsRepository;
   DateTime _selectedDate = normalizeToLocalDate(DateTime.now());
 
+  /// Refreshes the daily plan data for the currently selected date
+  void refresh() => loadPlanForDate(_selectedDate);
+
   Future<void> loadPlanForDate(DateTime date) async {
     _selectedDate = normalizeToLocalDate(date);
     emit(DailyPlanLoading());

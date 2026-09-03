@@ -289,11 +289,14 @@ class _SessionViewState extends State<SessionView> with WidgetsBindingObserver {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          Text(
-                            timerLabel,
-                            style: theme.textTheme.displaySmall?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.primary,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              timerLabel,
+                              style: theme.textTheme.displaySmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: theme.colorScheme.primary,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),

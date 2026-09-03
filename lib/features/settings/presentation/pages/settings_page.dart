@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:study_planner/app_drawer.dart';
-import 'package:study_planner/core/routes/app_router.dart';
 import 'package:study_planner/core/widgets/application_drawer.dart';
-import 'package:study_planner/features/dashboard/presentation/cubit/dashboard_cubit.dart';
-import 'package:study_planner/features/planner/cubit/subjects_cubit.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:study_planner/features/settings/presentation/cubit/settings_state.dart';
 import 'package:study_planner/features/settings/presentation/widgets/settings_appearance_section.dart';
@@ -14,8 +9,47 @@ import 'package:study_planner/features/settings/presentation/widgets/settings_fo
 import 'package:study_planner/features/settings/presentation/widgets/settings_language_section.dart';
 import 'package:study_planner/features/settings/presentation/widgets/settings_profile_section.dart';
 import 'package:study_planner/l10n/app_localizations.dart';
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({
+    super.key,
+    required this.tabIndexNotifier,
+    required this.refreshNotifier,
+  });
+
+  final ValueNotifier<int> tabIndexNotifier;
+  final ValueNotifier<int> refreshNotifier;
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void initState() {
+    super.initState();
+    widget.tabIndexNotifier.addListener(_onTabChanged);
+    widget.refreshNotifier.addListener(_onRefreshRequested);
+  }
+
+  @override
+  void dispose() {
+    widget.tabIndexNotifier.removeListener(_onTabChanged);
+    widget.refreshNotifier.removeListener(_onRefreshRequested);
+    super.dispose();
+  }
+
+  void _onTabChanged() {
+    if (widget.tabIndexNotifier.value == 5) {
+      context.read<SettingsCubit>().refresh();
+    }
+  }
+
+  void _onRefreshRequested() {
+    if (widget.tabIndexNotifier.value == 5) {
+      context.read<SettingsCubit>().refresh();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +57,7 @@ class SettingsPage extends StatelessWidget {
       builder: (context, state) {
         final l10n = AppLocalizations.of(context);
         return Scaffold(
-          drawer:ApplicationDrawer(),
+          drawer: ApplicationDrawer(),
           appBar: AppBar(title: Text(l10n.settingsTitle)),
           body: SafeArea(
             child: Padding(

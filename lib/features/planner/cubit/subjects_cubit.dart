@@ -9,6 +9,9 @@ class SubjectsCubit extends Cubit<SubjectsState> {
 
   final SubjectRepository _repository;
 
+  /// Refreshes the subjects list by reloading from repository
+  void refresh() => loadSubjects();
+
   Future<void> loadSubjects() async {
     emit(SubjectsLoading());
     try {

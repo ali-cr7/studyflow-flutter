@@ -14,6 +14,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   final StudentProfileRepository _profileRepository;
   final AppSettingsRepository _settingsRepository;
 
+  /// Refreshes the dashboard data by reloading from repositories
+  void refresh() => loadDashboard();
+
   Future<void> loadDashboard() async {
     emit(const DashboardState.loading());
 

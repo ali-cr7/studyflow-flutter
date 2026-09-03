@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/statistics/presentation/widgets/statistics_empty_state.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class StatisticsAchievementPreview extends StatelessWidget {
   const StatisticsAchievementPreview({super.key, required this.achievements});
@@ -9,36 +10,44 @@ class StatisticsAchievementPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context);
+
     if (achievements.isEmpty) {
-      return const StatisticsEmptyState(
-        title: 'No achievements yet',
-        message:
-            'Complete study sessions and reach your goals to unlock milestones.',
+      return StatisticsEmptyState(
+        title: l10n.noAchievementsYetStats,
+        message: l10n.completeSessionsForAchievements,
       );
     }
+
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(AppColors.radiusLg),
-        border: Border.all(color: context.sfColors.border),
+        border: Border.all(color: colors.border, width: 1),
       ),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: achievements.map((achievement) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: context.sfColors.primaryLight,
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              achievement,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w700,
-              ),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.emoji_events_rounded,
+                  size: 18,
+                  color: colors.accent,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    achievement,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              ],
             ),
           );
         }).toList(),
