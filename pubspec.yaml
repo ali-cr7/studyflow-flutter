@@ -33,6 +33,7 @@ dependencies:
   audioplayers: ^6.1.0
   supabase_flutter: ^2.8.4
   crypto: ^3.0.6
+  flutter_native_splash: ^2.4.8
 
 dev_dependencies:
   flutter_test:
@@ -67,3 +68,12 @@ flutter:
 
   assets:
     - assets/sounds/
+flutter_native_splash:
+  color: "#F8FAFC"
+  image: assets/icons/studyrise_logo.png
+
+  android_12:
+    color: "#F8FAFC"
+    image: assets/icons/studyrise_logo.png
+
+  web: false
