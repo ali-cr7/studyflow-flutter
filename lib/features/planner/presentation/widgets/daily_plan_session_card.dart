@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/planner/cubit/daily_plan_cubit.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/planned_subject.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 
@@ -25,9 +27,10 @@ class DailyPlanSessionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context)!;
+
     final subjectColor = Color(subject.color);
     final cubit = context.read<DailyPlanCubit>();
-
     final isCompleted = plannedSubject.completed;
 
     return Material(
@@ -49,7 +52,6 @@ class DailyPlanSessionCard extends StatelessWidget {
                 width: 1,
               ),
             ),
-
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -66,7 +68,9 @@ class DailyPlanSessionCard extends StatelessWidget {
                     size: 28,
                   ),
                 ),
+
                 const SizedBox(width: 14),
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,18 +83,21 @@ class DailyPlanSessionCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+
                       const SizedBox(height: 6),
+
                       Text(
-                        _sessionSummary(),
+                        _sessionSummary(l10n),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: colors.mutedForeground,
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
+
                 Column(
                   children: [
                     IconButton(
@@ -104,13 +111,14 @@ class DailyPlanSessionCard extends StatelessWidget {
                             ? colors.success
                             : colors.mutedForeground,
                       ),
-                      tooltip: 'Toggle completion',
+                      tooltip: l10n.toggleCompletion,
                     ),
+
                     IconButton(
                       onPressed: () =>
                           cubit.deletePlannedSubject(plannedSubject.id),
                       icon: const Icon(Icons.delete_outline_rounded),
-                      tooltip: 'Delete planned subject',
+                      tooltip: l10n.deletePlannedSubject,
                     ),
                   ],
                 ),
@@ -122,10 +130,12 @@ class DailyPlanSessionCard extends StatelessWidget {
     );
   }
 
-  String _sessionSummary() {
-    final minutes = plannedSubject.plannedMinutes;
-    final sessionLabel = totalSessions == 1 ? 'session' : 'sessions';
-    return '$sessionNumber/$totalSessions $sessionLabel • $minutes min';
+  String _sessionSummary(AppLocalizations l10n) {
+    return l10n.sessionSummary(
+      sessionNumber,
+      totalSessions,
+      plannedSubject.plannedMinutes,
+    );
   }
 
   static IconData _subjectIcon(String key) {
@@ -141,6 +151,7 @@ class DailyPlanSessionCard extends StatelessWidget {
       'biotech': Icons.biotech_outlined,
       'code': Icons.code_outlined,
     };
+
     return map[key] ?? Icons.book_rounded;
   }
 }

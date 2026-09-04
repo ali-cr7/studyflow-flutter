@@ -40,7 +40,7 @@ class StatisticsSubjectBreakdown extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  subject.name,
+                  subject.name ?? l10n.na,
                   style: theme.textTheme.bodyMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

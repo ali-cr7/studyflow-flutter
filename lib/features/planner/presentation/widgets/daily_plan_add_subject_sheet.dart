@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/planner/cubit/daily_plan_cubit.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 
 class DailyPlanAddSubjectSheet extends StatefulWidget {
@@ -26,6 +28,7 @@ class _DailyPlanAddSubjectSheetState extends State<DailyPlanAddSubjectSheet> {
   @override
   void initState() {
     super.initState();
+
     pickedSubjectId = widget.availableSubjects.first.id;
     sessionsController = TextEditingController(text: '1');
   }
@@ -38,6 +41,8 @@ class _DailyPlanAddSubjectSheetState extends State<DailyPlanAddSubjectSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.only(
         left: 20,
@@ -59,23 +64,27 @@ class _DailyPlanAddSubjectSheetState extends State<DailyPlanAddSubjectSheet> {
               ),
             ),
           ),
+
           const SizedBox(height: 20),
+
           Text(
-            'Add to today’s plan',
+            l10n.addToTodaysPlan,
             style: Theme.of(context).textTheme.titleLarge,
           ),
+
           const SizedBox(height: 20),
+
           DropdownButtonFormField<int>(
             value: pickedSubjectId,
-            decoration: const InputDecoration(
-              labelText: 'Subject',
-              prefixIcon: Icon(Icons.school_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.subject,
+              prefixIcon: const Icon(Icons.school_outlined),
             ),
             items: widget.availableSubjects
                 .map(
                   (subject) => DropdownMenuItem<int>(
                     value: subject.id,
-                    child: Text(subject.name),
+                    child: Text(subject.name, overflow: TextOverflow.ellipsis),
                   ),
                 )
                 .toList(),
@@ -85,30 +94,39 @@ class _DailyPlanAddSubjectSheetState extends State<DailyPlanAddSubjectSheet> {
               }
             },
           ),
+
           const SizedBox(height: 16),
+
           TextFormField(
             controller: sessionsController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              labelText: 'Sessions',
+              labelText: l10n.sessions,
               prefixIcon: const Icon(Icons.event_available_outlined),
-              helperText: '1 session = ${widget.sessionDurationMinutes} min',
+              helperText: l10n.sessionDurationHelper(
+                widget.sessionDurationMinutes,
+              ),
             ),
           ),
+
           const SizedBox(height: 24),
+
           SizedBox(
             width: double.infinity,
             child: FilledButton(
               onPressed: () {
                 final cubit = context.read<DailyPlanCubit>();
+
                 final sessions = int.tryParse(sessionsController.text) ?? 1;
+
                 cubit.addPlannedSubject(
                   subjectId: pickedSubjectId,
                   sessionCount: sessions,
                 );
+
                 Navigator.of(context).pop();
               },
-              child: const Text('Add subject'),
+              child: Text(l10n.addSubject),
             ),
           ),
         ],

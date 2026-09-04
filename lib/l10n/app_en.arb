@@ -249,5 +249,99 @@
   "mostStudiedSubjectRecord": "Most studied subject",
   "longestSession": "Longest session",
   "noStudySessionsRecorded": "No study sessions recorded yet for this period.",
-  "na": "N/A"
+  "na": "N/A",
+  "home": "Home",
+  "plan": "Plan",
+  "study": "Study",
+  "subjects": "Subjects",
+  "stats": "Stats",
+  "settings": "Settings",
+  "studyStack": "Study stack",
+  "activeSubjects": "{count} active {count, plural, =1 {subject} other {subjects}}",
+  "studyFocus": "Study focus",
+  "editSubject": "Edit subject",
+  "deleteSubject": "Delete subject",
+  "planSummary": "{planned} min planned • {completed} min completed",
+  "toggleCompletion": "Toggle completion",
+  "deletePlannedSubject": "Delete planned subject",
+  "sessionSummary": "{sessionNumber}/{totalSessions} {totalSessions, plural, =1 {session} other {sessions}} • {minutes} min",
+  "addToTodaysPlan": "Add to today’s plan",
+  "subject": "Subject",
+  "sessions": "Sessions",
+  "sessionDurationHelper": "1 session = {minutes} min",
+  "addSubject": "Add subject",
+
+  "notifStudyCompleteTitle": "Study session complete",
+  "notifStudyCompleteBody": "Great job! Your study session is finished. Time for a break.",
+  "notifBreakFinishedTitle": "Break finished",
+  "notifBreakFinishedBody": "Break time is over. Ready to start studying again?",
+  "notifBreakStartedTitle": "Break time",
+  "notifBreakStartedBody": "Your study session is complete. Take a short break.",
+  "notifStudyStartingTitle": "Study session starting",
+  "notifStudyStartingBody": "It's time to study {subject}.",
+  "@notifStudyStartingBody": {
+    "placeholders": {
+      "subject": { "type": "String" }
+    }
+  },
+  "notifSubjectCompleteTitle": "🎉 Subject complete!",
+  "notifSubjectCompleteBody": "You finished your planned session for {subject}. Great work!",
+  "@notifSubjectCompleteBody": {
+    "placeholders": {
+      "subject": { "type": "String" }
+    }
+  },
+  "notifDailyGoalTitle": "🏆 Daily goal reached!",
+  "notifDailyGoalBody": "You've hit your study goal for today. Incredible effort!",
+  "notifForegroundFocusLabel": "Focus",
+  "notifForegroundBreakLabel": "Break",
+  "notifForegroundTitle": "{phase} timer: {subject}",
+  "@notifForegroundTitle": {
+    "placeholders": {
+      "phase": { "type": "String" },
+      "subject": { "type": "String" }
+    }
+  },
+  "notifForegroundBody": "{remaining} remaining",
+  "@notifForegroundBody": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "notifInitialTitle": "Study timer running",
+  "notifInitialContent": "Keeping your session on track.",
+  "subjectCompleteTitle": "Subject complete!",
+  "subjectCompleteBody": "You finished your planned session for {subject}. Keep up the great work!",
+  "dailyGoalReachedTitle": "Daily goal reached!",
+  "dailyGoalReachedBody": "You've hit your study goal for today. Every minute counts — you should be proud!",
+  "doubleMilestoneTitle": "Double milestone!",
+  "doubleMilestoneBody": "You finished {subject} AND hit your daily study goal. That's an incredible effort today!",
+  "sessionCompleteTitle": "Session complete!",
+  "sessionCompleteBody": "Great job completing the session!",
+  "continueButton": "Continue",
+  "achievementFirstStepTitle": "الخطوة الأولى",
+  "achievementFirstStepDescription": "أكمل أول جلسة دراسة لك.",
+
+  "achievementStreak3Title": "البداية القوية",
+  "achievementStreak3Description": "حافظ على سلسلة دراسة لمدة 3 أيام.",
+
+  "achievementStreak7Title": "أسبوع من الالتزام",
+  "achievementStreak7Description": "حافظ على سلسلة دراسة لمدة 7 أيام.",
+
+  "achievementStreak30Title": "لا يمكن إيقافه",
+  "achievementStreak30Description": "حافظ على سلسلة دراسة لمدة 30 يومًا.",
+
+  "achievementDailyGoalMetTitle": "تم تحقيق الهدف",
+  "achievementDailyGoalMetDescription": "حقق هدفك الدراسي اليومي.",
+
+  "achievementTenSessionsTitle": "الطالب المثابر",
+  "achievementTenSessionsDescription": "أكمل 10 جلسات دراسة.",
+
+  "achievementFiftySessionsTitle": "آلة الدراسة",
+  "achievementFiftySessionsDescription": "أكمل 50 جلسة دراسة.",
+
+  "achievementHundredSessionsTitle": "سيد الاستمرارية",
+  "achievementHundredSessionsDescription": "أكمل 100 جلسة دراسة.",
+  "unlocked": "تم فتحه",
+  "locked": "مقفل"
 }

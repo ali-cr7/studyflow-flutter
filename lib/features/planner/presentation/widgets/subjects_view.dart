@@ -86,7 +86,7 @@ class SubjectsView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'add_subject',
+        heroTag: l10n.addSubject,
         onPressed: () => _openEditor(context),
         icon: const Icon(Icons.add_rounded),
         label: Text(l10n.addSubject),

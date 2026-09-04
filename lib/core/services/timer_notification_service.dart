@@ -7,25 +7,37 @@ import 'package:study_planner/shared/domain/entities/subject.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+/// Generic notification service for the study timer.
+///
+/// This class has no knowledge of localization, languages, or user preferences.
+/// All user-facing strings (title, body) are passed in by the caller.
+/// The [NotificationStrings] helper in the service layer is responsible for
+/// supplying the correct localized text.
 class TimerNotificationService {
   TimerNotificationService({FlutterLocalNotificationsPlugin? plugin})
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
-  static const int foregroundNotificationId = 7000;
-  static const int studyCompletionId = 7001;
-  static const int breakCompletionId = 7002;
-  static const int breakStartedId = 7003;
-  static const int scheduledStudyId = 7004;
-  static const int subjectCompletedId = 7005;
-  static const int dailyGoalReachedId = 7006;
+  // ── Notification IDs (never change — referenced by platform) ─────────────
 
-  static const String timerChannelId = 'study_timer';
-  static const String timerChannelName = 'Study timer';
-  static const String foregroundChannelId = 'study_timer_foreground';
-  static const String foregroundChannelName = 'Active study timer';
+  static const int foregroundNotificationId = 7000;
+  static const int studyCompletionId        = 7001;
+  static const int breakCompletionId        = 7002;
+  static const int breakStartedId           = 7003;
+  static const int scheduledStudyId         = 7004;
+  static const int subjectCompletedId       = 7005;
+  static const int dailyGoalReachedId       = 7006;
+
+  // ── Channel IDs (stable — Android channels are persistent) ───────────────
+
+  static const String timerChannelId          = 'study_timer';
+  static const String timerChannelName        = 'Study timer';
+  static const String foregroundChannelId     = 'study_timer_foreground';
+  static const String foregroundChannelName   = 'Active study timer';
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _initialized = false;
+
+  // ── Initialization ────────────────────────────────────────────────────────
 
   Future<void> initialize() async {
     if (_initialized) return;
@@ -33,15 +45,13 @@ class TimerNotificationService {
     tz.initializeTimeZones();
     await _setLocalTimezone();
 
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-    const darwinSettings = DarwinInitializationSettings();
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const darwinSettings  = DarwinInitializationSettings();
     await _plugin.initialize(
       settings: const InitializationSettings(
         android: androidSettings,
-        iOS: darwinSettings,
-        macOS: darwinSettings,
+        iOS:     darwinSettings,
+        macOS:   darwinSettings,
       ),
     );
 
@@ -52,23 +62,17 @@ class TimerNotificationService {
 
   Future<void> requestPermissions() async {
     try {
-      final android = _plugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+      final android = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
       await android?.requestNotificationsPermission();
       await android?.requestExactAlarmsPermission();
 
-      final ios = _plugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >();
+      final ios = _plugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
       await ios?.requestPermissions(alert: true, badge: true, sound: true);
 
-      final macos = _plugin
-          .resolvePlatformSpecificImplementation<
-            MacOSFlutterLocalNotificationsPlugin
-          >();
+      final macos = _plugin.resolvePlatformSpecificImplementation<
+          MacOSFlutterLocalNotificationsPlugin>();
       await macos?.requestPermissions(alert: true, badge: true, sound: true);
     } catch (error, stackTrace) {
       debugPrint('Notification permission request failed: $error');
@@ -76,85 +80,90 @@ class TimerNotificationService {
     }
   }
 
+  // ── Scheduled notifications ───────────────────────────────────────────────
+  // Callers resolve the localized title/body at scheduling time so the correct
+  // language is embedded in the scheduled notification payload.
+
   Future<void> scheduleStudyCompleted({
     required DateTime endsAt,
     required Subject subject,
+    required String title,
+    required String body,
   }) {
     return _schedule(
-      id: studyCompletionId,
-      title: 'Study session complete',
-      body: 'Great job! Your study session is finished. Time for a break.',
+      id:          studyCompletionId,
+      title:       title,
+      body:        body,
       scheduledAt: endsAt,
-      payload: 'session:${subject.id}',
+      payload:     'session:${subject.id}',
     );
   }
 
   Future<void> scheduleBreakCompleted({
     required DateTime endsAt,
     required Subject subject,
+    required String title,
+    required String body,
   }) {
     return _schedule(
-      id: breakCompletionId,
-      title: 'Break finished',
-      body: 'Break time is over. Ready to start studying again?',
+      id:          breakCompletionId,
+      title:       title,
+      body:        body,
       scheduledAt: endsAt,
-      payload: 'session:${subject.id}',
+      payload:     'session:${subject.id}',
     );
   }
 
   Future<void> schedulePlannedStudy({
     required DateTime startsAt,
     required Subject subject,
+    required String title,
+    required String body,
   }) {
     return _schedule(
-      id: scheduledStudyId + subject.id,
-      title: 'Study session starting',
-      body: "It's time to study ${subject.name}.",
+      id:          scheduledStudyId + subject.id,
+      title:       title,
+      body:        body,
       scheduledAt: startsAt,
-      payload: 'session:${subject.id}',
+      payload:     'session:${subject.id}',
     );
   }
 
-  Future<void> showStudyComplete() {
-    return showNow(
-      id: studyCompletionId,
-      title: 'Study session complete',
-      body: 'Great job! Your study session is finished. Time for a break.',
-    );
+  // ── Immediate notifications ───────────────────────────────────────────────
+
+  Future<void> showStudyComplete({
+    required String title,
+    required String body,
+  }) {
+    return showNow(id: studyCompletionId, title: title, body: body);
   }
 
-  Future<void> showBreakStarted() {
-    return showNow(
-      id: breakStartedId,
-      title: 'Break time',
-      body: 'Your study session is complete. Take a short break.',
-    );
+  Future<void> showBreakStarted({
+    required String title,
+    required String body,
+  }) {
+    return showNow(id: breakStartedId, title: title, body: body);
   }
 
-  Future<void> showBreakComplete() {
-    return showNow(
-      id: breakCompletionId,
-      title: 'Break finished',
-      body: 'Break time is over. Ready to start studying again?',
-    );
+  Future<void> showBreakComplete({
+    required String title,
+    required String body,
+  }) {
+    return showNow(id: breakCompletionId, title: title, body: body);
   }
 
-  /// Fired when the student finishes the planned session for a specific subject.
-  Future<void> showSubjectCompleted(String subjectName) {
-    return showNow(
-      id: subjectCompletedId,
-      title: '🎉 Subject complete!',
-      body: "You finished your planned session for $subjectName. Great work!",
-    );
+  Future<void> showSubjectCompleted({
+    required String title,
+    required String body,
+  }) {
+    return showNow(id: subjectCompletedId, title: title, body: body);
   }
 
-  /// Fired when the student's total study time today meets the daily goal.
-  Future<void> showDailyGoalReached() {
-    return showNow(
-      id: dailyGoalReachedId,
-      title: '🏆 Daily goal reached!',
-      body: "You've hit your study goal for today. Incredible effort!",
-    );
+  Future<void> showDailyGoalReached({
+    required String title,
+    required String body,
+  }) {
+    return showNow(id: dailyGoalReachedId, title: title, body: body);
   }
 
   Future<void> showForegroundTimer({
@@ -162,33 +171,37 @@ class TimerNotificationService {
     required String body,
   }) {
     return _show(
-      id: foregroundNotificationId,
-      title: title,
-      body: body,
-      channelId: foregroundChannelId,
+      id:          foregroundNotificationId,
+      title:       title,
+      body:        body,
+      channelId:   foregroundChannelId,
       channelName: foregroundChannelName,
-      ongoing: true,
-      importance: Importance.low,
-      priority: Priority.low,
+      ongoing:     true,
+      importance:  Importance.low,
+      priority:    Priority.low,
     );
   }
 
+  // ── Low-level show ────────────────────────────────────────────────────────
+
   Future<void> showNow({
-    required int id,
+    required int    id,
     required String title,
     required String body,
   }) {
     return _show(
-      id: id,
-      title: title,
-      body: body,
-      channelId: timerChannelId,
+      id:          id,
+      title:       title,
+      body:        body,
+      channelId:   timerChannelId,
       channelName: timerChannelName,
-      ongoing: false,
-      importance: Importance.high,
-      priority: Priority.high,
+      ongoing:     false,
+      importance:  Importance.high,
+      priority:    Priority.high,
     );
   }
+
+  // ── Cancellation ─────────────────────────────────────────────────────────
 
   Future<void> cancelTimerSchedules() async {
     await Future.wait([
@@ -199,17 +212,21 @@ class TimerNotificationService {
     ]);
   }
 
-  Future<void> cancelForeground() => _plugin.cancel(id: foregroundNotificationId);
+  Future<void> cancelForeground() =>
+      _plugin.cancel(id: foregroundNotificationId);
+
+  // ── Private implementation ────────────────────────────────────────────────
 
   Future<void> _schedule({
-    required int id,
-    required String title,
-    required String body,
+    required int      id,
+    required String   title,
+    required String   body,
     required DateTime scheduledAt,
-    required String payload,
+    required String   payload,
   }) async {
     await initialize();
     await _plugin.cancel(id: id);
+
     if (!scheduledAt.isAfter(DateTime.now())) {
       await showNow(id: id, title: title, body: body);
       return;
@@ -217,92 +234,92 @@ class TimerNotificationService {
 
     final scheduledDate = tz.TZDateTime.from(scheduledAt, tz.local);
     final details = _notificationDetails(
-      channelId: timerChannelId,
+      channelId:   timerChannelId,
       channelName: timerChannelName,
-      ongoing: false,
-      importance: Importance.high,
-      priority: Priority.high,
+      ongoing:     false,
+      importance:  Importance.high,
+      priority:    Priority.high,
     );
 
     try {
       await _plugin.zonedSchedule(
-        id: id,
-        title: title,
-        body: body,
-        scheduledDate: scheduledDate,
+        id:                  id,
+        title:               title,
+        body:                body,
+        scheduledDate:       scheduledDate,
         notificationDetails: details,
-        payload: payload,
+        payload:             payload,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } catch (error, stackTrace) {
       debugPrint('Exact notification scheduling failed: $error');
       debugPrintStack(stackTrace: stackTrace);
       await _plugin.zonedSchedule(
-        id: id,
-        title: title,
-        body: body,
-        scheduledDate: scheduledDate,
+        id:                  id,
+        title:               title,
+        body:                body,
+        scheduledDate:       scheduledDate,
         notificationDetails: details,
-        payload: payload,
+        payload:             payload,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       );
     }
   }
 
   Future<void> _show({
-    required int id,
-    required String title,
-    required String body,
-    required String channelId,
-    required String channelName,
-    required bool ongoing,
+    required int        id,
+    required String     title,
+    required String     body,
+    required String     channelId,
+    required String     channelName,
+    required bool       ongoing,
     required Importance importance,
-    required Priority priority,
+    required Priority   priority,
   }) async {
     await initialize();
     await _plugin.show(
-      id: id,
-      title: title,
-      body: body,
+      id:                  id,
+      title:               title,
+      body:                body,
       notificationDetails: _notificationDetails(
-        channelId: channelId,
+        channelId:   channelId,
         channelName: channelName,
-        ongoing: ongoing,
-        importance: importance,
-        priority: priority,
+        ongoing:     ongoing,
+        importance:  importance,
+        priority:    priority,
       ),
       payload: 'session',
     );
   }
 
   NotificationDetails _notificationDetails({
-    required String channelId,
-    required String channelName,
-    required bool ongoing,
+    required String     channelId,
+    required String     channelName,
+    required bool       ongoing,
     required Importance importance,
-    required Priority priority,
+    required Priority   priority,
   }) {
     return NotificationDetails(
       android: AndroidNotificationDetails(
         channelId,
         channelName,
+        // Channel description kept in English — Android channel metadata is
+        // persistent and cannot be updated after first creation.
         channelDescription: 'Study timer reminders and status updates.',
-        ongoing: ongoing,
+        ongoing:   ongoing,
         autoCancel: !ongoing,
         importance: importance,
-        priority: priority,
-        category: AndroidNotificationCategory.alarm,
+        priority:   priority,
+        category:   AndroidNotificationCategory.alarm,
       ),
-      iOS: const DarwinNotificationDetails(),
+      iOS:   const DarwinNotificationDetails(),
       macOS: const DarwinNotificationDetails(),
     );
   }
 
   Future<void> _createAndroidChannels() async {
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     if (android == null) return;
 
     await android.createNotificationChannel(
@@ -310,7 +327,7 @@ class TimerNotificationService {
         timerChannelId,
         timerChannelName,
         description: 'Study timer completion reminders.',
-        importance: Importance.high,
+        importance:  Importance.high,
       ),
     );
     await android.createNotificationChannel(
@@ -318,7 +335,7 @@ class TimerNotificationService {
         foregroundChannelId,
         foregroundChannelName,
         description: 'Persistent notification while a study timer is active.',
-        importance: Importance.low,
+        importance:  Importance.low,
       ),
     );
   }

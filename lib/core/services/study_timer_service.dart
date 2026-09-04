@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:study_planner/core/services/notification_strings.dart';
 import 'package:study_planner/core/services/study_timer_background_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
 import 'package:study_planner/core/utils/date_utils.dart';
@@ -199,7 +200,11 @@ class StudyTimerService {
 
     await _activeTimerRepository.clear();
     await _notificationService.cancelTimerSchedules();
-    await _notificationService.showBreakComplete();
+    final strings = await _strings();
+    await _notificationService.showBreakComplete(
+      title: strings.breakFinishedTitle,
+      body:  strings.breakFinishedBody,
+    );
     await _backgroundService?.stop();
     return null;
   }
@@ -226,7 +231,11 @@ class StudyTimerService {
     if (timer.phase == ActiveTimerPhase.breakTime) {
       await _activeTimerRepository.clear();
       await _notificationService.cancelTimerSchedules();
-      await _notificationService.showBreakComplete();
+      final strings = await _strings();
+      await _notificationService.showBreakComplete(
+        title: strings.breakFinishedTitle,
+        body:  strings.breakFinishedBody,
+      );
       await _backgroundService?.stop();
     }
 
@@ -264,8 +273,14 @@ class StudyTimerService {
       subjectJustCompleted = await _markDailyPlanSubjectComplete(subject.id);
     }
 
+    // Resolve the current language once for all notifications in this call.
+    final strings = await _strings();
+
     await _notificationService.cancelTimerSchedules();
-    await _notificationService.showStudyComplete();
+    await _notificationService.showStudyComplete(
+      title: strings.studyCompleteTitle,
+      body:  strings.studyCompleteBody,
+    );
 
     // ── Milestone detection ───────────────────────────────────────────────
     final dailyGoalJustReached = await _checkDailyGoalReached();
@@ -277,10 +292,16 @@ class StudyTimerService {
 
     // Fire celebration notifications (in addition to the standard ones above).
     if (subjectJustCompleted) {
-      await _notificationService.showSubjectCompleted(subject.name);
+      await _notificationService.showSubjectCompleted(
+        title: strings.subjectCompleteTitle,
+        body:  strings.subjectCompleteBody(subject.name),
+      );
     }
     if (dailyGoalJustReached) {
-      await _notificationService.showDailyGoalReached();
+      await _notificationService.showDailyGoalReached(
+        title: strings.dailyGoalTitle,
+        body:  strings.dailyGoalBody,
+      );
     }
 
     // ── Create the break timer ────────────────────────────────────────────
@@ -302,8 +323,11 @@ class StudyTimerService {
         updatedAt: now,
       ),
     );
-    await _notificationService.showBreakStarted();
-    await _scheduleFor(breakTimer, subject);
+    await _notificationService.showBreakStarted(
+      title: strings.breakStartedTitle,
+      body:  strings.breakStartedBody,
+    );
+    await _scheduleFor(breakTimer, subject, strings: strings);
     await _backgroundService?.start();
 
     return reason;
@@ -391,26 +415,43 @@ class StudyTimerService {
     );
   }
 
-  Future<void> _scheduleFor(ActiveTimerState timer, Subject subject) async {
+  Future<void> _scheduleFor(
+    ActiveTimerState timer,
+    Subject subject, {
+    NotificationStrings? strings,
+  }) async {
     if (timer.endsAt == null) return;
     try {
       final settings = await _settingsRepository.getSettings();
       if (!settings.notificationsEnabled) return;
+      // Resolve strings at schedule time so the embedded title/body match the
+      // language currently selected by the user.
+      final s = strings ?? NotificationStrings.forLanguage(settings.language);
       if (timer.phase == ActiveTimerPhase.study) {
         await _notificationService.scheduleStudyCompleted(
-          endsAt: timer.endsAt!,
+          endsAt:  timer.endsAt!,
           subject: subject,
+          title:   s.studyCompleteTitle,
+          body:    s.studyCompleteBody,
         );
       } else if (timer.phase == ActiveTimerPhase.breakTime) {
         await _notificationService.scheduleBreakCompleted(
-          endsAt: timer.endsAt!,
+          endsAt:  timer.endsAt!,
           subject: subject,
+          title:   s.breakFinishedTitle,
+          body:    s.breakFinishedBody,
         );
       }
     } catch (error, stackTrace) {
       debugPrint('Timer notification scheduling failed: $error');
       debugPrintStack(stackTrace: stackTrace);
     }
+  }
+
+  /// Builds a [NotificationStrings] for the currently persisted language.
+  Future<NotificationStrings> _strings() async {
+    final settings = await _settingsRepository.getSettings();
+    return NotificationStrings.forLanguage(settings.language);
   }
 
   Future<StudyTimerSnapshot> _snapshot(

@@ -18,7 +18,7 @@ class StatisticsPlanProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     final safePlannedSeconds = plannedSeconds < 0 ? 0 : plannedSeconds;
     final safeCompletedSeconds = completedSeconds < 0 ? 0 : completedSeconds;

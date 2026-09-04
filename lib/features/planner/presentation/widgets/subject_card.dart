@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/subject.dart';
 
 final Map<String, IconData> subjectIcons = {
@@ -31,6 +33,7 @@ class SubjectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context)!;
     final subjectColor = Color(subject.color);
 
     return Container(
@@ -65,10 +68,12 @@ class SubjectCard extends StatelessWidget {
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Study focus',
+                  l10n.studyFocus,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colors.mutedForeground,
                   ),
@@ -82,12 +87,12 @@ class SubjectCard extends StatelessWidget {
               IconButton(
                 onPressed: onEdit,
                 icon: const Icon(Icons.edit_outlined),
-                tooltip: 'Edit subject',
+                tooltip: l10n.editSubject,
               ),
               IconButton(
                 onPressed: onDelete,
                 icon: const Icon(Icons.delete_outline_rounded),
-                tooltip: 'Delete subject',
+                tooltip: l10n.deleteSubject,
                 color: theme.colorScheme.error,
               ),
             ],

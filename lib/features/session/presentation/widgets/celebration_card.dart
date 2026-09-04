@@ -1,8 +1,11 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:study_planner/core/app_colors.dart';
-import 'package:study_planner/features/session/cubit/session_cubit.dart';
 
+import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/core/service%20locator/injection.dart';
+import 'package:study_planner/core/services/sound_service.dart';
+import 'package:study_planner/features/session/cubit/session_cubit.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 /// Full-screen modal overlay shown when a study milestone is reached.
 ///
@@ -28,8 +31,7 @@ class CelebrationCard extends StatefulWidget {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.black54,
-      builder: (_) =>
-          CelebrationCard(reason: reason, subjectName: subjectName),
+      builder: (_) => CelebrationCard(reason: reason, subjectName: subjectName),
     );
   }
 
@@ -43,9 +45,14 @@ class _CelebrationCardState extends State<CelebrationCard> {
   @override
   void initState() {
     super.initState();
+
     _confetti = ConfettiController(duration: const Duration(seconds: 3));
-    // Small delay so the dialog paint is complete before confetti starts.
-    Future.microtask(_confetti.play);
+
+    // Small delay so the dialog paint is complete before confetti and sound start.
+    Future.microtask(() {
+      _confetti.play();
+      getIt<SoundService>().playCelebration();
+    });
   }
 
   @override
@@ -53,8 +60,6 @@ class _CelebrationCardState extends State<CelebrationCard> {
     _confetti.dispose();
     super.dispose();
   }
-
-  // ── Copy helpers ───────────────────────────────────────────────────────────
 
   String get _emoji {
     return switch (widget.reason) {
@@ -65,27 +70,26 @@ class _CelebrationCardState extends State<CelebrationCard> {
     };
   }
 
-  String get _title {
+  String _title(AppLocalizations l10n) {
     return switch (widget.reason) {
-      CelebrationReason.subjectCompleted => 'Subject complete!',
-      CelebrationReason.dailyGoalReached => 'Daily goal reached!',
-      CelebrationReason.both => 'Double milestone!',
-      CelebrationReason.none => 'Session complete!',
+      CelebrationReason.subjectCompleted => l10n.subjectCompleteTitle,
+      CelebrationReason.dailyGoalReached => l10n.dailyGoalReachedTitle,
+      CelebrationReason.both => l10n.doubleMilestoneTitle,
+      CelebrationReason.none => l10n.sessionCompleteTitle,
     };
   }
 
-  String get _body {
+  String _body(AppLocalizations l10n) {
     return switch (widget.reason) {
-      CelebrationReason.subjectCompleted =>
-        'You finished your planned session for ${widget.subjectName}. '
-            'Keep up the great work!',
-      CelebrationReason.dailyGoalReached =>
-        "You've hit your study goal for today. "
-            'Every minute counts — you should be proud!',
-      CelebrationReason.both =>
-        'You finished ${widget.subjectName} AND hit your daily study goal. '
-            "That's an incredible effort today!",
-      CelebrationReason.none => 'Great job completing the session!',
+      CelebrationReason.subjectCompleted => l10n.subjectCompleteBody(
+        widget.subjectName,
+      ),
+
+      CelebrationReason.dailyGoalReached => l10n.dailyGoalReachedBody,
+
+      CelebrationReason.both => l10n.doubleMilestoneBody(widget.subjectName),
+
+      CelebrationReason.none => l10n.sessionCompleteBody,
     };
   }
 
@@ -94,6 +98,7 @@ class _CelebrationCardState extends State<CelebrationCard> {
     final theme = Theme.of(context);
     final colors = context.sfColors;
     final scheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     // Confetti colours drawn from the app palette.
     final confettiColors = [
@@ -107,7 +112,6 @@ class _CelebrationCardState extends State<CelebrationCard> {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        // ── Dialog card ────────────────────────────────────────────────────
         Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppColors.radiusXl),
@@ -127,33 +131,33 @@ class _CelebrationCardState extends State<CelebrationCard> {
                     shape: BoxShape.circle,
                   ),
                   child: Center(
-                    child: Text(
-                      _emoji,
-                      style: const TextStyle(fontSize: 38),
-                    ),
+                    child: Text(_emoji, style: const TextStyle(fontSize: 38)),
                   ),
                 ),
+
                 const SizedBox(height: 20),
 
                 // Title
                 Text(
-                  _title,
+                  _title(l10n),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+
                 const SizedBox(height: 12),
 
                 // Body
                 Text(
-                  _body,
+                  _body(l10n),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: colors.mutedForeground,
                     height: 1.5,
                   ),
                 ),
+
                 const SizedBox(height: 28),
 
                 // Dismiss button
@@ -161,7 +165,7 @@ class _CelebrationCardState extends State<CelebrationCard> {
                   width: double.infinity,
                   child: FilledButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Continue'),
+                    child: Text(l10n.continueButton),
                   ),
                 ),
               ],
@@ -169,7 +173,7 @@ class _CelebrationCardState extends State<CelebrationCard> {
           ),
         ),
 
-        // ── Confetti cannon centred at the top of the screen ───────────────
+        // Confetti cannon centred at the top of the screen
         ConfettiWidget(
           confettiController: _confetti,
           blastDirectionality: BlastDirectionality.explosive,

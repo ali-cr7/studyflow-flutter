@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_planner/features/achievements/presentation/widgets/achievement_card.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 import 'package:study_planner/shared/domain/entities/achievement.dart';
 import 'package:study_planner/shared/domain/entities/achievement_definition.dart';
@@ -33,6 +34,7 @@ class AchievementGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -45,6 +47,7 @@ class AchievementGrid extends StatelessWidget {
         childAspectRatio: 0.82,
       ),
       itemBuilder: (context, index) {
+
         final definition =
             AchievementDefinitions.all[index];
 

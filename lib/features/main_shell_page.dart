@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,7 @@ import 'package:study_planner/features/planner/presentation/pages/subjects_page.
 import 'package:study_planner/features/settings/presentation/pages/settings_page.dart';
 import 'package:study_planner/features/statistics/presentation/pages/statistics_page.dart';
 import 'package:study_planner/features/session/presentation/pages/session_page.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/active_timer_state.dart';
 import 'package:study_planner/shared/domain/repositories/active_timer_repository.dart';
 import 'package:study_planner/shared/domain/repositories/subject_repository.dart';
@@ -27,42 +30,9 @@ class _MainShellPageState extends State<MainShellPage> {
 
   /// Notifies when a different tab is selected
   final tabIndexNotifier = ValueNotifier<int>(0);
-  
+
   /// Notifies when the currently selected tab is tapped again (refresh request)
   final refreshNotifier = ValueNotifier<int>(0);
-
-  static const List<NavigationDestination> _destinations = [
-    NavigationDestination(
-      icon: Icon(Icons.dashboard_outlined),
-      selectedIcon: Icon(Icons.dashboard_rounded),
-      label: 'Home',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.event_note_outlined),
-      selectedIcon: Icon(Icons.event_note_rounded),
-      label: 'Plan',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.timer_outlined),
-      selectedIcon: Icon(Icons.timer_rounded),
-      label: 'Study',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.school_outlined),
-      selectedIcon: Icon(Icons.school_rounded),
-      label: 'Subjects',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.bar_chart_outlined),
-      selectedIcon: Icon(Icons.bar_chart_rounded),
-      label: 'Stats',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.settings_outlined),
-      selectedIcon: Icon(Icons.settings_rounded),
-      label: 'Settings',
-    ),
-  ];
 
   late final List<Widget> _views;
 
@@ -96,6 +66,39 @@ class _MainShellPageState extends State<MainShellPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final List<NavigationDestination> _destinations = [
+      NavigationDestination(
+        icon: const Icon(Icons.dashboard_outlined),
+        selectedIcon: const Icon(Icons.dashboard_rounded),
+        label: l10n.home,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.event_note_outlined),
+        selectedIcon: const Icon(Icons.event_note_rounded),
+        label: l10n.plan,
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.timer_outlined),
+        selectedIcon: Icon(Icons.timer_rounded),
+        label: l10n.study,
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.school_outlined),
+        selectedIcon: Icon(Icons.school_rounded),
+        label: l10n.subjects,
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.bar_chart_outlined),
+        selectedIcon: Icon(Icons.bar_chart_rounded),
+        label: l10n.statistics,
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.settings_outlined),
+        selectedIcon: Icon(Icons.settings_rounded),
+        label: l10n.settings,
+      ),
+    ];
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: _views),
       bottomNavigationBar: NavigationBar(

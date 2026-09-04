@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:study_planner/core/app_colors.dart';
 import 'package:study_planner/features/dashboard/data/daily_phrases.dart';
+import 'package:study_planner/features/dashboard/data/daily_phrases_ar.dart';
+import 'package:study_planner/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:study_planner/shared/domain/enums/app_language.dart';
 
 /// Displays the personalised encouraging phrase of the day.
 ///
@@ -15,7 +19,13 @@ class DailyPhraseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
-    final phrase = DailyPhrases.forToday(name);
+    //final phrase = DailyPhrases.forToday(name);
+    final language = context.select(
+      (SettingsCubit cubit) => cubit.state.settings.language,
+    );
+    final phrase = language == AppLanguage.ar
+        ? DailyPhrasesAr.forToday(name)
+        : DailyPhrases.forToday(name);
 
     return Container(
       width: double.infinity,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/achievement_definition.dart';
+import 'package:study_planner/shared/domain/enums/achievement_type.dart';
 
 class AchievementCard extends StatelessWidget {
   const AchievementCard({
@@ -14,16 +17,60 @@ class AchievementCard extends StatelessWidget {
   final bool unlocked;
   final DateTime? unlockedAt;
 
+  String _title(AchievementType type, AppLocalizations l10n) {
+    return switch (type) {
+      AchievementType.firstSession => l10n.achievementFirstStepTitle,
+
+      AchievementType.streak3 => l10n.achievementStreak3Title,
+
+      AchievementType.streak7 => l10n.achievementStreak7Title,
+
+      AchievementType.streak30 => l10n.achievementStreak30Title,
+
+      AchievementType.dailyGoalMet => l10n.achievementDailyGoalMetTitle,
+
+      AchievementType.tenSessions => l10n.achievementTenSessionsTitle,
+
+      AchievementType.fiftySessions => l10n.achievementFiftySessionsTitle,
+
+      AchievementType.hundredSessions => l10n.achievementHundredSessionsTitle,
+    };
+  }
+
+  String _description(AchievementType type, AppLocalizations l10n) {
+    return switch (type) {
+      AchievementType.firstSession => l10n.achievementFirstStepDescription,
+
+      AchievementType.streak3 => l10n.achievementStreak3Description,
+
+      AchievementType.streak7 => l10n.achievementStreak7Description,
+
+      AchievementType.streak30 => l10n.achievementStreak30Description,
+
+      AchievementType.dailyGoalMet => l10n.achievementDailyGoalMetDescription,
+
+      AchievementType.tenSessions => l10n.achievementTenSessionsDescription,
+
+      AchievementType.fiftySessions => l10n.achievementFiftySessionsDescription,
+
+      AchievementType.hundredSessions =>
+        l10n.achievementHundredSessionsDescription,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final title = _title(definition.type, l10n);
+    final description = _description(definition.type, l10n);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
 
-        // Adapt spacing based on available card width.
         final isCompact = width < 180;
         final isVeryCompact = width < 140;
 
@@ -83,8 +130,8 @@ class AchievementCard extends StatelessWidget {
 
               // Title
               Text(
-                definition.title,
-                maxLines: isVeryCompact ? 2 : 2,
+                title,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontSize: isVeryCompact
@@ -100,18 +147,20 @@ class AchievementCard extends StatelessWidget {
               SizedBox(height: isCompact ? 4 : 6),
 
               // Description
-              Text(
-                definition.description,
-                maxLines: isVeryCompact
-                    ? 3
-                    : isCompact
-                    ? 4
-                    : 5,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontSize: isVeryCompact ? 11 : null,
-                  color: colors.mutedForeground,
-                  height: 1.4,
+              Expanded(
+                child: Text(
+                  description,
+                  maxLines: isVeryCompact
+                      ? 3
+                      : isCompact
+                      ? 4
+                      : 5,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: isVeryCompact ? 11 : null,
+                    color: colors.mutedForeground,
+                    height: 1.4,
+                  ),
                 ),
               ),
 
@@ -130,7 +179,7 @@ class AchievementCard extends StatelessWidget {
                   const SizedBox(width: 5),
                   Expanded(
                     child: Text(
-                      unlocked ? 'Unlocked' : 'Locked',
+                      unlocked ? l10n.unlocked : l10n.locked,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.labelMedium?.copyWith(

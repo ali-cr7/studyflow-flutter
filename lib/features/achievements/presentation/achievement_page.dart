@@ -7,16 +7,15 @@ import 'package:study_planner/features/achievements/presentation/widgets/achieve
 import 'package:study_planner/l10n/app_localizations.dart';
 import 'package:study_planner/shared/domain/entities/achievement_definition.dart';
 
-
 class AchievementsPage extends StatelessWidget {
   const AchievementsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AchievementsCubit(
-        achievementService: getIt<AchievementService>(),
-      )..loadAchievements(),
+      create: (_) =>
+          AchievementsCubit(achievementService: getIt<AchievementService>())
+            ..loadAchievements(),
       child: const _AchievementsView(),
     );
   }
@@ -29,26 +28,18 @@ class _AchievementsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.achievements),
-      ),
+      appBar: AppBar(title: Text(l10n.achievements)),
       body: BlocBuilder<AchievementsCubit, AchievementsState>(
         builder: (context, state) {
-          if (state is AchievementsLoading ||
-              state is AchievementsInitial) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          if (state is AchievementsLoading || state is AchievementsInitial) {
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state is AchievementsError) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
-                child: Text(
-                  state.message,
-                  textAlign: TextAlign.center,
-                ),
+                child: Text(state.message, textAlign: TextAlign.center),
               ),
             );
           }
@@ -63,9 +54,7 @@ class _AchievementsView extends StatelessWidget {
 
           return RefreshIndicator(
             onRefresh: () {
-              return context
-                  .read<AchievementsCubit>()
-                  .refresh();
+              return context.read<AchievementsCubit>().refresh();
             },
             child: ListView(
               padding: const EdgeInsets.all(20),
@@ -79,19 +68,14 @@ class _AchievementsView extends StatelessWidget {
 
                 Text(
                   l10n.yourAchievements,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
                 ),
 
                 const SizedBox(height: 14),
 
-                AchievementGrid(
-                  unlockedAchievements: unlocked,
-                ),
+                AchievementGrid(unlockedAchievements: unlocked),
               ],
             ),
           );
@@ -115,16 +99,12 @@ class _AchievementSummary extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    final progress = totalCount == 0
-        ? 0.0
-        : unlockedCount / totalCount;
+    final progress = totalCount == 0 ? 0.0 : unlockedCount / totalCount;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(
-          alpha: 0.08,
-        ),
+        color: theme.colorScheme.primary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
@@ -135,9 +115,7 @@ class _AchievementSummary extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(
-                    alpha: 0.12,
-                  ),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -149,13 +127,11 @@ class _AchievementSummary extends StatelessWidget {
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       l10n.achievementsUnlocked(unlockedCount, totalCount),
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),

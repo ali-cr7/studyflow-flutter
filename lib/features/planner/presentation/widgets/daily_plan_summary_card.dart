@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class DailyPlanSummaryCard extends StatelessWidget {
   const DailyPlanSummaryCard({
@@ -17,6 +20,11 @@ class DailyPlanSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context)!;
+
+    final locale = Localizations.localeOf(context).toString();
+
+    final formattedDate = DateFormat('EEEE, d/M', locale).format(date);
 
     return Container(
       width: double.infinity,
@@ -28,10 +36,10 @@ class DailyPlanSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_formatDate(date), style: theme.textTheme.titleLarge),
+          Text(formattedDate, style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
           Text(
-            '$totalPlannedMinutes min planned • $completedPlannedMinutes min completed',
+            l10n.planSummary(totalPlannedMinutes, completedPlannedMinutes),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colors.primaryDark,
             ),
@@ -41,16 +49,5 @@ class DailyPlanSummaryCard extends StatelessWidget {
     );
   }
 
-  static String _formatDate(DateTime date) {
-    final weekday = <String>[
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ][date.weekday - 1];
-    return '$weekday, ${date.day}/${date.month}';
-  }
+ 
 }

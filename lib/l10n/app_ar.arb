@@ -63,7 +63,7 @@
   "onboardingWelcome": "مرحباً بك في StudyRise",
   "onboardingDescription": "رفيقك الدراسي الشخصي",
   "getStarted": "ابدأ الآن",
-  "records": "السجلات",
+  "records": "الإنجازات",
   "drawer": "القائمة",
   "studySession": "جلسة دراسة",
   "error": "خطأ: {message}",
@@ -187,14 +187,14 @@
   "plannedVsCompletedHeader": "المخطط مقابل المكتمل",
   "consistency": "الاستمرارية",
   "insights": "رؤى",
-  "bestRecords": "أفضل السجلات",
+  "bestRecords": "أفضل الإنجازات",
   "recentAchievements": "الإنجازات الأخيرة",
   "studyDays": "أيام الدراسة",
   "activeDays": "الأيام النشطة",
   "noStudyHistory": "لا يوجد سجل دراسة",
   "noStudyHistoryMessage": "ليس لديك جلسات دراسة مكتملة لهذا الشهر بعد.",
   "yourAchievements": "إنجازاتك",
-  "achievementsUnlocked": "{unlockedCount} من {totalCount} مفتوحة",
+  "achievementsUnlocked": "{totalCount} من {unlockedCount} مفتوحة",
   "keepStudyingToUnlockMore": "واصل الدراسة لفتح المزيد!",
   "goodMorning": "صباح الخير، {name}",
   "goodAfternoon": "مساء الخير، {name}",
@@ -212,7 +212,7 @@
   "totalStudyTime": "المجموع",
   "otherSubjects": "أخرى",
   "streakDays": "سلسلة {count} أيام",
-  "noRecordsYet": "لا توجد سجلات بعد",
+  "noRecordsYet": "لا توجد إنجازات بعد",
   "keepStudyingForRecords": "واصل الدراسة لفتح أفضل سلاسل وإنجازاتك.",
   "average": "المتوسط {duration}",
   "goal": "الهدف {duration}",
@@ -249,5 +249,102 @@
   "mostStudiedSubjectRecord": "المادة الأكثر دراسة",
   "longestSession": "أطول جلسة",
   "noStudySessionsRecorded": "لم يتم تسجيل جلسات دراسة لهذه الفترة بعد.",
-  "na": "غير متاح"
+  "na": "غير متاح",
+  "home": "الرئيسية",
+  "plan": "الخطة",
+  "study": "الدراسة",
+  "subjects": "المواد",
+  "stats": "الإحصائيات",
+  "settings": "الإعدادات",
+  "studyStack": "مجموعة المواد",
+  "activeSubjects": "{count} مادة نشطة",
+  "studyFocus": "التركيز الدراسي",
+  "editSubject": "تعديل المادة",
+  "deleteSubject": "حذف المادة",
+  "planSummary": "{completed} دقيقة مخططة • {planned} دقيقة مكتملة",
+  "toggleCompletion": "تبديل حالة الإنجاز",
+  "deletePlannedSubject": "حذف المادة من الخطة",
+  "sessionSummary": "{sessionNumber}/{minutes} {totalSessions, plural, =0 {جلسة} =1 {جلسة} =2 {جلستان} few {جلسات} many {جلسة} other {جلسة}} • {totalSessions} دقيقة",
+  "addToTodaysPlan": "إضافة إلى خطة اليوم",
+  "subject": "المادة",
+  "sessions": "الجلسات",
+  "sessionDurationHelper": "الجلسة الواحدة = {minutes} دقيقة",
+  "addSubject": "إضافة المادة",
+
+  "notifStudyCompleteTitle": "اكتملت جلسة الدراسة",
+  "notifStudyCompleteBody": "أحسنت! انتهت جلسة دراستك. حان وقت الاستراحة.",
+  "notifBreakFinishedTitle": "انتهت الاستراحة",
+  "notifBreakFinishedBody": "انتهى وقت الاستراحة. هل أنت مستعد للعودة إلى الدراسة؟",
+  "notifBreakStartedTitle": "وقت الاستراحة",
+  "notifBreakStartedBody": "اكتملت جلسة دراستك. خذ استراحة قصيرة.",
+  "notifStudyStartingTitle": "بدأت جلسة الدراسة",
+  "notifStudyStartingBody": "حان وقت دراسة {subject}.",
+  "@notifStudyStartingBody": {
+    "placeholders": {
+      "subject": { "type": "String" }
+    }
+  },
+  "notifSubjectCompleteTitle": "🎉 اكتملت المادة!",
+  "notifSubjectCompleteBody": "لقد أنهيت الجلسة المخططة لـ {subject}. عمل رائع!",
+  "@notifSubjectCompleteBody": {
+    "placeholders": {
+      "subject": { "type": "String" }
+    }
+  },
+  "notifDailyGoalTitle": "🏆 تم تحقيق الهدف اليومي!",
+  "notifDailyGoalBody": "لقد حققت هدف دراستك لليوم. جهد مذهل!",
+  "notifForegroundFocusLabel": "تركيز",
+  "notifForegroundBreakLabel": "استراحة",
+  "notifForegroundTitle": "مؤقت {phase}: {subject}",
+  "@notifForegroundTitle": {
+    "placeholders": {
+      "phase": { "type": "String" },
+      "subject": { "type": "String" }
+    }
+  },
+  "notifForegroundBody": "تبقى {remaining}",
+  "@notifForegroundBody": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "notifInitialTitle": "مؤقت الدراسة يعمل",
+  "notifInitialContent": "جارٍ متابعة جلستك.",
+  "subjectCompleteTitle": "أتممت المادة!",
+  "subjectCompleteBody": "لقد أنهيت جلستك المخططة لمادة {subject}. أحسنت، استمر بهذا الإنجاز!",
+  "dailyGoalReachedTitle": "حققت هدفك اليومي!",
+  "dailyGoalReachedBody": "لقد حققت هدفك الدراسي لهذا اليوم. كل دقيقة تصنع فرقًا، ويحق لك أن تفتخر بإنجازك!",
+  "doubleMilestoneTitle": "إنجازان في وقت واحد!",
+  "doubleMilestoneBody": "لقد أنهيت مادة {subject} وحققت هدفك الدراسي اليومي أيضًا. يا له من إنجاز رائع!",
+  "sessionCompleteTitle": "اكتملت الجلسة!",
+  "sessionCompleteBody": "أحسنت! لقد أتممت جلسة الدراسة.",
+  "continueButton": "متابعة",
+
+  "achievementFirstStepTitle": "الخطوة الأولى",
+  "achievementFirstStepDescription": "أكمل أول جلسة دراسة لك.",
+
+  "achievementStreak3Title": "البداية القوية",
+  "achievementStreak3Description": "حافظ على سلسلة دراسة لمدة 3 أيام.",
+
+  "achievementStreak7Title": "أسبوع من الالتزام",
+  "achievementStreak7Description": "حافظ على سلسلة دراسة لمدة 7 أيام.",
+
+  "achievementStreak30Title": "لا يمكن إيقافه",
+  "achievementStreak30Description": "حافظ على سلسلة دراسة لمدة 30 يومًا.",
+
+  "achievementDailyGoalMetTitle": "تم تحقيق الهدف",
+  "achievementDailyGoalMetDescription": "حقق هدفك الدراسي اليومي.",
+
+  "achievementTenSessionsTitle": "الطالب المثابر",
+  "achievementTenSessionsDescription": "أكمل 10 جلسات دراسة.",
+
+  "achievementFiftySessionsTitle": "آلة الدراسة",
+  "achievementFiftySessionsDescription": "أكمل 50 جلسة دراسة.",
+
+  "achievementHundredSessionsTitle": "سيد الاستمرارية",
+  "achievementHundredSessionsDescription": "أكمل 100 جلسة دراسة.",
+
+  "unlocked": "تم فتحه",
+  "locked": "مقفل"
+
 }

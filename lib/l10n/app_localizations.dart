@@ -341,7 +341,7 @@ abstract class AppLocalizations {
   /// No description provided for @addSubject.
   ///
   /// In en, this message translates to:
-  /// **'Add Subject'**
+  /// **'Add subject'**
   String get addSubject;
 
   /// No description provided for @subjectName.
@@ -749,13 +749,13 @@ abstract class AppLocalizations {
   /// No description provided for @locked.
   ///
   /// In en, this message translates to:
-  /// **'Locked'**
+  /// **'مقفل'**
   String get locked;
 
   /// No description provided for @unlocked.
   ///
   /// In en, this message translates to:
-  /// **'Unlocked'**
+  /// **'تم فتحه'**
   String get unlocked;
 
   /// No description provided for @activationTitle.
@@ -1573,6 +1573,358 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'N/A'**
   String get na;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get plan;
+
+  /// No description provided for @stats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get stats;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @studyStack.
+  ///
+  /// In en, this message translates to:
+  /// **'Study stack'**
+  String get studyStack;
+
+  /// No description provided for @activeSubjects.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active {count, plural, =1 {subject} other {subjects}}'**
+  String activeSubjects(num count);
+
+  /// No description provided for @studyFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Study focus'**
+  String get studyFocus;
+
+  /// No description provided for @editSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit subject'**
+  String get editSubject;
+
+  /// No description provided for @deleteSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete subject'**
+  String get deleteSubject;
+
+  /// No description provided for @planSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} min planned • {completed} min completed'**
+  String planSummary(Object completed, Object planned);
+
+  /// No description provided for @toggleCompletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle completion'**
+  String get toggleCompletion;
+
+  /// No description provided for @deletePlannedSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete planned subject'**
+  String get deletePlannedSubject;
+
+  /// No description provided for @sessionSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{sessionNumber}/{totalSessions} {totalSessions, plural, =1 {session} other {sessions}} • {minutes} min'**
+  String sessionSummary(
+    Object minutes,
+    Object sessionNumber,
+    num totalSessions,
+  );
+
+  /// No description provided for @addToTodaysPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to today’s plan'**
+  String get addToTodaysPlan;
+
+  /// No description provided for @sessionDurationHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'1 session = {minutes} min'**
+  String sessionDurationHelper(Object minutes);
+
+  /// No description provided for @notifStudyCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study session complete'**
+  String get notifStudyCompleteTitle;
+
+  /// No description provided for @notifStudyCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! Your study session is finished. Time for a break.'**
+  String get notifStudyCompleteBody;
+
+  /// No description provided for @notifBreakFinishedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Break finished'**
+  String get notifBreakFinishedTitle;
+
+  /// No description provided for @notifBreakFinishedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Break time is over. Ready to start studying again?'**
+  String get notifBreakFinishedBody;
+
+  /// No description provided for @notifBreakStartedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Break time'**
+  String get notifBreakStartedTitle;
+
+  /// No description provided for @notifBreakStartedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your study session is complete. Take a short break.'**
+  String get notifBreakStartedBody;
+
+  /// No description provided for @notifStudyStartingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study session starting'**
+  String get notifStudyStartingTitle;
+
+  /// No description provided for @notifStudyStartingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s time to study {subject}.'**
+  String notifStudyStartingBody(String subject);
+
+  /// No description provided for @notifSubjectCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Subject complete!'**
+  String get notifSubjectCompleteTitle;
+
+  /// No description provided for @notifSubjectCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You finished your planned session for {subject}. Great work!'**
+  String notifSubjectCompleteBody(String subject);
+
+  /// No description provided for @notifDailyGoalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🏆 Daily goal reached!'**
+  String get notifDailyGoalTitle;
+
+  /// No description provided for @notifDailyGoalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve hit your study goal for today. Incredible effort!'**
+  String get notifDailyGoalBody;
+
+  /// No description provided for @notifForegroundFocusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get notifForegroundFocusLabel;
+
+  /// No description provided for @notifForegroundBreakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get notifForegroundBreakLabel;
+
+  /// No description provided for @notifForegroundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{phase} timer: {subject}'**
+  String notifForegroundTitle(String phase, String subject);
+
+  /// No description provided for @notifForegroundBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{remaining} remaining'**
+  String notifForegroundBody(String remaining);
+
+  /// No description provided for @notifInitialTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study timer running'**
+  String get notifInitialTitle;
+
+  /// No description provided for @notifInitialContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeping your session on track.'**
+  String get notifInitialContent;
+
+  /// No description provided for @subjectCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject complete!'**
+  String get subjectCompleteTitle;
+
+  /// No description provided for @subjectCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You finished your planned session for {subject}. Keep up the great work!'**
+  String subjectCompleteBody(Object subject);
+
+  /// No description provided for @dailyGoalReachedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily goal reached!'**
+  String get dailyGoalReachedTitle;
+
+  /// No description provided for @dailyGoalReachedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve hit your study goal for today. Every minute counts — you should be proud!'**
+  String get dailyGoalReachedBody;
+
+  /// No description provided for @doubleMilestoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Double milestone!'**
+  String get doubleMilestoneTitle;
+
+  /// No description provided for @doubleMilestoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You finished {subject} AND hit your daily study goal. That\'s an incredible effort today!'**
+  String doubleMilestoneBody(Object subject);
+
+  /// No description provided for @sessionCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session complete!'**
+  String get sessionCompleteTitle;
+
+  /// No description provided for @sessionCompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job completing the session!'**
+  String get sessionCompleteBody;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @achievementFirstStepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'الخطوة الأولى'**
+  String get achievementFirstStepTitle;
+
+  /// No description provided for @achievementFirstStepDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'أكمل أول جلسة دراسة لك.'**
+  String get achievementFirstStepDescription;
+
+  /// No description provided for @achievementStreak3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'البداية القوية'**
+  String get achievementStreak3Title;
+
+  /// No description provided for @achievementStreak3Description.
+  ///
+  /// In en, this message translates to:
+  /// **'حافظ على سلسلة دراسة لمدة 3 أيام.'**
+  String get achievementStreak3Description;
+
+  /// No description provided for @achievementStreak7Title.
+  ///
+  /// In en, this message translates to:
+  /// **'أسبوع من الالتزام'**
+  String get achievementStreak7Title;
+
+  /// No description provided for @achievementStreak7Description.
+  ///
+  /// In en, this message translates to:
+  /// **'حافظ على سلسلة دراسة لمدة 7 أيام.'**
+  String get achievementStreak7Description;
+
+  /// No description provided for @achievementStreak30Title.
+  ///
+  /// In en, this message translates to:
+  /// **'لا يمكن إيقافه'**
+  String get achievementStreak30Title;
+
+  /// No description provided for @achievementStreak30Description.
+  ///
+  /// In en, this message translates to:
+  /// **'حافظ على سلسلة دراسة لمدة 30 يومًا.'**
+  String get achievementStreak30Description;
+
+  /// No description provided for @achievementDailyGoalMetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'تم تحقيق الهدف'**
+  String get achievementDailyGoalMetTitle;
+
+  /// No description provided for @achievementDailyGoalMetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'حقق هدفك الدراسي اليومي.'**
+  String get achievementDailyGoalMetDescription;
+
+  /// No description provided for @achievementTenSessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'الطالب المثابر'**
+  String get achievementTenSessionsTitle;
+
+  /// No description provided for @achievementTenSessionsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'أكمل 10 جلسات دراسة.'**
+  String get achievementTenSessionsDescription;
+
+  /// No description provided for @achievementFiftySessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'آلة الدراسة'**
+  String get achievementFiftySessionsTitle;
+
+  /// No description provided for @achievementFiftySessionsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'أكمل 50 جلسة دراسة.'**
+  String get achievementFiftySessionsDescription;
+
+  /// No description provided for @achievementHundredSessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'سيد الاستمرارية'**
+  String get achievementHundredSessionsTitle;
+
+  /// No description provided for @achievementHundredSessionsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'أكمل 100 جلسة دراسة.'**
+  String get achievementHundredSessionsDescription;
 }
 
 class _AppLocalizationsDelegate

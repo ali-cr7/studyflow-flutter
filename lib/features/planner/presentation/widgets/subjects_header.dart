@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_planner/core/app_colors.dart';
+import 'package:study_planner/l10n/app_localizations.dart';
 
 class SubjectsHeader extends StatelessWidget {
   const SubjectsHeader({super.key, required this.subjectCount});
@@ -10,6 +12,7 @@ class SubjectsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = context.sfColors;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       width: double.infinity,
@@ -38,7 +41,7 @@ class SubjectsHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Study stack',
+                  l10n.studyStack,
                   style: theme.textTheme.labelLarge?.copyWith(
                     color: colors.primaryDark,
                     fontWeight: FontWeight.w700,
@@ -46,7 +49,7 @@ class SubjectsHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '$subjectCount subject${subjectCount == 1 ? '' : 's'} active',
+                  l10n.activeSubjects(subjectCount),
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w700,

@@ -93,7 +93,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               children: [
                 StatisticsHeader(
                   title: l10n.yourProgress,
-                  subtitle: snapshot.subtitle,
+                  subtitle: _subtitleForPeriod(snapshot.period, l10n),
                   streak: snapshot.currentStreak,
                 ),
                 const SizedBox(height: 16),
@@ -241,6 +241,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 StatisticsActivityChart(
                   chartPoints: snapshot.chartPoints,
                   goalMinutes: snapshot.goalMinutes,
+                  period: snapshot.period,
                 ),
                 const SizedBox(height: 20),
                 StatisticsSectionHeader(title: l10n.studyBySubject),
@@ -308,5 +309,20 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     }
 
     return '${remainingSeconds}s';
+  }
+
+  /// Derives the subtitle string shown under "Your Progress" from the
+  /// selected period using the current locale. No hard-coded strings.
+  static String _subtitleForPeriod(
+    StatisticsPeriod period,
+    AppLocalizations l10n,
+  ) {
+    return switch (period) {
+      StatisticsPeriod.today => l10n.periodToday,
+      StatisticsPeriod.week => l10n.periodWeek,
+      StatisticsPeriod.month => l10n.periodMonth,
+      StatisticsPeriod.year => l10n.periodYear,
+      StatisticsPeriod.allTime => l10n.periodAllTime,
+    };
   }
 }

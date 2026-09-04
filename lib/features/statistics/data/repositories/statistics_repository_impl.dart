@@ -43,20 +43,15 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     final settings = await _appSettingsRepository.getSettings();
 
     final relevantSessions = sessions
-        .where(
-          (session) =>
-              session.completed && _isInPeriod(session.startTime, period),
-        )
+        .where((s) => s.completed && _isInPeriod(s.startTime, period))
         .toList();
-
-
 
     final range = _periodRange(period);
     final dailyPlans = await _loadPlansForRange(range.start, range.end);
 
     final studySeconds = relevantSessions.fold<int>(
       0,
-      (sum, session) => sum + session.duration,
+      (sum, s) => sum + s.duration,
     );
     final sessionCount = relevantSessions.length;
     final chartPoints = _buildChartPoints(relevantSessions, period);
@@ -65,8 +60,9 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     final currentStreak = _calculateCurrentStreak(relevantSessions);
     final activeDays = _uniqueStudyDays(relevantSessions).length;
     final longestStreak = _calculateLongestStreak(relevantSessions);
+
     final insights = _buildInsights(
-      studyMinutes: studySeconds,
+      studySeconds: studySeconds,
       sessionCount: sessionCount,
       planCompletionPercent: planTotals.completionPercent,
       subjectBreakdown: subjectBreakdown,
@@ -74,15 +70,16 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
       longestStreak: longestStreak,
       period: period,
     );
+
     final bestRecords = _buildBestRecords(relevantSessions, subjectBreakdown);
+
     final recentAchievements = achievements
         .take(3)
-        .map((achievement) => achievement.type.name)
+        .map((a) => a.type.name)
         .toList();
 
     return StatisticsSnapshot(
       period: period,
-      subtitle: _subtitleForPeriod(period),
       studyMinutes: studySeconds,
       sessionCount: sessionCount,
       planCompletionPercent: planTotals.completionPercent,
@@ -99,6 +96,8 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
       recentAchievements: recentAchievements,
     );
   }
+
+  // ── Period helpers ────────────────────────────────────────────────────────
 
   bool _isInPeriod(DateTime date, StatisticsPeriod period) {
     final range = _periodRange(period);
@@ -142,6 +141,8 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     }
   }
 
+  // ── Plan loading ──────────────────────────────────────────────────────────
+
   Future<List<DailyPlan>> _loadPlansForRange(
     DateTime start,
     DateTime end,
@@ -149,15 +150,11 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     final plans = <DailyPlan>[];
     var cursor = DateTime(start.year, start.month, start.day);
     final lastDay = DateTime(end.year, end.month, end.day);
-
     while (!cursor.isAfter(lastDay)) {
       final plan = await _dailyPlanRepository.getByDate(cursor);
-      if (plan != null) {
-        plans.add(plan);
-      }
+      if (plan != null) plans.add(plan);
       cursor = cursor.add(const Duration(days: 1));
     }
-
     return plans;
   }
 
@@ -167,7 +164,6 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
   ) {
     var planned = 0;
     var completed = 0;
-
     for (final plan in plans) {
       final isInRange =
           !plan.date.isBefore(range.start) && !plan.date.isAfter(range.end);
@@ -175,7 +171,6 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
       planned += plan.totalPlannedMinutes;
       completed += plan.completedPlannedMinutes;
     }
-
     return _PlanTotals(
       plannedMinutes: planned * 60,
       completedMinutes: completed * 60,
@@ -185,6 +180,18 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     );
   }
 
+  // ── Chart points ──────────────────────────────────────────────────────────
+  //
+  // Chart labels are locale-neutral keys:
+  //   today    → 24-h hour string  '6', '9', '12', '15', '18', '21'
+  //   week     → ISO-8601 date     '2026-08-19'
+  //   month    → week-index string '0', '1', '2', '3', '4'
+  //   year     → month number      '1' .. '12'
+  //   allTime  → month number      '1' .. '12'
+  //
+  // The StatisticsActivityChart widget converts these keys to localized
+  // labels using intl.DateFormat.
+
   List<ChartPoint> _buildChartPoints(
     List<StudySession> sessions,
     StatisticsPeriod period,
@@ -192,104 +199,72 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     if (sessions.isEmpty) return const [];
 
     final range = _periodRange(period);
-    final dayMap = <String, int>{};
+    final map = <String, int>{};
 
     for (final session in sessions) {
-      final date = DateTime(
-        session.startTime.year,
-        session.startTime.month,
-        session.startTime.day,
-      );
       final key = _chartKeyForPeriod(period, session.startTime, range.start);
-      dayMap.update(
+      map.update(
         key,
-        (value) => value + session.duration,
+        (v) => v + session.duration,
         ifAbsent: () => session.duration,
       );
     }
 
     switch (period) {
       case StatisticsPeriod.today:
-        return _rangeByHours(range.start, range.end, dayMap);
+        return _rangeByHours(map);
       case StatisticsPeriod.week:
-        return _rangeByDays(range.start, range.end, dayMap, 7);
+        return _rangeByDays(range.start, map, 7);
       case StatisticsPeriod.month:
-        return _rangeByWeeks(range.start, range.end, dayMap, 5);
+        return _rangeByWeeks(map, 5);
       case StatisticsPeriod.year:
-        return _rangeByMonths(range.start, range.end, dayMap);
       case StatisticsPeriod.allTime:
-        return _rangeByMonths(range.start, range.end, dayMap);
+        return _rangeByMonths(range.start, range.end, map);
     }
   }
 
-  List<ChartPoint> _rangeByHours(
-    DateTime start,
-    DateTime end,
-    Map<String, int> dayMap,
-  ) {
-    final labels = ['6a', '9a', '12p', '3p', '6p', '9p'];
-    final values = List.generate(labels.length, (_) => 0);
-    for (var i = 0; i < labels.length; i++) {
-      values[i] = dayMap[labels[i]] ?? 0;
-    }
-    return [
-      ChartPoint(label: '6a', minutes: dayMap['6a'] ?? 0),
-      ChartPoint(label: '9a', minutes: dayMap['9a'] ?? 0),
-      ChartPoint(label: '12p', minutes: dayMap['12p'] ?? 0),
-      ChartPoint(label: '3p', minutes: dayMap['3p'] ?? 0),
-      ChartPoint(label: '6p', minutes: dayMap['6p'] ?? 0),
-      ChartPoint(label: '9p', minutes: dayMap['9p'] ?? 0),
-    ];
+  /// Hour slots for the today period.
+  /// Labels are 24-h hour strings: '6', '9', '12', '15', '18', '21'.
+  List<ChartPoint> _rangeByHours(Map<String, int> map) {
+    const slots = ['6', '9', '12', '15', '18', '21'];
+    return slots
+        .map((h) => ChartPoint(label: h, minutes: map[h] ?? 0))
+        .toList();
   }
 
+  /// One bar per day; label is the ISO-8601 date string ('2026-08-19').
   List<ChartPoint> _rangeByDays(
     DateTime start,
-    DateTime end,
     Map<String, int> map,
     int count,
   ) {
     final points = <ChartPoint>[];
     for (var i = 0; i < count; i++) {
       final date = start.add(Duration(days: i));
-      final dayLabel = _dayLabel(date.weekday);
-      final value = map[date.toIso8601String().substring(0, 10)] ?? 0;
-      points.add(ChartPoint(label: dayLabel, minutes: value));
+      final key = date.toIso8601String().substring(0, 10);
+      points.add(ChartPoint(label: key, minutes: map[key] ?? 0));
     }
     return points;
   }
 
-  List<ChartPoint> _rangeByWeeks(
-    DateTime start,
-    DateTime end,
-    Map<String, int> map,
-    int count,
-  ) {
-    final points = <ChartPoint>[];
-    for (var i = 0; i < count; i++) {
-      final key = 'week-$i';
-      final value = map[key] ?? 0;
-      points.add(ChartPoint(label: 'W${i + 1}', minutes: value));
-    }
-    return points;
+  /// One bar per week; label is the zero-based week index as a string ('0'..'4').
+  List<ChartPoint> _rangeByWeeks(Map<String, int> map, int count) {
+    return List.generate(
+      count,
+      (i) => ChartPoint(label: '$i', minutes: map['week-$i'] ?? 0),
+    );
   }
 
+  /// One bar per month; label is the month number as a string ('1'..'12').
   List<ChartPoint> _rangeByMonths(
     DateTime start,
     DateTime end,
     Map<String, int> map,
   ) {
     final points = <ChartPoint>[];
-    final months = <String>[];
     for (var month = start.month; month <= end.month; month++) {
-      final monthDate = DateTime(start.year, month);
-      months.add(_monthLabel(monthDate.month));
+      points.add(ChartPoint(label: '$month', minutes: map['$month'] ?? 0));
     }
-
-    for (final label in months) {
-      final key = label;
-      points.add(ChartPoint(label: label, minutes: map[key] ?? 0));
-    }
-
     return points;
   }
 
@@ -301,12 +276,12 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     switch (period) {
       case StatisticsPeriod.today:
         final hour = date.hour;
-        if (hour < 9) return '6a';
-        if (hour < 12) return '9a';
-        if (hour < 15) return '12p';
-        if (hour < 18) return '3p';
-        if (hour < 21) return '6p';
-        return '9p';
+        if (hour < 9) return '6';
+        if (hour < 12) return '9';
+        if (hour < 15) return '12';
+        if (hour < 18) return '15';
+        if (hour < 21) return '18';
+        return '21';
       case StatisticsPeriod.week:
         return date.toIso8601String().substring(0, 10);
       case StatisticsPeriod.month:
@@ -314,32 +289,11 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
         return 'week-$weekIndex';
       case StatisticsPeriod.year:
       case StatisticsPeriod.allTime:
-        return _monthLabel(date.month);
+        return '${date.month}';
     }
   }
 
-  String _dayLabel(int weekday) {
-    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return labels[(weekday - 1) % 7];
-  }
-
-  String _monthLabel(int month) {
-    const labels = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return labels[month - 1];
-  }
+  // ── Subject breakdown ─────────────────────────────────────────────────────
 
   List<SubjectBreakdown> _buildSubjectBreakdown(
     List<StudySession> sessions,
@@ -347,24 +301,22 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
   ) {
     final bySubject = <int, int>{};
     for (final session in sessions) {
-      final current = bySubject[session.subjectId] ?? 0;
-      bySubject[session.subjectId] = current + session.duration;
+      bySubject[session.subjectId] =
+          (bySubject[session.subjectId] ?? 0) + session.duration;
     }
-
     if (bySubject.isEmpty) return const [];
 
-    final total = bySubject.values.fold<int>(0, (sum, value) => sum + value);
-    final subjectMap = {for (final subject in subjects) subject.id: subject};
+    final total = bySubject.values.fold<int>(0, (sum, v) => sum + v);
+    final subjectMap = {for (final s in subjects) s.id: s};
 
     final entries = bySubject.entries.map((entry) {
       final subject = subjectMap[entry.key];
-      final name = subject?.name ?? 'Unknown';
-      final color = subject?.color ?? 0xFF4C6FFF;
+      // Return null name when subject not found; presentation shows l10n.na.
       return SubjectBreakdown(
-        name: name,
+        name: subject?.name,
         minutes: entry.value,
         percent: total == 0 ? 0 : ((entry.value / total) * 100).round(),
-        color: color,
+        color: subject?.color ?? 0xFF4C6FFF,
       );
     }).toList();
 
@@ -372,38 +324,34 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     return entries;
   }
 
+  // ── Streak helpers ────────────────────────────────────────────────────────
+
   int _calculateCurrentStreak(List<StudySession> sessions) {
     final dates = _uniqueStudyDays(sessions);
     if (dates.isEmpty) return 0;
-
     var streak = 0;
     var cursor = DateTime.now();
     while (true) {
       final normalized = DateTime(cursor.year, cursor.month, cursor.day);
       if (dates.contains(normalized)) {
-        streak += 1;
+        streak++;
         cursor = cursor.subtract(const Duration(days: 1));
       } else {
         break;
       }
     }
-
     return streak;
   }
 
   int _calculateLongestStreak(List<StudySession> sessions) {
     final dates = _uniqueStudyDays(sessions);
     if (dates.isEmpty) return 0;
-
     dates.sort();
-
     var longest = 1;
     var current = 1;
     for (var i = 1; i < dates.length; i++) {
-      final previous = dates[i - 1];
-      final currentDate = dates[i];
-      if (currentDate.difference(previous).inDays == 1) {
-        current += 1;
+      if (dates[i].difference(dates[i - 1]).inDays == 1) {
+        current++;
       } else {
         current = 1;
       }
@@ -415,19 +363,23 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
   List<DateTime> _uniqueStudyDays(List<StudySession> sessions) {
     final unique = <DateTime>{};
     for (final session in sessions) {
-      final date = DateTime(
-        session.startTime.year,
-        session.startTime.month,
-        session.startTime.day,
+      unique.add(
+        DateTime(
+          session.startTime.year,
+          session.startTime.month,
+          session.startTime.day,
+        ),
       );
-      unique.add(date);
     }
-    final sorted = unique.toList()..sort();
-    return sorted;
+    return unique.toList()..sort();
   }
 
-  List<String> _buildInsights({
-    required int studyMinutes,
+  // ── Structured insights ───────────────────────────────────────────────────
+  //
+  // Returns raw structured data only. No localized strings.
+
+  List<StatisticsInsight> _buildInsights({
+    required int studySeconds,
     required int sessionCount,
     required int planCompletionPercent,
     required List<SubjectBreakdown> subjectBreakdown,
@@ -435,138 +387,98 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
     required int longestStreak,
     required StatisticsPeriod period,
   }) {
-    final insights = <String>[];
-
-    if (studyMinutes == 0 || sessionCount == 0) {
-      return ['No study sessions recorded yet for this period.'];
+    if (studySeconds == 0 || sessionCount == 0) {
+      return const [StatisticsInsight(type: StatisticsInsightType.noSessions)];
     }
 
+    final insights = <StatisticsInsight>[];
+
     if (subjectBreakdown.isNotEmpty) {
-      final topSubject = subjectBreakdown.first;
       insights.add(
-        '${topSubject.name} is your most studied subject ${_periodLabel(period)}.',
+        StatisticsInsight(
+          type: StatisticsInsightType.mostStudiedSubject,
+          subjectName: subjectBreakdown.first.name,
+          period: period,
+        ),
       );
     }
 
     if (planCompletionPercent > 0) {
       insights.add(
-        'You completed $planCompletionPercent% of your planned study time.',
+        StatisticsInsight(
+          type: StatisticsInsightType.planCompletion,
+          percent: planCompletionPercent,
+        ),
       );
     }
 
     if (currentStreak > 0) {
-      insights.add('Your current streak is $currentStreak days.');
+      insights.add(
+        StatisticsInsight(
+          type: StatisticsInsightType.currentStreak,
+          count: currentStreak,
+        ),
+      );
     }
 
     if (longestStreak > 0) {
-      insights.add('Your longest streak is $longestStreak days.');
+      insights.add(
+        StatisticsInsight(
+          type: StatisticsInsightType.longestStreak,
+          count: longestStreak,
+        ),
+      );
     }
 
     return insights.take(3).toList();
   }
 
-  String _periodLabel(StatisticsPeriod period) {
-    switch (period) {
-      case StatisticsPeriod.today:
-        return 'today';
-      case StatisticsPeriod.week:
-        return 'this week';
-      case StatisticsPeriod.month:
-        return 'this month';
-      case StatisticsPeriod.year:
-        return 'this year';
-      case StatisticsPeriod.allTime:
-        return 'overall';
-    }
-  }
+  // ── Structured best records ───────────────────────────────────────────────
+  //
+  // Returns raw typed data. No English strings, no formatted durations.
 
-  List<BestRecord> _buildBestRecords(
+  StatisticsBestRecordsData _buildBestRecords(
     List<StudySession> sessions,
     List<SubjectBreakdown> subjectBreakdown,
   ) {
-    if (sessions.isEmpty) return const [];
+    if (sessions.isEmpty) {
+      return const StatisticsBestRecordsData();
+    }
 
-    final longSession = sessions.reduce(
-      (best, session) => session.duration > best.duration ? session : best,
+    // Longest single session (in seconds)
+    final longestSession = sessions.reduce(
+      (best, s) => s.duration > best.duration ? s : best,
     );
+
+    // Most productive calendar day
     final byDay = <String, int>{};
-    for (final session in sessions) {
-      final day = DateTime(
-        session.startTime.year,
-        session.startTime.month,
-        session.startTime.day,
+    for (final s in sessions) {
+      final key = DateTime(
+        s.startTime.year,
+        s.startTime.month,
+        s.startTime.day,
       ).toIso8601String();
-      byDay.update(
-        day,
-        (value) => value + session.duration,
-        ifAbsent: () => session.duration,
-      );
+      byDay[key] = (byDay[key] ?? 0) + s.duration;
     }
-    final bestDay = byDay.entries.reduce(
-      (best, entry) => entry.value > best.value ? entry : best,
+    final bestDayEntry = byDay.entries.reduce(
+      (best, e) => e.value > best.value ? e : best,
     );
-    final bestSubject = subjectBreakdown.isNotEmpty
-        ? subjectBreakdown.first.name
-        : 'N/A';
+    final mostProductiveDay = DateTime.parse(bestDayEntry.key);
 
-    return [
-      const BestRecord(label: 'Longest streak', value: '—'),
-      BestRecord(
-        label: 'Most productive day',
-        value: _dayFromDate(DateTime.parse(bestDay.key)),
-      ),
-      BestRecord(label: 'Most studied subject', value: bestSubject),
-      BestRecord(
-        label: 'Longest session',
-        value: _formatDuration(longSession.duration),
-      ),
-    ];
-  }
-
-  String _dayFromDate(DateTime date) {
-    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return weekdays[(date.weekday - 1) % 7];
-  }
-
-  static String _formatDuration(int seconds) {
-    final hours = seconds ~/ 3600;
-    final minutes = (seconds % 3600) ~/ 60;
-    final remainingSeconds = seconds % 60;
-
-    if (hours > 0 && minutes > 0) {
-      return '${hours}h ${minutes}m';
-    }
-
-    if (hours > 0) {
-      return '${hours}h';
-    }
-
-    if (minutes > 0 && remainingSeconds > 0) {
-      return '${minutes}m ${remainingSeconds}s';
-    }
-
-    if (minutes > 0) {
-      return '${minutes}m';
-    }
-
-    return '${remainingSeconds}s';
-  }
-
-  String _subtitleForPeriod(StatisticsPeriod period) {
-    switch (period) {
-      case StatisticsPeriod.today:
-        return 'Today';
-      case StatisticsPeriod.week:
-        return 'This week';
-      case StatisticsPeriod.month:
-        return 'This month';
-      case StatisticsPeriod.year:
-        return 'This year';
-      case StatisticsPeriod.allTime:
-        return 'All time';
-    }
+    return StatisticsBestRecordsData(
+      // longestStreakDays is not computed here because streak requires
+      // the full session list — pass null; presentation shows '—' via l10n.na.
+      longestStreakDays: null,
+      mostProductiveDay: mostProductiveDay,
+      mostStudiedSubjectName: subjectBreakdown.isNotEmpty
+          ? subjectBreakdown.first.name
+          : null,
+      longestSessionSeconds: longestSession.duration,
+    );
   }
 }
+
+// ── Private helpers ───────────────────────────────────────────────────────────
 
 class _PlanTotals {
   const _PlanTotals({

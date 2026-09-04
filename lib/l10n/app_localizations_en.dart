@@ -129,7 +129,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reset => 'Reset';
 
   @override
-  String get addSubject => 'Add Subject';
+  String get addSubject => 'Add subject';
 
   @override
   String get subjectName => 'Subject name';
@@ -337,10 +337,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achievementsPageTitle => 'Achievements';
 
   @override
-  String get locked => 'Locked';
+  String get locked => 'مقفل';
 
   @override
-  String get unlocked => 'Unlocked';
+  String get unlocked => 'تم فتحه';
 
   @override
   String get activationTitle => 'Activation';
@@ -811,4 +811,222 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get na => 'N/A';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get plan => 'Plan';
+
+  @override
+  String get stats => 'Stats';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get studyStack => 'Study stack';
+
+  @override
+  String activeSubjects(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'subjects',
+      one: 'subject',
+    );
+    return '$count active $_temp0';
+  }
+
+  @override
+  String get studyFocus => 'Study focus';
+
+  @override
+  String get editSubject => 'Edit subject';
+
+  @override
+  String get deleteSubject => 'Delete subject';
+
+  @override
+  String planSummary(Object completed, Object planned) {
+    return '$planned min planned • $completed min completed';
+  }
+
+  @override
+  String get toggleCompletion => 'Toggle completion';
+
+  @override
+  String get deletePlannedSubject => 'Delete planned subject';
+
+  @override
+  String sessionSummary(
+    Object minutes,
+    Object sessionNumber,
+    num totalSessions,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      totalSessions,
+      locale: localeName,
+      other: 'sessions',
+      one: 'session',
+    );
+    return '$sessionNumber/$totalSessions $_temp0 • $minutes min';
+  }
+
+  @override
+  String get addToTodaysPlan => 'Add to today’s plan';
+
+  @override
+  String sessionDurationHelper(Object minutes) {
+    return '1 session = $minutes min';
+  }
+
+  @override
+  String get notifStudyCompleteTitle => 'Study session complete';
+
+  @override
+  String get notifStudyCompleteBody =>
+      'Great job! Your study session is finished. Time for a break.';
+
+  @override
+  String get notifBreakFinishedTitle => 'Break finished';
+
+  @override
+  String get notifBreakFinishedBody =>
+      'Break time is over. Ready to start studying again?';
+
+  @override
+  String get notifBreakStartedTitle => 'Break time';
+
+  @override
+  String get notifBreakStartedBody =>
+      'Your study session is complete. Take a short break.';
+
+  @override
+  String get notifStudyStartingTitle => 'Study session starting';
+
+  @override
+  String notifStudyStartingBody(String subject) {
+    return 'It\'s time to study $subject.';
+  }
+
+  @override
+  String get notifSubjectCompleteTitle => '🎉 Subject complete!';
+
+  @override
+  String notifSubjectCompleteBody(String subject) {
+    return 'You finished your planned session for $subject. Great work!';
+  }
+
+  @override
+  String get notifDailyGoalTitle => '🏆 Daily goal reached!';
+
+  @override
+  String get notifDailyGoalBody =>
+      'You\'ve hit your study goal for today. Incredible effort!';
+
+  @override
+  String get notifForegroundFocusLabel => 'Focus';
+
+  @override
+  String get notifForegroundBreakLabel => 'Break';
+
+  @override
+  String notifForegroundTitle(String phase, String subject) {
+    return '$phase timer: $subject';
+  }
+
+  @override
+  String notifForegroundBody(String remaining) {
+    return '$remaining remaining';
+  }
+
+  @override
+  String get notifInitialTitle => 'Study timer running';
+
+  @override
+  String get notifInitialContent => 'Keeping your session on track.';
+
+  @override
+  String get subjectCompleteTitle => 'Subject complete!';
+
+  @override
+  String subjectCompleteBody(Object subject) {
+    return 'You finished your planned session for $subject. Keep up the great work!';
+  }
+
+  @override
+  String get dailyGoalReachedTitle => 'Daily goal reached!';
+
+  @override
+  String get dailyGoalReachedBody =>
+      'You\'ve hit your study goal for today. Every minute counts — you should be proud!';
+
+  @override
+  String get doubleMilestoneTitle => 'Double milestone!';
+
+  @override
+  String doubleMilestoneBody(Object subject) {
+    return 'You finished $subject AND hit your daily study goal. That\'s an incredible effort today!';
+  }
+
+  @override
+  String get sessionCompleteTitle => 'Session complete!';
+
+  @override
+  String get sessionCompleteBody => 'Great job completing the session!';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String get achievementFirstStepTitle => 'الخطوة الأولى';
+
+  @override
+  String get achievementFirstStepDescription => 'أكمل أول جلسة دراسة لك.';
+
+  @override
+  String get achievementStreak3Title => 'البداية القوية';
+
+  @override
+  String get achievementStreak3Description =>
+      'حافظ على سلسلة دراسة لمدة 3 أيام.';
+
+  @override
+  String get achievementStreak7Title => 'أسبوع من الالتزام';
+
+  @override
+  String get achievementStreak7Description =>
+      'حافظ على سلسلة دراسة لمدة 7 أيام.';
+
+  @override
+  String get achievementStreak30Title => 'لا يمكن إيقافه';
+
+  @override
+  String get achievementStreak30Description =>
+      'حافظ على سلسلة دراسة لمدة 30 يومًا.';
+
+  @override
+  String get achievementDailyGoalMetTitle => 'تم تحقيق الهدف';
+
+  @override
+  String get achievementDailyGoalMetDescription => 'حقق هدفك الدراسي اليومي.';
+
+  @override
+  String get achievementTenSessionsTitle => 'الطالب المثابر';
+
+  @override
+  String get achievementTenSessionsDescription => 'أكمل 10 جلسات دراسة.';
+
+  @override
+  String get achievementFiftySessionsTitle => 'آلة الدراسة';
+
+  @override
+  String get achievementFiftySessionsDescription => 'أكمل 50 جلسة دراسة.';
+
+  @override
+  String get achievementHundredSessionsTitle => 'سيد الاستمرارية';
+
+  @override
+  String get achievementHundredSessionsDescription => 'أكمل 100 جلسة دراسة.';
 }

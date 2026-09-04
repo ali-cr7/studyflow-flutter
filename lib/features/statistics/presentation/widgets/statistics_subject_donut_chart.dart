@@ -156,7 +156,7 @@ class _DonutChartView extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              selectedSubject.name,
+                              selectedSubject.name ?? '',
                               style: theme.textTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
@@ -223,7 +223,7 @@ class _DonutChartView extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            subject.name,
+                            subject.name ?? '',
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontWeight: isSelected
                                   ? FontWeight.w700

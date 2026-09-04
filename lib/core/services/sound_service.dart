@@ -10,6 +10,11 @@ import 'package:study_planner/shared/domain/enums/focus_sound_mode.dart';
 class SoundService {
   final AudioPlayer _player = AudioPlayer();
 
+  /// Dedicated one-shot player for celebration/effect sounds.
+  /// Completely independent of [_player] so it never interrupts the
+  /// ambient loop.
+  final AudioPlayer _effectPlayer = AudioPlayer();
+
   FocusSoundMode _currentMode = FocusSoundMode.none;
   bool _isMuted = false;
   bool _isPlaying = false;
@@ -100,8 +105,27 @@ class SoundService {
     await _applyVolume();
   }
 
+  /// Plays the celebration sound once.
+  ///
+  /// - Uses a separate [AudioPlayer] — the ambient loop is never touched.
+  /// - Does not loop; [ReleaseMode.release] releases the resource automatically
+  ///   after playback completes.
+  /// - Respects [_isMuted]: silent when the user has muted the session sound.
+  /// - Does not modify [_currentMode], [_isPlaying], or [_player] in any way.
+  Future<void> playCelebration() async {
+    if (_isMuted) return;
+    try {
+      await _effectPlayer.setReleaseMode(ReleaseMode.release);
+      await _effectPlayer.play(AssetSource('sounds/celebration.m4a'));
+    } catch (e, st) {
+      debugPrint('[SoundService] playCelebration error: $e');
+      debugPrintStack(stackTrace: st);
+    }
+  }
+
   /// Call when the app no longer needs the service.
   Future<void> dispose() async {
     await _player.dispose();
+    await _effectPlayer.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:isar/isar.dart';
+import 'package:study_planner/core/services/notification_strings.dart';
 import 'package:study_planner/core/services/study_timer_service.dart';
 import 'package:study_planner/core/services/timer_notification_service.dart';
 import 'package:study_planner/shared/data/database/isar.dart';
@@ -35,6 +36,9 @@ class StudyTimerBackgroundService {
         autoStartOnBoot: true,
         isForegroundMode: true,
         notificationChannelId: TimerNotificationService.foregroundChannelId,
+        // Initial title/body are shown before the first ticker fires (~1 s).
+        // They use English as a safe default; the ticker immediately replaces
+        // them with the persisted-language version on its first run.
         initialNotificationTitle: 'Study timer running',
         initialNotificationContent: 'Keeping your session on track.',
         foregroundServiceNotificationId:
@@ -104,13 +108,16 @@ void _onStart(ServiceInstance service) async {
       final subject = await subjectRepository.getById(timer.subjectId);
       if (subject == null) return;
 
-      final coordinator = StudyTimerService(
-        studentProfileRepository: StudentProfileRepositoryImpl(isar)  ,
+      final settingsRepo = AppSettingsRepositoryImpl(isar);
+      final settings = await settingsRepo.getSettings();
+      final strings = NotificationStrings.forLanguage(settings.language);
 
+      final coordinator = StudyTimerService(
+        studentProfileRepository: StudentProfileRepositoryImpl(isar),
         activeTimerRepository: activeTimerRepository,
         sessionRepository: StudySessionRepositoryImpl(isar),
         dailyPlanRepository: DailyPlanRepositoryImpl(isar),
-        settingsRepository: AppSettingsRepositoryImpl(isar),
+        settingsRepository: settingsRepo,
         subjectRepository: subjectRepository,
         notificationService: notificationService,
       );
@@ -126,12 +133,14 @@ void _onStart(ServiceInstance service) async {
       }
 
       final phaseLabel = latest.phase == ActiveTimerPhase.breakTime
-          ? 'Break'
-          : 'Focus';
+          ? strings.foregroundBreakLabel
+          : strings.foregroundFocusLabel;
+
       await notificationService.showForegroundTimer(
-        title: '$phaseLabel timer: ${subject.name}',
-        body:
-            '${_formatRemaining(snapshot!.remainingSeconds)} remaining',
+        title: strings.foregroundTitle(phaseLabel, subject.name),
+        body:  strings.foregroundBody(
+          _formatRemaining(snapshot!.remainingSeconds),
+        ),
       );
     } catch (error, stackTrace) {
       debugPrint('Background timer tick failed: $error');
